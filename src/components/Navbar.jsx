@@ -8,10 +8,10 @@ function Navbar(props) {
         <div className="space-x-4">
           <a href="/" className="text-black hover:text-white mx-2 font-semibold">Beranda</a>
           <a href="/About" className="text-black hover:text-white mx-2 font-semibold">Tentang</a>
-          <a href="/Kategori" className="text-black hover:text-white mx-2 font-semibold">Kategori</a>
-          <a href="/Testimoni" className="text-black hover:text-white mx-2 font-semibold">Testimoni</a>
           <a href="/Blog" className="text-black hover:text-white mx-2 font-semibold">Blog</a>
+          <a href="/Kategori" className="text-black hover:text-white mx-2 font-semibold">Kategori</a>
           <a href="/Kontak" className="text-black hover:text-white mx-2 font-semibold">kontak</a>
+          <a href="/Testimoni" className="text-black hover:text-white mx-2 font-semibold">Testimoni</a>
         </div>
       </div>
     </nav>
