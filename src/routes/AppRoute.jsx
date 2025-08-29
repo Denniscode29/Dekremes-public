@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import App from "../App";
 import About from "../pages/About";
+import Tentang from "../pages/Tentang";
 import Blog from "../pages/Blog";
 import Menu from "../pages/Menu";
 import Kontak from "../pages/Kontak";
@@ -13,6 +14,7 @@ function AppRoute() {
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/About" element={<About />} />
+      <Route path="/Tentang" element={<Tentang />} />
       <Route path="/Blog" element={<Blog />} />
       <Route path="/Menu" element={<Menu />} />
       <Route path="/Kontak" element={<Kontak />} />
