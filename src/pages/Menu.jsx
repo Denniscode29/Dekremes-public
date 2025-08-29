@@ -1,9 +1,9 @@
-function Kategori() {
+function Menu() {
   return (
     <>
     <div className="min-h-screen flex flex-col md:flex-row items-center md:items-stretch justify-between px-8 md:px-16 py-12"
       style={{ backgroundColor: '#FFF5CC' }}>
-            <div className="md:w-1/2 mb-8 md:mb-0 flex flexA-col justify-center">
+            <div className="md:w-1/2 mb-8 md:mb-0 flex flex-col justify-center">
               <h2 className="text-4xl md:text-5xl font-extrabold text-black mb-4">About <span className="text-[#4DA8DA]">TO-DO-U</span>      </h2>
               <p className="text-gray-800 text-lg leading-relaxed">
                 TODOU is a todo list application designed to help you record, organize and complete daily tasks easily.
@@ -59,4 +59,4 @@ function Kategori() {
   );
 }   
 
-export default Kategori;
+export default Menu;
