@@ -1,4 +1,7 @@
-      function App() {
+    import { Link } from "react-router-dom";
+    import Footer from "./components/Footer";
+    
+    function App() {
         return (
           <>
         <div className="bg-[#FFF5CC] min-h-screen flex items-center">
@@ -124,6 +127,7 @@
             </div>
           </div>
         </div>
+        <Footer />
         </>
      );
    }
