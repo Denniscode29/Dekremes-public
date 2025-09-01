@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar.jsx";
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Navbar title="DeKremes&Chicken" />
       <AppRoute />
     </BrowserRouter>
   </StrictMode>
