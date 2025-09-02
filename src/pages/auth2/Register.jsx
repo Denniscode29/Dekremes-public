@@ -5,7 +5,13 @@ import Swal from "sweetalert2";
 import educator from "../../assets/undraw_barbecue_k11q (1).svg";
 
 function Register() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "", // ✅ ditambahkan
+  });
+
   const register = AuthController((state) => state.register);
   const error = AuthController((state) => state.error);
   const navigate = useNavigate();
@@ -30,22 +36,26 @@ function Register() {
       Swal.fire({
         icon: "success",
         title: "Berhasil Register",
-        text: "Pendaftaran berhasil silahkan login"
-      }); 
+        text: "Pendaftaran berhasil, silahkan login",
+      });
     } catch (err) {
       Swal.fire({
-          icon: "error",
-          title: "Gagal Register",
-          text: err.response?.data?.message || "Pendaftaran gagal, silahkan coba lagi nanti",
+        icon: "error",
+        title: "Gagal Register",
+        text:
+          error ||
+          err.response?.data?.message ||
+          "Pendaftaran gagal, silahkan coba lagi nanti",
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
-    style={{ backgroundColor: '#FFF5CC' }}>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
+      style={{ backgroundColor: "#FFF5CC" }}
+    >
       <div className="bg-white shadow-2xl rounded-2xl flex overflow-hidden w-full max-w-5xl h-[654px]">
-        
         {/* Bagian Kiri */}
         <div className="w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
           <img
@@ -117,11 +127,26 @@ function Register() {
               />
             </div>
 
-            {/* Tampilkan Error */}
+            {/* Input Konfirmasi Password */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Konfirmasi Password
+              </label>
+              <input
+                type="password"
+                name="password_confirmation"
+                value={form.password_confirmation}
+                onChange={handleChange}
+                placeholder="Ulangi password"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
+                minLength={6}
+              />
+            </div>
+
+            {/* Tampilkan Error di bawah form */}
             {error && (
-              <div className="text-red-600 text-sm text-center">
-                {error}
-              </div>
+              <div className="text-red-600 text-sm text-center">{error}</div>
             )}
 
             {/* Tombol Daftar */}
