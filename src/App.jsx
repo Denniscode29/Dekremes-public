@@ -4,39 +4,55 @@
         return (
           <>
         <div className="bg-[#FFF5CC] min-h-screen flex items-center">
-          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              
-            {/* Kiri - Teks */}
-            <div className="text-center">
-              {/* Judul */}
-              <h1 className="text-6xl md:text-7xl font-extrabold text-black leading-tight mb-4">
-                DeKremes
-                <span className="block text-red-600">Crispy &</span>
-              </h1>
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          
+          {/* Kiri - Teks */}
+          <div className="text-center">
+            {/* Judul */}
+            <h1 className="text-6xl md:text-7xl font-extrabold text-black leading-tight mb-4">
+              DeKremes
+              <span className="block text-red-600">Crispy &</span>
+            </h1>
 
-              {/* Deskripsi */}
-              <p className="text-gray-700 text-lg md:text-xl mb-6 max-w-md mx-auto">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-              </p>
+            {/* Deskripsi */}
+            <p className="text-gray-700 text-lg md:text-xl mb-6 max-w-md mx-auto">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            </p>
 
-              {/* Tombol */}
-              <div className="flex justify-center">
-                <button className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition">
-                  ORDER NOW
-                </button>
-              </div>
-            </div>
-
-            {/* Kanan - Gambar */}
-            <div className="flex justify-center relative">
-              <img
-                src="src/assets/chicken.png"
-                alt="DeKremes Product"
-                className="w-80 md:w-[400px]"
-              />
+            {/* Tombol */}
+            <div className="flex justify-center">
+              <button className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition">
+                ORDER NOW
+              </button>
             </div>
           </div>
+
+          {/* Kanan - Gambar */}
+          <div className="flex justify-center relative">
+            {/* Ayam */}
+            <img
+              src="src/assets/chicken.png"
+              alt="DeKremes Product"
+              className="w-80 md:w-[400px] relative z-10"
+            />
+
+            {/* Dekorasi Tomat di kanan bawah */}
+            <img
+              src="src/assets/tomato.png"
+              alt="Tomat Dekorasi"
+              className="absolute top-0 left-10 w-20 md:w-28 opacity-90 rotate-12"
+            />
+
+            {/* Dekorasi Tomat di kiri atas */}
+            <img
+              src="src/assets/tomato.png"
+              alt="Tomat Dekorasi"
+              className="absolute top-0 left-10 w-20 md:w-28 opacity-90 rotate-12"
+            />
+          </div>
         </div>
+      </div>
+
           <div className="bg-red-700 text-white w-full min-h-screen flex flex-col items-center justify-center px-6 py-16">
             {/* Judul */}
           <h2 className="text-[96px] font-bold mb-4">Popular Menu</h2>
@@ -74,32 +90,58 @@
               </div>
             </div>
           </div>
-         <div className="bg-[#FFF5CC] min-h-screen flex items-center">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          
-          {/* Kiri - Gambar */}
-          <div className="bg-black p-4 rounded-lg shadow-lg flex justify-center">
+        <div className="bg-[#FFF5CC] min-h-screen flex items-center relative overflow-hidden">
+          {/* Tomat Dekorasi di background */}
           <img
-            src="src/assets/chicken.png"
-            alt="Chicken Potato Sauce"
-            className="w-64 md:w-96 lg:w-[500px] rounded-lg object-contain"
+            src="src/assets/tomatokiri.png"
+            alt="Tomat"
+            className="absolute top-10 left-10 w-32 opacity-90"
           />
-        </div>
-          {/* Kanan - Teks */}
-          <div className="text-center md:text-left">
-            <h2 className="text-6xl md:text-4xl font-bold text-red-600 mb-4">
-              CHICKEN POTATO SAUCE
-            </h2>
-            <p className="text-gray-700 mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Vivamus lacinia odio vitae vestibulum vestibulum.
-            </p>
-            <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition">
-              ORDER NOW
-            </button>
+          <img
+            src="src/assets/tomato.png"
+            alt="Tomat"
+            className="absolute top-20 right-12 w-36 opacity-90"
+          />
+          <img
+            src="src/assets/tomato.png"
+            alt="Tomat"
+            className="absolute bottom-16 left-20 w-28 opacity-90"
+          />
+          <img
+            src="src/assets/tomato.png"
+            alt="Tomat"
+            className="absolute bottom-10 right-16 w-32 opacity-90"
+          />
+
+          {/* Isi Konten */}
+          <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
+            
+            {/* Kiri - Card Gambar */}
+            <div className="bg-black p-4 rounded-lg shadow-lg flex justify-center">
+              <img
+                src="src/assets/chicken.png"
+                alt="Chicken Potato Sauce"
+                className="w-64 md:w-96 lg:w-[500px] rounded-lg object-contain"
+              />
+            </div>
+
+            {/* Kanan - Teks */}
+            <div className="text-center md:text-left">
+              <h2 className="text-6xl md:text-4xl font-bold text-red-600 mb-4">
+                CHICKEN POTATO SAUCE
+              </h2>
+              <p className="text-gray-700 mb-6">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Vivamus lacinia odio vitae vestibulum vestibulum.
+              </p>
+              <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition">
+                ORDER NOW
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+
+
       <div className="bg-[#B80000] min-h-screen flex items-center justify-center">
           <div className="text-center max-w-2xl px-6">
             {/* Judul */}

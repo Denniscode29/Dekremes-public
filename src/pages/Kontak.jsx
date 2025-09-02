@@ -3,57 +3,58 @@ function kontak(){
     return (
         <>
     <div className="bg-[#FFF5CC] py-12 px-6 min-h-screen">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-stretch">
-    
-    {/* Kiri */}
-    <div className="flex flex-col h-full">
-      {/* Judul */}
-      <h2 className="text-4xl font-extrabold text-red-700 text-left">
-        CONTACT US
-      </h2>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-stretch">
+          
+          {/* Kiri */}
+          <div className="flex flex-col h-full">
+            {/* Judul */}
+            <h2 className="text-4xl font-extrabold text-red-700 text-left">
+              CONTACT US
+            </h2>
 
-      {/* Deskripsi */}
-      <p className="text-gray-700 text-left max-w-md mt-4">
-        If you have any questions, please feel free to get in touch with us via
-        phone, text, email, the form below, or even on social media.
-      </p>
+            {/* Deskripsi */}
+            <p className="text-gray-700 text-left max-w-md mt-4">
+              If you have any questions, please feel free to get in touch with us via
+              phone, text, email, the form below, or even on social media.
+            </p>
 
-      {/* Card Contact Info */}
-          <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200 w-[592px] h-[439px] mt-auto">
+            {/* Card Contact Info */}
+              <div className="bg-white shadow-md rounded-xl p-6 border border-gray-200 w-[592px] h-[439px] mt-auto">
         <h3 className="text-lg font-bold text-red-700 border-b border-gray-300 pb-2 mb-6">
           CONTACT INFORMATION
         </h3>
 
-        <div className="space-y-6 text-gray-700 text-sm">
-          {/* Phone */}
-          <div className="flex items-start gap-3">
-            <span className="text-red-600 text-2xl">📞</span>
-            <div>
-              <p className="font-semibold">Phone</p>
-              <p>0909878765</p>
-            </div>
+             <div className="grid grid-cols-2 gap-y-4 text-gray-700 text-sm">
+        {/* Phone */}
+        <div className="flex items-center ">
+          <span className="text-red-600 text-2xl w-12 flex justify-center">📞</span>
+          <div>
+            <p className="font-semibold">Phone</p>
+            <p>0909878765</p>
           </div>
+        </div>
 
-          {/* Address */}
-          <div className="flex items-start gap-3">
-            <span className="text-red-600 text-2xl">📍</span>
-            <div>
-              <p className="font-semibold">Address</p>
-              <p>Jl. Bayangkhara no.1</p>
-            </div>
+        {/* Address */}
+        <div className="flex items-center">
+          <span className="text-red-600 text-2xl w-12 flex justify-center">📍</span>
+          <div>
+            <p className="font-semibold">Address</p>
+            <p>Jl. Bayangkhara no.1</p>
           </div>
+        </div>
 
-          {/* Email */}
-          <div className="flex items-start gap-3">
-            <span className="text-red-600 text-2xl">📧</span>
-            <div>
-              <p className="font-semibold">Email</p>
-              <p>DeKremes@enak.com</p>
-            </div>
+        {/* Email */}
+        <div className="flex items-center">
+          <span className="text-red-600 text-2xl w-12 flex justify-center">📧</span>
+          <div>
+            <p className="font-semibold">Email</p>
+            <p>DeKremes@enak.com</p>
           </div>
         </div>
       </div>
-    </div>
+
+      </div>
+          </div>
            {/* Kanan */}
             <div className="bg-white border border-gray-200 rounded-lg shadow-md 
                   w-[704px] h-[700px] flex flex-col p-8">
@@ -125,22 +126,21 @@ function kontak(){
                   </button>
                 </div>
               </div>
-            </div>
-
-
+            </div>    
               </div>
-              </div>
-              <div className="w-full h-screen">
-            <iframe
-              title="Lokasi Kami"
-              className="w-full h-full border-0"
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15857.839399509035!2d106.92497252525178!3d-6.911330876774717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e684831d4ab49b7%3A0x13d7ec548f6271b4!2sJl.%20Pemuda%2C%20Citamiang%2C%20Kec.%20Citamiang%2C%20Kota%20Sukabumi%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1721369999999!5m2!1sid!2sid"
-            ></iframe>
+                </div>
+                  <div className="bg-[#FFF5CC] min-h-screen flex justify-center items-center">
+                      <div className="w-full h-screen">
+                    <iframe
+                      title="Lokasi Kami"
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15857.839399509035!2d106.92497252525178!3d-6.911330876774717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e684831d4ab49b7%3A0x13d7ec548f6271b4!2sJl.%20Pemuda%2C%20Citamiang%2C%20Kec.%20Citamiang%2C%20Kota%20Sukabumi%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1721369999999!5m2!1sid!2sid"
+                    ></iframe>
+                </div>
           </div>
-          
         </>
     );
 }
