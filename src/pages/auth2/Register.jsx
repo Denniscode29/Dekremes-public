@@ -1,7 +1,46 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthController from "../../controllers/AuthController";
+import Swal from "sweetalert2";
 import educator from "../../assets/undraw_barbecue_k11q (1).svg";
 
 function Register() {
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const register = AuthController((state) => state.register);
+  const error = AuthController((state) => state.error);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Register...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      await register(form, navigate);
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil Register",
+        text: "Pendaftaran berhasil silahkan login"
+      }); 
+    } catch (err) {
+      Swal.fire({
+          icon: "error",
+          title: "Gagal Register",
+          text: err.response?.data?.message || "Pendaftaran gagal, silahkan coba lagi nanti",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
     style={{ backgroundColor: '#FFF5CC' }}>
@@ -28,7 +67,7 @@ function Register() {
             Daftar
           </h2>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleRegister}>
             {/* Input Nama */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">
@@ -36,8 +75,12 @@ function Register() {
               </label>
               <input
                 type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
                 placeholder="Masukkan nama lengkap"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
               />
             </div>
 
@@ -48,8 +91,12 @@ function Register() {
               </label>
               <input
                 type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
                 placeholder="Masukkan email Anda"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
               />
             </div>
 
@@ -60,16 +107,27 @@ function Register() {
               </label>
               <input
                 type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
                 placeholder="Buat password"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
+                minLength={6}
               />
             </div>
+
+            {/* Tampilkan Error */}
+            {error && (
+              <div className="text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
 
             {/* Tombol Daftar */}
             <button
               type="submit"
-              className="w-full bg-[#B80002] text-white py-3 px-4 rounded-lg font-semibold hover:bg-[#8F0002] active:scale-95 shadow-md transition
-"
+              className="w-full bg-[#B80002] text-white py-3 px-4 rounded-lg font-semibold hover:bg-[#8F0002] active:scale-95 shadow-md transition"
             >
               Daftar
             </button>

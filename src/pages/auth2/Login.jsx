@@ -1,7 +1,43 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthController from "../../controllers/AuthController";
+import Swal from "sweetalert2";
 import educator from "../../assets/undraw_personal-information_h7kf.svg";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const login = AuthController((state) => state.login);
+  const error = AuthController((state) => state.error);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Login...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      await login(email, password, navigate);
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil Login",
+        text: "Selamat datang kembali",
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal Login",
+        text: err.response?.data?.message || "Email atau password salah",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
     style={{ backgroundColor: '#FFF5CC' }}>
@@ -28,7 +64,7 @@ export default function Login() {
             Masuk
           </h2>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             {/* Input Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">
@@ -36,8 +72,11 @@ export default function Login() {
               </label>
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Masukkan email Anda"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
               />
             </div>
 
@@ -48,10 +87,21 @@ export default function Login() {
               </label>
               <input
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password Anda"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
+                required
+                minLength={8}
               />
             </div>
+
+            {/* Tampilkan Error */}
+            {error && (
+              <div className="text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
 
             {/* Tombol Login */}
             <button
