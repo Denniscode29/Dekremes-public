@@ -9,7 +9,7 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    password_confirmation: "", // ✅ ditambahkan
+    password_confirmation: "",
   });
 
   const register = AuthController((state) => state.register);
