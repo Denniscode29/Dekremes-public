@@ -52,27 +52,27 @@ function Register() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-3"
       style={{ backgroundColor: "#FFF5CC" }}
     >
-      <div className="bg-white shadow-2xl rounded-2xl flex overflow-hidden w-full max-w-5xl h-[654px]">
+      <div className="bg-white shadow-2xl rounded-2xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl max-h-screen">
         {/* Bagian Kiri */}
-        <div className="w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
           <img
             src={educator}
             alt="Educator"
             className="w-72 h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
           />
           <h2 className="text-white text-2xl font-semibold mt-6 text-center">
-            Bergabunglah Bersama Kami!
+            Atur profile anda agar lebih mudah dilihat oleh orang lain!
           </h2>
           <p className="text-white/80 text-sm mt-2 text-center px-4">
-            Buat akun dan nikmati berbagai layanan menarik dari kami.
+            Buat akun dan masukan komentar anda pada produk kami.
           </p>
         </div>
 
         {/* Bagian Kanan */}
-        <div className="w-1/2 p-10 flex flex-col justify-center">
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center overflow-y-auto">
           <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">
             Daftar
           </h2>
