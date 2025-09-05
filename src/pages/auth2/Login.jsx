@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_personal-information_h7kf.svg";
+import { ArrowLeft } from "lucide-react"; // opsional, kalau tidak pakai icon tinggal hapus baris ini
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,10 +40,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4"
-    style={{ backgroundColor: '#FFF5CC' }}>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-4 relative"
+      style={{ backgroundColor: "#FFF5CC" }}
+    >
+      {/* Tombol Kembali */}
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-4 left-4 flex items-center gap-2 text-gray-700 hover:text-red-600 font-medium transition"
+      >
+        <ArrowLeft size={20} /> Kembali
+      </button>
+
       <div className="bg-white shadow-2xl rounded-2xl flex overflow-hidden w-full max-w-5xl h-[654px]">
-        
         {/* Bagian Kiri */}
         <div className="w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
           <img
@@ -98,9 +108,7 @@ export default function Login() {
 
             {/* Tampilkan Error */}
             {error && (
-              <div className="text-red-600 text-sm text-center">
-                {error}
-              </div>
+              <div className="text-red-600 text-sm text-center">{error}</div>
             )}
 
             {/* Tombol Login */}

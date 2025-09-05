@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_barbecue_k11q (1).svg";
+import { ArrowLeft } from "lucide-react"; // opsional, hapus kalau ga pakai icon
 
 function Register() {
   const [form, setForm] = useState({
@@ -52,9 +53,17 @@ function Register() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-3"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br p-3 relative"
       style={{ backgroundColor: "#FFF5CC" }}
     >
+      {/* Tombol Kembali */}
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-4 left-4 flex items-center gap-2 text-gray-700 hover:text-red-600 font-medium transition"
+      >
+        <ArrowLeft size={20} /> Kembali
+      </button>
+
       <div className="bg-white shadow-2xl rounded-2xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl max-h-screen">
         {/* Bagian Kiri */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
@@ -144,7 +153,7 @@ function Register() {
               />
             </div>
 
-            {/* Tampilkan Error di bawah form */}
+            {/* Tampilkan Error */}
             {error && (
               <div className="text-red-600 text-sm text-center">{error}</div>
             )}
@@ -165,7 +174,7 @@ function Register() {
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          {/* Tombol Daftar Google */}
+          {/* Tombol Daftar dengan Google */}
           <button
             type="button"
             className="w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 shadow-sm"
