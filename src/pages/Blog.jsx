@@ -167,6 +167,16 @@ export default function FoodBlogPage() {
   };
 
   return (
+
+    <>
+
+    {/* spasi atas */}
+        <div className="h-20"
+        style={{ backgroundColor: '#FFF5CC' }}></div>
+    <div>
+      {/* kosong buat ngejarakin */}
+    </div>
+
     <div className="min-h-screen bg-[#FFF5CC] py-12 px-6 md:px-20">
       {/* Header */}
       <div className="text-center mb-10">
@@ -347,5 +357,7 @@ export default function FoodBlogPage() {
         </div>
       </div>
     </div>
+
+    </>
   );
 }

@@ -1,6 +1,14 @@
 function Kategori() {
   return (
     <>
+
+    {/* spasi atas */}
+        <div className="h-20"
+        style={{ backgroundColor: '#FFF5CC' }}></div>
+    <div>
+      {/* kosong buat ngejarakin */}
+    </div>
+
     <div className="min-h-screen flex flex-col md:flex-row items-center md:items-stretch justify-between px-8 md:px-16 py-12"
       style={{ backgroundColor: '#FFF5CC' }}>
             <div className="md:w-1/2 mb-8 md:mb-0 flex flexA-col justify-center">

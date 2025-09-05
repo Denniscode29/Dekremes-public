@@ -1,6 +1,13 @@
 function Tentang() {
   return (
     <>
+      {/* spasi atas */}
+        <div className="h-20"
+        style={{ backgroundColor: '#FFF5CC' }}></div>
+    <div>
+      {/* kosong buat ngejarakin */}
+    </div>
+
       <div className="bg-[#FFF5CC] min-h-screen flex flex-col items-center px-8 py-16">
   {/* Judul */}
   <h2 className="text-4xl font-extrabold text-red-600 mb-12">About us</h2>
