@@ -1,3 +1,4 @@
+// routes/AppRoute.jsx
 import { Route, Routes } from "react-router-dom";
 import App from "../App";
 import About from "../pages/About";
@@ -6,6 +7,7 @@ import Blog from "../pages/Blog";
 import Menu from "../pages/Menu";
 import Kontak from "../pages/Kontak";
 import Testimoni from "../pages/Testimoni";
+import Profile from "../pages/Profile"; // ✅ tambahin profile
 
 import MainLayout from "../layouts/MainLayout.jsx";
 
@@ -17,15 +19,18 @@ function AppRoute() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<App />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Tentang" element={<Tentang />} />
-        <Route path="/Blog" element={<Blog />} />
-        <Route path="/Menu" element={<Menu />} />
-        <Route path="/Kontak" element={<Kontak />} />
-        <Route path="/Testimoni" element={<Testimoni />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/tentang" element={<Tentang />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/kontak" element={<Kontak />} />
+        <Route path="/testimoni" element={<Testimoni />} />
+        <Route path="/profile" element={<Profile />} /> {/* ✅ halaman profil */}
       </Route>
-      <Route path="/Login" element={<Login />} />
-      <Route path="/Register" element={<Register />} />
+
+      {/* Auth route */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
     </Routes>
   );
 }

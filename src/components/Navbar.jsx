@@ -1,12 +1,16 @@
+// components/Navbar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import AuthController from "../controllers/AuthController";
 import defaultProfile from "../assets/profil.jpg";
+import Swal from "sweetalert2";
 
 function Navbar({ title }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [navbarVisible, setNavbarVisible] = useState(true);
   const [navbarBackground, setNavbarBackground] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const menuRef = useRef();
   const navigate = useNavigate();
   const lastScrollY = useRef(0);
@@ -14,7 +18,7 @@ function Navbar({ title }) {
   // route sekarang
   const location = useLocation();
 
-  // route yang harus selalu abu
+  // route dengan background solid
   const solidBgRoutes = ["/tentang", "/blog", "/menu", "/kontak", "/testimoni"];
 
   // auth state
@@ -22,10 +26,37 @@ function Navbar({ title }) {
   const user = AuthController((state) => state.user);
   const logout = AuthController((state) => state.logout);
 
-  const handleLogout = () => {
-    logout();
-    setShowProfileMenu(false);
-    navigate("/");
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    
+    // Tampilkan loading animation
+    Swal.fire({
+      title: "Logging out...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      // Simulasi proses logout (bisa disesuaikan dengan implementasi asli)
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulasi delay
+      logout();
+      setShowProfileMenu(false);
+      
+      // Tutup loading dan redirect
+      Swal.close();
+      navigate("/");
+    } catch (err) {
+      console.error("Logout error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Logout Failed",
+        text: "Terjadi kesalahan saat logout. Silakan coba lagi.",
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   // klik luar untuk nutup dropdown
@@ -75,7 +106,7 @@ function Navbar({ title }) {
             : "bg-transparent"
         }`}
     >
-      <div className="flex justify-between items-center py-6 px-6 md:px-12">
+      <div className="flex justify-between items-center py-4 px-6 md:px-12">
         {/* Logo */}
         <div
           className={`font-extrabold text-2xl md:text-3xl tracking-wide transition-colors duration-300 ${
@@ -96,8 +127,8 @@ function Navbar({ title }) {
                 to={item === "Beranda" ? "/" : `/${item.toLowerCase()}`}
                 className={`relative font-semibold transition duration-300 group ${
                   navbarBackground || solidBgRoutes.includes(location.pathname)
-                    ? "text-black"
-                    : "text-white"
+                    ? "text-black hover:text-[#B80002]"
+                    : "text-white hover:text-[#FFD700]"
                 }`}
               >
                 {item}
@@ -108,51 +139,68 @@ function Navbar({ title }) {
         </div>
 
         {/* Tombol Login & Profil */}
-        <div className="flex items-center space-x-8 relative">
+        <div className="flex items-center space-x-4 relative" ref={menuRef}>
+          {/* tombol login/daftar tetap muncul kalau belum login */}
           {!isLoggedIn && (
             <>
               <Link
                 to="/login"
-                className="text-center bg-[#B80002] text-white px-5 py-2 rounded-lg hover:bg-[#a00002] transition"
+                className={`text-center px-5 py-2 rounded-lg transition font-semibold ${
+                  navbarBackground || solidBgRoutes.includes(location.pathname)
+                    ? "bg-[#B80002] text-white hover:bg-[#a00002]"
+                    : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                }`}
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="hidden md:block text-center bg-[#B80002] text-white px-5 py-2 rounded-lg hover:bg-[#a00002] transition"
+                className={`hidden md:block text-center px-5 py-2 rounded-lg transition font-semibold ${
+                  navbarBackground || solidBgRoutes.includes(location.pathname)
+                    ? "bg-[#B80002] text-white hover:bg-[#a00002]"
+                    : "bg-[#B80002] text-white hover:bg-[#a00002]"
+                }`}
               >
                 Daftar
               </Link>
             </>
           )}
 
-          {/* Profil Avatar */}
-          <div className="relative ml-4 md:ml-10" ref={menuRef}>
+          {/* Avatar selalu ada */}
+          <div className="relative">
             <img
               src={user?.avatar || defaultProfile}
               alt="Profile"
-              className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300"
+              className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
+                showProfileMenu 
+                  ? "border-[#B80002] scale-105" 
+                  : navbarBackground || solidBgRoutes.includes(location.pathname)
+                    ? "border-gray-300 hover:border-[#B80002]"
+                    : "border-white/50 hover:border-white"
+              }`}
               onClick={() => setShowProfileMenu(!showProfileMenu)}
             />
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                <div className="p-4">
-                  <p className="text-gray-800 font-medium mb-2">
-                    Halo, {user?.name || "Tamu"}
+              <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                <div className="p-4 border-b border-gray-100 bg-gray-50">
+                  <p className="text-gray-800 font-medium">
+                    {isLoggedIn ? `Halo, ${user?.name}` : "Selamat Datang"}
                   </p>
+                </div>
 
+                <div className="p-2">
                   {!isLoggedIn ? (
                     <>
                       <Link
                         to="/login"
-                        className="block w-full text-center bg-[#B80002] text-white py-2 rounded-lg hover:bg-[#a00002] transition mb-2"
+                        className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         Login
                       </Link>
                       <Link
                         to="/register"
-                        className="block w-full text-center bg-gray-100 text-gray-800 py-2 rounded-lg hover:bg-gray-200 transition"
+                        className="block text-center text-gray-700 font-medium hover:bg-gray-100 rounded-md py-2 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         Daftar
@@ -162,16 +210,27 @@ function Navbar({ title }) {
                     <>
                       <Link
                         to="/profile"
-                        className="block text-center text-black font-medium mb-2 hover:underline py-2 border-b border-gray-200"
+                        className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
                         onClick={() => setShowProfileMenu(false)}
                       >
                         Edit Profil
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full bg-[#B80002] text-white py-2 rounded-lg hover:bg-[#a00002] transition mt-2"
+                        disabled={isLoggingOut}
+                        className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition mt-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                       >
-                        Logout
+                        {isLoggingOut ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Logging out...
+                          </>
+                        ) : (
+                          "Logout"
+                        )}
                       </button>
                     </>
                   )}
