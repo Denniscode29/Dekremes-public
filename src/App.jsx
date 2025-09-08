@@ -1,6 +1,148 @@
-import { Link } from "react-router-dom";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 function App() {
+  // Data untuk menu favorit
+  const favoriteMenus = [
+    {
+      name: "Big Mac®",
+      description: "Dua patty daging sapi spesial dengan saus Big Mac, selada, keju, acar, bawang.",
+      image: "src/assets/chicken.png",
+      price: "Rp 35.000"
+    },
+    {
+      name: "Pallas 1",
+      description: "Ayam krispi terbaik dengan saus spesial dan sayuran segar dalam roti premium.",
+      image: "src/assets/chicken.png",
+      price: "Rp 32.000"
+    },
+    {
+      name: "Pallas Special",
+      description: "Kreasi istimewa dengan daging ayam pilihan, saus rahasia, dan sayuran segar.",
+      image: "src/assets/chicken.png",
+      price: "Rp 38.000"
+    },
+    {
+      name: "McChicken",
+      description: "Potongan ayam gurih dilapisi tepung krispi, dengan mayones dan selada segar.",
+      image: "src/assets/chicken.png",
+      price: "Rp 30.000"
+    },
+    {
+      name: "McNuggets®",
+      description: "Potongan ayam tanpa tulang yang digoreng hingga garing, cocok dengan saus.",
+      image: "src/assets/chicken.png",
+      price: "Rp 28.000"
+    },
+    {
+      name: "Crispy Deluxe",
+      description: "Ayam crispy dengan saus spesial dan sayuran segar dalam roti premium.",
+      image: "src/assets/chicken.png",
+      price: "Rp 36.000"
+    }
+  ];
+
+  // State untuk carousel menu favorit
+  const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
+  const menuCarouselRef = useRef(null);
+  const [menuItemWidth, setMenuItemWidth] = useState(0);
+
+  // State untuk banner carousel
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const bannerData = [
+    {
+      image: "src/assets/banner.jpg",
+      title: "Promo Spesial 1",
+      description: "Diskon 20% untuk semua menu ayam crispy"
+    },
+    {
+      image: "src/assets/banner2.jpg", 
+      title: "Promo Spesial 2",
+      description: "Buy 1 Get 1 untuk pembelian minuman"
+    },
+    {
+      image: "src/assets/banner3.jpg",
+      title: "Promo Spesial 3",
+      description: "Paket keluarga dengan harga spesial"
+    }
+  ];
+
+  // Auto slide untuk banner carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % bannerData.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, [bannerData.length]);
+
+  // Auto slide untuk menu carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMenuIndex((prev) => {
+        const visibleItems = getVisibleItemsCount();
+        return (prev + 1) % (favoriteMenus.length - visibleItems + 1);
+      });
+    }, 3000);
+    
+    return () => clearInterval(interval);
+  }, [favoriteMenus.length]);
+
+  // Fungsi navigasi banner carousel
+  const nextBanner = () => {
+    setCurrentBanner((prev) => (prev + 1) % bannerData.length);
+  };
+
+  const prevBanner = () => {
+    setCurrentBanner((prev) => (prev - 1 + bannerData.length) % bannerData.length);
+  };
+
+  // Fungsi untuk mengatur lebar item menu carousel
+  const updateMenuItemWidth = useCallback(() => {
+    const containerWidth = window.innerWidth;
+    const visibleItems = getVisibleItemsCount();
+    const gap = 16; // gap between items
+    const padding = 32; // total horizontal padding
+    
+    // Calculate item width based on container width, gaps and padding
+    const calculatedWidth = (containerWidth - padding - (gap * (visibleItems - 1))) / visibleItems;
+    setMenuItemWidth(calculatedWidth);
+  }, []);
+
+  // Efek untuk mengatur ulang carousel menu saat ukuran layar berubah
+  useEffect(() => {
+    updateMenuItemWidth();
+    window.addEventListener('resize', updateMenuItemWidth);
+    return () => window.removeEventListener('resize', updateMenuItemWidth);
+  }, [updateMenuItemWidth]);
+
+  // Menghitung jumlah item yang ditampilkan berdasarkan lebar layar
+  const getVisibleItemsCount = () => {
+    if (window.innerWidth < 640) return 1;
+    if (window.innerWidth < 768) return 2;
+    if (window.innerWidth < 1024) return 3;
+    return 4;
+  };
+
+  // Navigasi menu carousel
+  const nextMenu = () => {
+    const visibleItems = getVisibleItemsCount();
+    if (currentMenuIndex < favoriteMenus.length - visibleItems) {
+      setCurrentMenuIndex(currentMenuIndex + 1);
+    }
+  };
+
+  const prevMenu = () => {
+    if (currentMenuIndex > 0) {
+      setCurrentMenuIndex(currentMenuIndex - 1);
+    }
+  };
+
+  // Menghitung translateX untuk carousel
+  const calculateTranslateX = () => {
+    const gap = 16;
+    return -currentMenuIndex * (menuItemWidth + gap);
+  };
+
   return (
     <>
       {/* HERO SECTION */}
@@ -17,105 +159,201 @@ function App() {
 
         {/* Konten Hero */}
         <div className="relative z-10 text-center px-6">
-          <h1 className="text-6xl md:text-7xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
             DeKremes
-            <span className="block text-red-500">Crispy &</span>
+            <span className="block text-red-500">& Crispy</span>
           </h1>
 
-          <p className="text-gray-200 text-lg md:text-xl mb-6 max-w-2xl mx-auto">
+          {/* Banner Carousel - Diposisikan di bawah judul */}
+          <div className="relative mx-auto mb-8 max-w-4xl overflow-hidden rounded-xl shadow-2xl">
+            <div 
+              className="flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${currentBanner * 100}%)` }}
+            >
+              {bannerData.map((banner, index) => (
+                <div key={index} className="w-full flex-shrink-0">
+                  <img 
+                    src={banner.image} 
+                    className="w-full h-56 object-cover" 
+                    alt={`Promo ${index+1}`} 
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <h3 className="text-white text-xl font-bold">{banner.title}</h3>
+                    <p className="text-gray-200 text-sm">{banner.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation buttons untuk banner carousel */}
+            <button 
+              onClick={prevBanner}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
+            >
+              &#10094;
+            </button>
+            <button 
+              onClick={nextBanner}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
+            >
+              &#10095;
+            </button>
+
+            {/* Indicator dots untuk banner carousel */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+              {bannerData.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentBanner(idx)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    currentBanner === idx ? 'bg-white scale-125' : 'bg-gray-400'
+                  }`}
+                ></button>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-gray-200 text-base md:text-lg mb-6 max-w-2xl mx-auto">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry.
           </p>
 
           <div className="flex justify-center">
-            <button className="bg-[#B80000] text-white px-8 py-4 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105">
+            <button
+            onClick={() => window.location.href = '/menu'} 
+            className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105 text-sm md:text-base">
               ORDER NOW
             </button>
           </div>
         </div>
       </div>
 
-      {/* POPULAR MENU */}
-      <div className="bg-red-700 text-white w-full min-h-screen flex flex-col items-center justify-center px-6 py-16">
-        <h2 className="text-[72px] md:text-[96px] font-bold mb-4">Popular Menu</h2>
-        <p className="max-w-4xl text-center mb-12 text-lg md:text-xl">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
+      {/* MENU FAVORIT SECTION */}
+      <div className="text-black w-full py-12 flex flex-col items-center justify-center bg-white">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Menu Favorit</h2>
+        <p className="max-w-2xl text-center mb-8 text-base md:text-lg mx-auto px-4">
+          Temukan menu-menu favorit pelanggan kami yang selalu dinantikan kehadirannya.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Item 1 */}
-          <div className="flex flex-col items-center text-center bg-white/10 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-            <img src="src/assets/chicken.png" alt="Package I" className="w-40 mb-4" />
-            <h3 className="font-bold text-xl mb-2">PACKAGE I</h3>
-            <p className="text-sm text-white/80">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
+        {/* Carousel Container - Full width dengan padding */}
+        <div className="relative w-full overflow-hidden px-4">
+          {/* Carousel Track */}
+          <div 
+            ref={menuCarouselRef}
+            className="flex transition-transform duration-500 ease-out gap-4"
+            style={{ 
+              transform: `translateX(${calculateTranslateX()}px)`,
+              userSelect: 'none'
+            }}
+          >
+            {favoriteMenus.map((menu, index) => (
+              <div 
+                key={index}
+                className="flex flex-col items-center text-center p-4 rounded-lg shadow-md hover:shadow-lg transition-all flex-shrink-0 border border-gray-100"
+                style={{ 
+                  width: `${menuItemWidth}px`,
+                  minWidth: `${menuItemWidth}px`
+                }}
+              >
+                <img src={menu.image} alt={menu.name} className="w-28 h-28 object-contain mb-3 mx-auto rounded-lg" />
+                <h3 className="font-bold text-lg mb-1 text-red-600">{menu.name}</h3>
+                <p className="text-xs text-gray-600 mb-3 line-clamp-2 h-10">
+                  {menu.description}
+                </p>
+                <div className="flex items-center justify-between w-full mt-2">
+                  <span className="font-bold text-red-600 text-base">{menu.price}</span>
+                  <button className="bg-red-600 text-white px-3 py-1 rounded-md text-xs font-semibold hover:bg-red-700 transition">
+                    Pesan
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Item 2 */}
-          <div className="flex flex-col items-center text-center bg-white/10 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-            <img src="src/assets/chicken.png" alt="Package II" className="w-40 mb-4" />
-            <h3 className="font-bold text-xl mb-2">PACKAGE II</h3>
-            <p className="text-sm text-white/80">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
+        {/* Navigation buttons untuk menu carousel */}
+        <div className="flex justify-center mt-6 space-x-3 items-center">
+          <button 
+            onClick={prevMenu}
+            disabled={currentMenuIndex === 0}
+            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            &#10094;
+          </button>
+          
+          {/* Navigation Dots */}
+          <div className="flex space-x-2">
+            {Array.from({ length: Math.max(1, favoriteMenus.length - getVisibleItemsCount() + 1) }).map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all ${currentMenuIndex === index ? 'bg-red-600 scale-125' : 'bg-gray-300'}`}
+                onClick={() => setCurrentMenuIndex(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
+          
+          <button 
+            onClick={nextMenu}
+            disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - getVisibleItemsCount())}
+            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            &#10095;
+          </button>
+        </div>
 
-          {/* Item 3 */}
-          <div className="flex flex-col items-center text-center bg-white/10 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-            <img src="src/assets/chicken.png" alt="Package III" className="w-40 mb-4" />
-            <h3 className="font-bold text-xl mb-2">PACKAGE III</h3>
-            <p className="text-sm text-white/80">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
-          </div>
+        {/* View All Menu Button */}
+        <div className="mt-8">
+          <button className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-red-700 transition transform hover:scale-105">
+            Lihat Semua Menu
+          </button>
         </div>
       </div>
 
       {/* CHICKEN POTATO SAUCE */}
-      <div className="bg-[#FFF5CC] min-h-screen flex items-center relative overflow-hidden">
+      <div className="bg-[#FFF5CC] py-16 flex items-center relative overflow-hidden">
         {/* Tomat Dekorasi di background */}
         <img
           src="src/assets/tomatokiri.png"
           alt="Tomat"
-          className="absolute top-10 left-10 w-32 opacity-90"
+          className="absolute top-10 left-10 w-24 opacity-90"
         />
         <img
           src="src/assets/tomato.png"
           alt="Tomat"
-          className="absolute top-20 right-12 w-36 opacity-90"
+          className="absolute top-16 right-8 w-28 opacity-90"
         />
         <img
           src="src/assets/tomato.png"
           alt="Tomat"
-          className="absolute bottom-16 left-20 w-28 opacity-90"
+          className="absolute bottom-12 left-16 w-20 opacity-90"
         />
         <img
           src="src/assets/tomato.png"
           alt="Tomat"
-          className="absolute bottom-10 right-16 w-32 opacity-90"
+          className="absolute bottom-8 right-12 w-24 opacity-90"
         />
 
         {/* Isi Konten */}
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6 items-center relative z-10">
           {/* Kiri - Card Gambar */}
-          <div className="bg-black p-4 rounded-2xl shadow-2xl flex justify-center hover:scale-105 transition">
+          <div className="bg-black p-3 rounded-xl shadow-lg flex justify-center hover:scale-105 transition">
             <img
               src="src/assets/chicken.png"
               alt="Chicken Potato Sauce"
-              className="w-64 md:w-96 lg:w-[500px] rounded-lg object-contain"
+              className="w-52 md:w-72 lg:w-80 rounded-lg object-contain"
             />
           </div>
 
           {/* Kanan - Teks */}
           <div className="text-center md:text-left">
-            <h2 className="text-5xl md:text-6xl font-bold text-red-600 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
               CHICKEN POTATO SAUCE
             </h2>
-            <p className="text-gray-700 mb-6 text-lg">
+            <p className="text-gray-700 mb-4 text-base">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
               Vivamus lacinia odio vitae vestibulum vestibulum.
             </p>
-            <button className="bg-red-600 text-white font-semibold px-8 py-4 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105">
+            <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
               ORDER NOW
             </button>
           </div>
@@ -123,23 +361,23 @@ function App() {
       </div>
 
       {/* COMMENT SECTION */}
-      <div className="bg-[#B80000] min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-2xl px-6">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
+      <div className="bg-[#B80000] py-16 flex items-center justify-center">
+        <div className="text-center max-w-2xl px-4">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
             Write your comment here!
           </h1>
-          <p className="text-white/90 text-base md:text-lg mb-8">
+          <p className="text-white/90 text-sm md:text-base mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
             Vivamus lacinia odio vitae vestibulum vestibulum.
           </p>
 
-          <div className="flex items-center bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-lg mx-auto">
+          <div className="flex items-center bg-white rounded-lg shadow-md overflow-hidden w-full max-w-md mx-auto">
             <input
               type="text"
               placeholder="What do u think"
-              className="flex-1 px-4 py-3 focus:outline-none text-gray-700"
+              className="flex-1 px-4 py-2 focus:outline-none text-gray-700 text-sm"
             />
-            <button className="px-6 py-3 text-[#B80000] font-bold hover:text-black transition">
+            <button className="px-4 py-2 text-[#B80000] font-bold hover:text-black transition text-sm">
               Send
             </button>
           </div>
@@ -148,4 +386,5 @@ function App() {
     </>
   );
 }
-export default App;
+
+export default App; 
