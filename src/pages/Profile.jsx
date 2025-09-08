@@ -17,7 +17,15 @@ function Profile() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-6">
-      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
+      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center relative">
+        {/* Tombol Kembali */}
+        <button
+          onClick={() => navigate("/")}
+          className="absolute left-4 top-4 bg-gray-100 text-gray-800 px-3 py-1 rounded-lg shadow hover:bg-gray-200 transition"
+        >
+          ← Kembali
+        </button>
+
         <img
           src={user?.avatar || defaultProfile}
           alt="Profile"
