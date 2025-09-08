@@ -68,7 +68,8 @@ function kontak(){
                 w-[704px] h-[700px] flex flex-col p-8">
 
             {/* Judul di kiri atas */}
-        <h2 className="text-2xl font-bold text-red-600 border-b border-gray-300 pb-2 mb-6 text-left">
+        <h2 className="text-2xl font-bold border-b border-gray-300 pb-2 mb-6 text-left"
+        style={{ color: '#B80002' }}>
           GET IN TOUCH
         </h2>
             {/* Form + Button (dorong ke bawah) */}
@@ -126,7 +127,8 @@ function kontak(){
               <div className="mt-6">
                 <button
                   type="submit"
-                  className="w-full bg-red-600 text-white py-3 rounded-md font-semibold hover:bg-red-700 transition"
+                  className="w-full text-white py-3 rounded-md font-semibold hover:bg-red-700 transition"
+                  style={{ backgroundColor: '#B80002' }}
                 >
                   SEND MESSAGE
                 </button>
@@ -147,7 +149,9 @@ function kontak(){
                   ></iframe>
               </div>
             </div>
-            <div className="flex justify-center items-center h-screen bg-red-600">
+            <div className="flex justify-center items-center h-[30vh] bg-red-600">
+
+
         <a
           href="https://wa.me/6285198674763" // ganti nomor dengan punyamu
           target="_blank"

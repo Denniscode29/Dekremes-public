@@ -41,6 +41,17 @@ function App() {
     }
   ];
 
+  // Data gambar kegiatan
+  const kegiatanImages = [
+    "src/assets/kegiatan/IMG-20240927-WA0001.jpg",
+    "src/assets/kegiatan/IMG-20250203-WA0001.jpg",
+    "src/assets/kegiatan/IMG-20250203-WA0015.jpg",
+    "src/assets/kegiatan/IMG-20250320-WA0134.jpg",
+    "src/assets/kegiatan/IMG-20250320-WA0146.jpg",
+    "src/assets/kegiatan/IMG20250523081115.jpg",
+    "src/assets/kegiatan/IMG20250619072923.jpg"
+  ];
+
   // State untuk carousel menu favorit
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
   const menuCarouselRef = useRef(null);
@@ -171,7 +182,7 @@ function App() {
               style={{ transform: `translateX(-${currentBanner * 100}%)` }}
             >
               {bannerData.map((banner, index) => (
-                <div key={index} className="w-full flex-shrink-0">
+                <div key={index} className="w-full flex-shrink-0 relative">
                   <img 
                     src={banner.image} 
                     className="w-full h-56 object-cover" 
@@ -227,8 +238,8 @@ function App() {
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION */}
-      <div className="text-black w-full py-12 flex flex-col items-center justify-center bg-white">
+      {/* MENU FAVORIT SECTION - Background diubah menjadi #FFF5CC */}
+      <div className="text-black w-full py-12 flex flex-col items-center justify-center" style={{backgroundColor: '#FFF5CC'}}>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Menu Favorit</h2>
         <p className="max-w-2xl text-center mb-8 text-base md:text-lg mx-auto px-4">
           Temukan menu-menu favorit pelanggan kami yang selalu dinantikan kehadirannya.
@@ -248,7 +259,7 @@ function App() {
             {favoriteMenus.map((menu, index) => (
               <div 
                 key={index}
-                className="flex flex-col items-center text-center p-4 rounded-lg shadow-md hover:shadow-lg transition-all flex-shrink-0 border border-gray-100"
+                className="flex flex-col items-center text-center bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all flex-shrink-0 border border-gray-100"
                 style={{ 
                   width: `${menuItemWidth}px`,
                   minWidth: `${menuItemWidth}px`
@@ -309,6 +320,23 @@ function App() {
         </div>
       </div>
 
+      {/* GALLERY SECTION - Tambahan section baru untuk gambar kegiatan */}
+      <div className="py-12 bg-red-600">
+        <h2 className="text-3xl font-bold text-center mb-8">Galeri Kegiatan Dekremes</h2>
+        <div className="overflow-hidden relative">
+          <div className="flex animate-scroll">
+            {kegiatanImages.concat(kegiatanImages).map((img, index) => (
+              <img 
+                key={index} 
+                src={img} 
+                alt="Kegiatan Dekremes" 
+                className="h-48 md:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* CHICKEN POTATO SAUCE */}
       <div className="bg-[#FFF5CC] py-16 flex items-center relative overflow-hidden">
         {/* Tomat Dekorasi di background */}
@@ -360,31 +388,29 @@ function App() {
         </div>
       </div>
 
-      {/* COMMENT SECTION */}
-      <div className="bg-[#B80000] py-16 flex items-center justify-center">
-        <div className="text-center max-w-2xl px-4">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
-            Write your comment here!
-          </h1>
-          <p className="text-white/90 text-sm md:text-base mb-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Vivamus lacinia odio vitae vestibulum vestibulum.
-          </p>
-
-          <div className="flex items-center bg-white rounded-lg shadow-md overflow-hidden w-full max-w-md mx-auto">
-            <input
-              type="text"
-              placeholder="What do u think"
-              className="flex-1 px-4 py-2 focus:outline-none text-gray-700 text-sm"
-            />
-            <button className="px-4 py-2 text-[#B80000] font-bold hover:text-black transition text-sm">
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* CSS untuk animasi scroll otomatis */}
+      <style>
+        {`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .animate-scroll {
+            animation: scroll 30s linear infinite;
+            display: flex;
+            width: max-content;
+          }
+          .animate-scroll:hover {
+            animation-play-state: paused;
+          }
+        `}
+      </style>
     </>
   );
 }
 
-export default App; 
+export default App;
