@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_personal-information_h7kf.svg";
-import { ArrowLeft } from "lucide-react"; // opsional, kalau tidak pakai icon tinggal hapus baris ini
+import { ArrowLeft } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,17 +24,25 @@ export default function Login() {
     });
 
     try {
-      await login(email, password, navigate);
-      Swal.fire({
-        icon: "success",
-        title: "Berhasil Login",
-        text: "Selamat datang kembali",
-      });
+      const success = await login(email, password);
+
+      if (success) {
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil Login",
+          text: "Selamat datang kembali",
+        });
+
+        navigate("/"); // pindah halaman di sini
+      }
     } catch (err) {
       Swal.fire({
         icon: "error",
         title: "Gagal Login",
-        text: err.response?.data?.message || "Email atau password salah",
+        text:
+          error ||
+          err.response?.data?.message ||
+          "Email atau password salah",
       });
     }
   };
@@ -102,7 +110,7 @@ export default function Login() {
                 placeholder="Masukkan password Anda"
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
                 required
-                minLength={8}
+                minLength={8} // ✅ disamakan dengan backend
               />
             </div>
 

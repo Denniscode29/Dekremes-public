@@ -1,98 +1,86 @@
-// controllers/AuthController.js
-import axios from "axios";
 import { create } from "zustand";
+import axios from "axios";
 
-const baseUrl = import.meta.env.VITE_API_URL;
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
-// Ambil data tersimpan di localStorage (jaga supaya tidak error)
-const savedToken = localStorage.getItem("token");
-const savedUserRaw = localStorage.getItem("user");
-const savedUser =
-  savedUserRaw && savedUserRaw !== "undefined"
-    ? JSON.parse(savedUserRaw)
-    : null;
+// Interceptor untuk token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-// Zustand store untuk authentication
 const AuthController = create((set) => ({
-  user: savedUser,
-  token: savedToken || null,
+  user: null,
+  isLoggedIn: false, // ✅ tambahkan flag ini
   error: null,
+  loading: false,
 
-  // ✅ status login
-  isLoggedIn: !!savedToken && !!savedUser,
-
-  // set user manual
-  setUser: (user) => set(() => ({ user })),
-
-  // refresh status user dari backend
-  refreshUserStatus: async () => {
+  // === REGISTER ===
+  register: async (form) => {
+    set({ loading: true, error: null });
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const res = await axios.get(`${baseUrl}/v1/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const user = res.data;
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("user_status", user.status);
-      set({ user, isLoggedIn: true });
+      await api.post("/auth/register", form);
+      set({ loading: false });
+      return true;
     } catch (err) {
-      console.error("❌ Gagal memperbarui status user:", err);
-      set({ user: null, token: null, isLoggedIn: false });
-    }
-  },
-
-  // login user
-  login: async (email, password, navigate) => {
-    try {
-      const res = await axios.post(`${baseUrl}/v1/auth/login`, {
-        email,
-        password,
+      set({
+        error: err.response?.data?.message || "Terjadi kesalahan",
+        loading: false,
       });
-
-      const { token, user } = res.data;
-
-      // simpan ke state + localStorage
-      set({ token, user, error: null, isLoggedIn: true });
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("user_status", user.status);
-
-      navigate("/");
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "Terjadi kesalahan";
-      set({ error: errorMsg });
       throw err;
     }
   },
 
-  // logout user
-  logout: () => {
-    set({ user: null, token: null, isLoggedIn: false });
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("user_status");
+  // === LOGIN ===
+  login: async (email, password) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post("/auth/login", { email, password });
+
+      if (res.data?.access_token) {
+        localStorage.setItem("token", res.data.access_token);
+      }
+
+      set({
+        user: res.data.user,
+        isLoggedIn: true, // ✅ update status login
+        loading: false,
+      });
+      return true;
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || "Email atau password salah",
+        loading: false,
+      });
+      throw err;
+    }
   },
 
-  // register user baru
-  register: async (data, navigate) => {
+  // === LOGOUT ===
+  logout: async () => {
     try {
-      const res = await axios.post(`${baseUrl}/v1/auth/register`, data);
-
-      const user = res.data.user;
-      set({ user, error: null, isLoggedIn: false }); // belum login otomatis
-      navigate("/login");
+      await api.post("/auth/logout");
     } catch (err) {
-      const errorMsg =
-        err.response?.data?.errors?.email?.[0] ||
-        err.response?.data?.errors?.password?.[0] ||
-        err.response?.data?.message ||
-        "Terjadi kesalahan saat register";
+      console.warn("Logout error (ignored):", err);
+    }
+    localStorage.removeItem("token");
+    set({ user: null, isLoggedIn: false }); // ✅ reset status
+    return true;
+  },
 
-      console.error("❌ Register error:", err);
-      set({ error: errorMsg });
+  // === REFRESH USER STATUS ===
+  refreshUserStatus: async () => {
+    try {
+      const res = await api.get("/auth/profile");
+      set({ user: res.data, isLoggedIn: true }); // ✅ login kalau token valid
+    } catch (err) {
+      console.error("Gagal memperbarui status user:", err);
+      set({ user: null, isLoggedIn: false });
     }
   },
 }));

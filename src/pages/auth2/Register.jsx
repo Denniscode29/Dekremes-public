@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_barbecue_k11q (1).svg";
-import { ArrowLeft } from "lucide-react"; // opsional, hapus kalau ga pakai icon
+import { ArrowLeft } from "lucide-react";
 
 function Register() {
   const [form, setForm] = useState({
@@ -24,6 +24,16 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // ✅ Validasi frontend password confirmation
+    if (form.password !== form.password_confirmation) {
+      Swal.fire({
+        icon: "error",
+        title: "Password Tidak Cocok",
+        text: "Password dan konfirmasi password harus sama!",
+      });
+      return;
+    }
+
     Swal.fire({
       title: "Register...",
       allowOutsideClick: false,
@@ -33,18 +43,25 @@ function Register() {
     });
 
     try {
-      await register(form, navigate);
-      Swal.fire({
-        icon: "success",
-        title: "Berhasil Register",
-        text: "Pendaftaran berhasil, silahkan login",
-      });
+      const success = await register(form); // 🚩 tidak perlu lempar navigate
+
+      if (success) {
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil Register",
+          text: "Pendaftaran berhasil, silahkan login",
+        });
+
+        navigate("/login"); // ✅ pindah halaman di komponen
+      }
     } catch (err) {
       Swal.fire({
         icon: "error",
         title: "Gagal Register",
         text:
           error ||
+          err.response?.data?.errors?.email?.[0] ||
+          err.response?.data?.errors?.password?.[0] ||
           err.response?.data?.message ||
           "Pendaftaran gagal, silahkan coba lagi nanti",
       });
@@ -73,10 +90,10 @@ function Register() {
             className="w-72 h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
           />
           <h2 className="text-white text-2xl font-semibold mt-6 text-center">
-            Atur profile anda agar lebih mudah dilihat oleh orang lain!
+            Atur profil anda agar lebih mudah dilihat oleh orang lain!
           </h2>
           <p className="text-white/80 text-sm mt-2 text-center px-4">
-            Buat akun dan masukan komentar anda pada produk kami.
+            Buat akun dan masukkan komentar anda pada produk kami.
           </p>
         </div>
 
@@ -132,7 +149,7 @@ function Register() {
                 placeholder="Buat password"
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
 
@@ -149,7 +166,7 @@ function Register() {
                 placeholder="Ulangi password"
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 placeholder-gray-500"
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
 
