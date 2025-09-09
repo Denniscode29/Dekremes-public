@@ -356,7 +356,7 @@ function Profile() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full px-4极狐 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
                   required
-                  minLength={6}
+                  minLength={8}
                   placeholder="Konfirmasi password baru"
                 />
                 <button
