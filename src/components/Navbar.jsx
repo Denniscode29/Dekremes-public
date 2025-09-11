@@ -4,15 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import AuthController from "../controllers/AuthController";
 import defaultProfile from "../assets/profil.jpg";
 import Swal from "sweetalert2";
-import LoadingScreen from "./LoadingScreen";
 
 function Navbar({ title }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [navbarVisible, setNavbarVisible] = useState(true);
   const [navbarBackground, setNavbarBackground] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingForPage, setLoadingForPage] = useState("");
 
   const menuRef = useRef();
   const navigate = useNavigate();
@@ -26,17 +23,11 @@ function Navbar({ title }) {
   const user = AuthController((state) => state.user);
   const logout = AuthController((state) => state.logout);
 
-  // Navigasi dengan loading
+  // Navigasi langsung tanpa loading
   const handleNavigation = (path) => {
     if (location.pathname !== path) {
-      setLoadingForPage(path);
-      setIsLoading(true);
+      navigate(path);
     }
-  };
-
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-    navigate(loadingForPage);
   };
 
   const handleLogout = async () => {
@@ -251,9 +242,6 @@ function Navbar({ title }) {
           </div>
         </div>
       </nav>
-
-      {/* Loading Screen */}
-      {isLoading && <LoadingScreen onLoadingComplete={handleLoadingComplete} />}
     </>
   );
 }
