@@ -34,115 +34,161 @@ function Tentang() {
           </div>
 
           {/* Services Section */}
-          <div className="mb-16">
-            <h3 className="text-3xl font-bold text-red-600 text-center mb-10">Layanan Kami</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* School Event */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
-                <div className="h-56 overflow-hidden">
-                  <img 
-                    src="src/assets/kegiatan/IMG-20250320-WA0146.jpg" 
-                    alt="Acara Sekolah" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h4 className="text-xl font-bold text-red-600 mb-3">Acara Sekolah</h4>
-                  <p className="text-gray-700">
-                    Melayani pesanan untuk acara sekolah seperti pentas seni, bazar, atau perayaan hari besar dengan paket khusus untuk siswa dan guru.
-                  </p>
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-red-600 text-center mb-10">
+            Layanan Kami
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            {/* Card Template */}
+            {[
+              {
+                title: "Acara Sekolah",
+                img: "src/assets/kegiatan/IMG-20250320-WA0146.jpg",
+                desc: "Melayani pesanan untuk acara sekolah seperti pentas seni, bazar, atau perayaan hari besar dengan paket khusus untuk siswa dan guru.",
+              },
+              {
+                title: "Ulang Tahun",
+                img: "src/assets/kegiatan/IMG20250619072923.jpg",
+                desc: "Membuat acara ulang tahun semakin spesial dengan berbagai pilihan paket crispy yang disukai oleh semua usia.",
+              },
+              {
+                title: "Acara Pengajian",
+                img: "src/assets/kegiatan/IMG-20250203-WA0015.jpg",
+                desc: "Menyediakan catering untuk acara pengajian, syukuran, atau acara keagamaan lainnya dengan menu yang beragam dan halal.",
+              },
+            ].map((card, i) => (
+              <div
+                key={i}
+                className="group relative rounded-2xl bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] shadow-xl hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-500 transform hover:-translate-y-2"
+              >
+                <div className="bg-white rounded-2xl overflow-hidden flex flex-col h-full">
+                  {/* Image */}
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={card.img}
+                      alt={card.title}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-70"></div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <h4 className="text-xl font-bold text-red-600 mb-3 group-hover:text-yellow-600 transition-colors duration-300">
+                      {card.title}
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed flex-1">
+                      {card.desc}
+                    </p>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Birthday Event */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
-                <div className="h-56 overflow-hidden">
-                  <img 
-                    src="src/assets/kegiatan/IMG20250619072923.jpg" 
-                    alt="Acara Ulang Tahun" 
-                    className="w-full h-full object-cover"
-                  />
+
+                  {/* Values Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch mb-16">
+          {/* Left Column */}
+          <div className="space-y-12">
+            {/* Card 1 */}
+            <div className="relative rounded-3xl overflow-hidden w-[580px] transition duration-700 hover:scale-[1.02] hover:rotate-[0.5deg] shadow-[0_15px_40px_rgba(0,0,0,0.25)] group">
+              {/* Shimmer Border */}
+              <div className="absolute inset-0 rounded-3xl p-[2px] bg-gradient-to-r from-yellow-400 via-red-600 to-yellow-400 animate-[shimmer_6s_linear_infinite]"></div>
+              <div className="relative rounded-3xl overflow-hidden">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-red-800 to-red-700 text-white p-8 flex items-center justify-between border-b border-yellow-500/40">
+                  <div>
+                    <h3 className="text-2xl font-extrabold tracking-wide uppercase text-yellow-300 drop-shadow-md">
+                      Komitmen terhadap Kualitas
+                    </h3>
+                    <p className="text-white/80 text-base mt-2">
+                      Kami hanya menggunakan bahan terbaik agar cita rasa konsisten & nikmat.
+                    </p>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-xl p-4 rounded-full shadow-inner group-hover:scale-110 transition">
+                    <img
+                      src="src/assets/meat.png"
+                      alt="Quality Icon"
+                      className="w-14 h-14 object-contain"
+                    />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h4 className="text-xl font-bold text-red-600 mb-3">Ulang Tahun</h4>
-                  <p className="text-gray-700">
-                    Membuat acara ulang tahun semakin spesial dengan berbagai pilihan paket crispy yang disukai oleh semua usia.
+
+                {/* Isi (Deskripsi) */}
+                <div className="bg-gradient-to-b from-white to-red-50 p-8 leading-relaxed relative">
+                  <p className="text-gray-800 text-lg text-justify">
+                    Sejak awal,{" "}
+                    <span className="font-bold text-red-700">DeKremes & Crispy</span>{" "}
+                    berdedikasi untuk menyajikan produk terbaik dengan harga terjangkau.
+                    Kami percaya bahwa makanan enak tidak harus mahal, dan setiap acara
+                    layak mendapatkan catering terbaik.
                   </p>
+                  {/* Inner Glow */}
+                  <div className="absolute inset-0 rounded-3xl ring-1 ring-yellow-300/20 pointer-events-none"></div>
                 </div>
               </div>
+            </div>
 
-              {/* Religious Event */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
-                <div className="h-56 overflow-hidden">
-                  <img 
-                    src="src/assets/kegiatan/IMG-20250203-WA0015.jpg" 
-                    alt="Acara Pengajian" 
-                    className="w-full h-full object-cover"
-                  />
+            {/* Card 2 */}
+            <div className="relative rounded-3xl overflow-hidden w-[580px] transition duration-700 hover:scale-[1.02] hover:-rotate-[0.5deg] shadow-[0_15px_40px_rgba(0,0,0,0.25)] group">
+              {/* Shimmer Border */}
+              <div className="absolute inset-0 rounded-3xl p-[2px] bg-gradient-to-r from-yellow-400 via-red-600 to-yellow-400 animate-[shimmer_6s_linear_infinite]"></div>
+              <div className="relative rounded-3xl overflow-hidden">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-red-800 to-red-700 text-white p-8 flex items-center justify-between border-b border-yellow-500/40">
+                  <div>
+                    <h3 className="text-2xl font-extrabold tracking-wide uppercase text-yellow-300 drop-shadow-md">
+                      Pelayanan Terbaik
+                    </h3>
+                    <p className="text-white/80 text-base mt-2">
+                      Tim kami siap melayani pesanan Anda dengan ramah & profesional.
+                    </p>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-xl p-4 rounded-full shadow-inner group-hover:scale-110 transition">
+                    <img
+                      src="src/assets/chicken.png"
+                      alt="Service Icon"
+                      className="w-14 h-14 object-contain"
+                    />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h4 className="text-xl font-bold text-red-600 mb-3">Acara Pengajian</h4>
-                  <p className="text-gray-700">
-                    Menyediakan catering untuk acara pengajian, syukuran, atau acara keagamaan lainnya dengan menu yang beragam dan halal.
+
+                {/* Isi (Deskripsi) */}
+                <div className="bg-gradient-to-b from-white to-red-50 p-8 leading-relaxed relative">
+                  <p className="text-gray-800 text-lg text-justify">
+                    Dengan pengalaman melayani berbagai acara, kami memahami kebutuhan
+                    khusus setiap pelanggan. Dari menu hingga eksekusi, kami hadir untuk
+                    membuat acara Anda sukses.
                   </p>
+                  <div className="absolute inset-0 rounded-3xl ring-1 ring-yellow-300/20 pointer-events-none"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Values Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-            {/* Left Column */}
-            <div className="space-y-8">
-              <div className="bg-red-700 text-white rounded-2xl shadow-lg p-8 flex items-center">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-3">Komitmen terhadap Kualitas</h3>
-                  <p>Kami hanya menggunakan bahan-bahan terbaik untuk memastikan cita rasa yang konsisten dan nikmat.</p>
-                </div>
-                <img 
-                  src="src/assets/meat.png" 
-                  alt="Quality Icon" 
-                  className="w-20 h-20 ml-6 object-contain" 
-                />
-              </div>
-
-              <p className="text-red-600 text-xl leading-relaxed text-justify">
-                Sejak awal, DeKremes & Crispy berdedikasi untuk menyajikan produk terbaik dengan harga terjangkau. 
-                Kami percaya bahwa makanan enak tidak harus mahal, dan setiap acara layak mendapatkan catering terbaik.
-              </p>
-            </div>
-
-            {/* Center Image */}
-            <div className="flex justify-center">
+          {/* Right Column - Image Card */}
+        <div className="flex justify-center items-center">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-yellow-500 bg-gradient-to-b from-white to-red-50 w-[420px] h-[520px] flex items-center justify-center">
               <img
                 src="src/assets/kegiatan/IMG-20240927-WA0001.jpg"
                 alt="Chef DeKremes"
-                className="w-80 h-auto object-contain"
+                className="w-[380px] h-[480px] object-cover rounded-2xl shadow-lg transform transition duration-500 hover:scale-105"
               />
             </div>
-
-            {/* Right Column */}
-            <div className="space-y-8">
-              <div className="bg-red-700 text-white rounded-2xl shadow-lg p-8 flex items-center">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-3">Pelayanan Terbaik</h3>
-                  <p>Tim kami siap melayani pesanan Anda dengan ramah dan profesional untuk berbagai jenis acara.</p>
-                </div>
-                <img 
-                  src="src/assets/chicken.png" 
-                  alt="Service Icon" 
-                  className="w-20 h-20 ml-6 object-contain" 
-                />
-              </div>
-
-              <p className="text-red-600 text-xl leading-relaxed text-justify">
-                Dengan pengalaman melayani berbagai acara, kami memahami kebutuhan khusus setiap pelanggan. 
-                Dari perencanaan menu hingga eksekusi, kami hadir untuk membuat acara Anda sukses.
-              </p>
-            </div>
           </div>
+        </div>
 
+        <style>
+        {`
+        @keyframes shimmer {
+          0% { background-position: -500px 0; }
+          100% { background-position: 500px 0; }
+        }
+        `}
+        </style>
           {/* CTA Section */}
           <div className="text-center bg-red-700 rounded-2xl p-10 text-white">
             <h3 className="text-3xl font-bold mb-4">Tertarik Memesan?</h3>

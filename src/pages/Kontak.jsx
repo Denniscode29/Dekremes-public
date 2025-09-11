@@ -136,32 +136,8 @@ function kontak(){
             </div>
           </div>    
         </div>
-      </div>
-           <div className="bg-[#FFF5CC] min-h-screen flex justify-center items-center">
-              <div className="w-[95%] h-[90vh] shadow-lg rounded-lg overflow-hidden">
-                 <iframe
-                     title="Lokasi Kami"
-                     className="w-full h-full border-0"
-                     loading="lazy"
-                     allowFullScreen
-                     referrerPolicy="no-referrer-when-downgrade"
-                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15857.839399509035!2d106.92497252525178!3d-6.911330876774717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e684831d4ab49b7%3A0x13d7ec548f6271b4!2sJl.%20Pemuda%2C%20Citamiang%2C%20Kec.%20Citamiang%2C%20Kota%20Sukabumi%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1721369999999!5m2!1sid!2sid"
-                  ></iframe>
-              </div>
-            </div>
-            <div className="flex justify-center items-center h-[30vh] bg-red-600">
-
-
-        <a
-          href="https://wa.me/6285198674763" // ganti nomor dengan punyamu
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-green-500 text-white flex items-center gap-2 px-6 py-3 rounded-xl text-lg font-semibold shadow-lg hover:bg-green-600 transition"
-        >
-          <FaWhatsapp className="text-2xl" />
-          Contact Via WhatsApp
-        </a>
-      </div>
+      
+</div>
         </>
     );
 }
