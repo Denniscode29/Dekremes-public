@@ -4,14 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import AuthController from "../controllers/AuthController";
 import defaultProfile from "../assets/profil.jpg";
 import Swal from "sweetalert2";
+import api from "../api/api";
+import { Bell } from "lucide-react";
 
 function Navbar({ title }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [navbarVisible, setNavbarVisible] = useState(true);
   const [navbarBackground, setNavbarBackground] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const menuRef = useRef();
+  const notificationsRef = useRef();
   const navigate = useNavigate();
   const lastScrollY = useRef(0);
 
@@ -30,6 +36,61 @@ function Navbar({ title }) {
     }
   };
 
+  // Fetch notifications
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchNotifications();
+      fetchUnreadCount();
+      
+      // Poll for new notifications every 30 seconds
+      const interval = setInterval(() => {
+        fetchUnreadCount();
+      }, 30000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isLoggedIn]);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await api.get("/notifications");
+      setNotifications(response.data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await api.get("/notifications/unread-count");
+      setUnreadCount(response.data.count);
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
+  const markAsRead = async (id) => {
+    try {
+      await api.post(`/notifications/${id}/read`);
+      setUnreadCount(prev => Math.max(0, prev - 1));
+      setNotifications(notifications.map(n => 
+        n.id === id ? {...n, dibaca: true} : n
+      ));
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await api.post("/notifications/read-all");
+      setUnreadCount(0);
+      setNotifications(notifications.map(n => ({...n, dibaca: true})));
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     Swal.fire({
@@ -42,6 +103,7 @@ function Navbar({ title }) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       logout();
       setShowProfileMenu(false);
+      setShowNotifications(false);
       Swal.close();
       navigate("/");
     } catch (err) {
@@ -61,6 +123,9 @@ function Navbar({ title }) {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowProfileMenu(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setShowNotifications(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -140,105 +205,172 @@ function Navbar({ title }) {
           </div>
 
           {/* Auth Section */}
-          <div className="flex items-center space-x-4 relative" ref={menuRef}>
-            {!isLoggedIn ? (
-              // 🔓 belum login → tombol Login & Daftar
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => handleNavigation("/login")}
-                  className={`text-center px-5 py-2 rounded-lg transition font-semibold ${
+          <div className="flex items-center space-x-4">
+            {isLoggedIn && (
+              <div className="relative" ref={notificationsRef}>
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className={`relative p-2 rounded-full transition ${
                     navbarBackground || solidBgRoutes.includes(location.pathname)
-                      ? "bg-[#B80002] text-white hover:bg-[#a00002]"
-                      : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                      ? "text-gray-700 hover:bg-gray-100"
+                      : "text-white hover:bg-white/20"
                   }`}
                 >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => handleNavigation("/register")}
-                  className={`hidden md:block text-center px-5 py-2 rounded-lg transition font-semibold ${
-                    navbarBackground || solidBgRoutes.includes(location.pathname)
-                      ? "bg-[#B80002] text-white hover:bg-[#a00002]"
-                      : "bg-[#B80002] text-white hover:bg-[#a00002]"
-                  }`}
-                >
-                  Daftar
-                </Link>
-              </>
-            ) : (
-              <div className="relative">
-                <img
-                  src={user?.avatar || defaultProfile}
-                  alt="Profile"
-                  className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
-                    showProfileMenu
-                      ? "border-[#B80002] scale-105"
-                      : navbarBackground ||
-                        solidBgRoutes.includes(location.pathname)
-                      ? "border-gray-300 hover:border-[#B80002]"
-                      : "border-white/50 hover:border-white"
-                  }`}
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                />
-                {showProfileMenu && (
-                  <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
-                    <div className="p-4 border-b border-gray-100 bg-gray-50">
-                      <p className="text-gray-800 font-medium">
-                        Halo, {user?.name || "User"}
-                      </p>
+                  <Bell className="w-6 h-6" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                    <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                      <h3 className="font-semibold text-gray-800">Notifikasi</h3>
+                      {unreadCount > 0 && (
+                        <button 
+                          onClick={markAllAsRead}
+                          className="text-sm text-[#B80002] hover:underline"
+                        >
+                          Tandai semua telah dibaca
+                        </button>
+                      )}
                     </div>
 
-                    <div className="p-2">
-                      <Link
-                        to="/profile"
-                        className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
-                        onClick={() => {
-                          setShowProfileMenu(false);
-                          handleNavigation("/profile");
-                        }}
-                      >
-                        Edit Profil
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        disabled={isLoggingOut}
-                        className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition mt-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
-                      >
-                        {isLoggingOut ? (
-                          <>
-                            <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Logging out...
-                          </>
-                        ) : (
-                          "Logout"
-                        )}
-                      </button>
+                    <div className="max-h-96 overflow-y-auto">
+                      {notifications.length > 0 ? (
+                        notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
+                              !notification.dibaca ? "bg-blue-50" : ""
+                            }`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <p className="text-gray-800">{notification.pesan}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(notification.created_at).toLocaleDateString("id-ID", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                              })}
+                            </p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-4 text-center text-gray-500">
+                          Tidak ada notifikasi
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
             )}
+
+            <div className="relative flex items-center space-x-3" ref={menuRef}>
+              {!isLoggedIn ? (
+                // 🔓 belum login → tombol Login & Daftar
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => handleNavigation("/login")}
+                    className={`text-center px-4 py-2 rounded-lg transition font-semibold ${
+                      navbarBackground || solidBgRoutes.includes(location.pathname)
+                        ? "bg-[#B80002] text-white hover:bg-[#a00002]"
+                        : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                    }`}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => handleNavigation("/register")}
+                    className={`text-center px-4 py-2 rounded-lg transition font-semibold ${
+                      navbarBackground || solidBgRoutes.includes(location.pathname)
+                        ? "border border-[#B80002] text-[#B80002] hover:bg-[#B80002] hover:text-white"
+                        : "border border-white text-white hover:bg-white hover:text-[#B80002]"
+                    }`}
+                  >
+                    Daftar
+                  </Link>
+                </>
+              ) : (
+                <div className="relative">
+                  <img
+                    src={user?.avatar || defaultProfile}
+                    alt="Profile"
+                    className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
+                      showProfileMenu
+                        ? "border-[#B80002] scale-105"
+                        : navbarBackground ||
+                          solidBgRoutes.includes(location.pathname)
+                        ? "border-gray-300 hover:border-[#B80002]"
+                        : "border-white/50 hover:border-white"
+                    }`}
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  />
+                  {showProfileMenu && (
+                    <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                      <div className="p-4 border-b border-gray-100 bg-gray-50">
+                        <p className="text-gray-800 font-medium">
+                          Halo, {user?.name || "User"}
+                        </p>
+                      </div>
+
+                      <div className="p-2">
+                        <Link
+                          to="/profile"
+                          className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
+                          onClick={() => {
+                            setShowProfileMenu(false);
+                            handleNavigation("/profile");
+                          }}
+                        >
+                          Edit Profil
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          disabled={isLoggingOut}
+                          className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition mt-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+                        >
+                          {isLoggingOut ? (
+                            <>
+                              <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                              Logging out...
+                            </>
+                          ) : (
+                            "Logout"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>

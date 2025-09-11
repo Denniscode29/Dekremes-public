@@ -14,9 +14,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle response errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 const AuthController = create((set) => ({
   user: null,
-  isLoggedIn: false, // ✅ tambahkan flag ini
+  isLoggedIn: false,
   error: null,
   loading: false,
 
@@ -48,7 +60,7 @@ const AuthController = create((set) => ({
 
       set({
         user: res.data.user,
-        isLoggedIn: true, // ✅ update status login
+        isLoggedIn: true,
         loading: false,
       });
       return true;
@@ -69,7 +81,7 @@ const AuthController = create((set) => ({
       console.warn("Logout error (ignored):", err);
     }
     localStorage.removeItem("token");
-    set({ user: null, isLoggedIn: false }); // ✅ reset status
+    set({ user: null, isLoggedIn: false });
     return true;
   },
 
@@ -77,7 +89,7 @@ const AuthController = create((set) => ({
   refreshUserStatus: async () => {
     try {
       const res = await api.get("/auth/profile");
-      set({ user: res.data, isLoggedIn: true }); // ✅ login kalau token valid
+      set({ user: res.data, isLoggedIn: true });
     } catch (err) {
       console.error("Gagal memperbarui status user:", err);
       set({ user: null, isLoggedIn: false });
