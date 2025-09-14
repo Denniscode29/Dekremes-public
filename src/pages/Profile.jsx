@@ -1,4 +1,4 @@
-// pages/Profile.jsx
+// src/pages/Profile.jsx
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthController from "../controllers/AuthController";
@@ -9,13 +9,15 @@ function Profile() {
   const isLoggedIn = AuthController((state) => state.isLoggedIn);
   const updateProfile = AuthController((state) => state.updateProfile);
   const changePassword = AuthController((state) => state.changePassword);
+  const refreshUserStatus = AuthController((state) => state.refreshUserStatus);
+  const deleteAvatar = AuthController((state) => state.deleteAvatar);
   const navigate = useNavigate();
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [name, setName] = useState(user?.name || "");
-  const [avatar, setAvatar] = useState(user?.avatar || "");
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || defaultProfile);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(defaultProfile);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,35 +33,35 @@ function Profile() {
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
+      return;
     }
-  }, [isLoggedIn, navigate]);
+    refreshUserStatus();
+  }, [isLoggedIn, navigate, refreshUserStatus]);
 
   useEffect(() => {
     if (user) {
       setName(user.name || "");
-      setAvatar(user.avatar || "");
-      setAvatarPreview(user.avatar || defaultProfile);
+      setAvatar(null);
+      setAvatarPreview(user.avatar_url || defaultProfile);
     }
   }, [user]);
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validasi ukuran file (maksimal 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        setMessage({ text: "Ukuran file terlalu besar. Maksimal 2MB", type: "error" });
-        return;
-      }
-      
-      setAvatar(file);
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = () => {
-        setAvatarPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      setMessage({ text: "Ukuran file terlalu besar. Maksimal 2MB", type: "error" });
+      return;
     }
+
+    setAvatar(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleProfileUpdate = async (e) => {
@@ -68,18 +70,18 @@ function Profile() {
     setMessage({ text: "", type: "" });
 
     try {
-      // Membuat FormData untuk mengirim file
       const formData = new FormData();
       formData.append("name", name);
       if (avatar instanceof File) {
         formData.append("avatar", avatar);
       }
 
-      await updateProfile(formData);
-      setMessage({ text: "Profil berhasil diperbarui", type: "success" });
-      setTimeout(() => setIsEditing(false), 1500);
+      const res = await updateProfile(formData);
+      setMessage({ text: res?.message || "Profil berhasil diperbarui", type: "success" });
+      setTimeout(() => setIsEditing(false), 1200);
     } catch (error) {
-      setMessage({ text: error.message || "Gagal memperbarui profil", type: "error" });
+      const errMsg = error?.response?.data?.message || error.message || "Gagal memperbarui profil";
+      setMessage({ text: errMsg, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -97,29 +99,46 @@ function Profile() {
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage({ text: "Password baru dan konfirmasi password tidak cocok", type: "error" });
+      setMessage({ text: "Password baru dan konfirmasi tidak cocok", type: "error" });
       setLoading(false);
       return;
     }
 
     try {
-      await changePassword(oldPassword, newPassword);
+      await changePassword(oldPassword, newPassword, confirmPassword);
       setMessage({ text: "Password berhasil diubah", type: "success" });
       setTimeout(() => {
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
         setIsChangingPassword(false);
-      }, 1500);
+      }, 1200);
     } catch (error) {
-      setMessage({ text: error.message || "Gagal mengubah password", type: "error" });
+      const errMsg = error?.response?.data?.message || error.message || "Gagal mengubah password";
+      setMessage({ text: errMsg, type: "error" });
     } finally {
       setLoading(false);
     }
   };
 
   const triggerAvatarSelect = () => {
-    fileInputRef.current.click();
+    fileInputRef.current?.click();
+  };
+
+  const handleDeleteAvatar = async () => {
+    if (!confirm("Yakin ingin menghapus avatar?")) return;
+    setLoading(true);
+    setMessage({ text: "", type: "" });
+    try {
+      const res = await deleteAvatar();
+      setMessage({ text: res?.message || "Avatar dihapus", type: "success" });
+      setAvatarPreview(res?.user?.avatar_url || defaultProfile);
+    } catch (error) {
+      const errMsg = error?.response?.data?.message || error.message || "Gagal menghapus avatar";
+      setMessage({ text: errMsg, type: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const togglePasswordVisibility = (field) => {
@@ -132,7 +151,6 @@ function Profile() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 to-yellow-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full relative">
-        {/* Tombol Kembali */}
         <button
           onClick={() => navigate("/")}
           className="absolute left-4 top-4 bg-gray-100 text-gray-800 px-3 py-2 rounded-lg shadow-sm hover:bg-gray-200 transition flex items-center"
@@ -154,7 +172,7 @@ function Profile() {
             <div className="text-center">
               <div className="relative inline-block">
                 <img
-                  src={user?.avatar || defaultProfile}
+                  src={avatarPreview || defaultProfile}
                   alt="Profile"
                   className="w-28 h-28 rounded-full mx-auto mb-4 border-4 border-white shadow-lg object-cover"
                 />
@@ -166,7 +184,7 @@ function Profile() {
               <p className="text-gray-600 mb-6">{user?.email}</p>
 
               <div className="mt-8 space-y-4">
-                <button 
+                <button
                   onClick={() => setIsEditing(true)}
                   className="w-full py-3 px-4 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white rounded-lg shadow-md hover:from-[#A00002] hover:to-[#C00002] transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:ring-opacity-50 flex items-center justify-center"
                 >
@@ -175,7 +193,7 @@ function Profile() {
                   </svg>
                   Edit Profil
                 </button>
-                <button 
+                <button
                   onClick={() => setIsChangingPassword(true)}
                   className="w-full py-3 px-4 bg-white text-gray-800 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 flex items-center justify-center"
                 >
@@ -190,24 +208,37 @@ function Profile() {
         ) : isEditing ? (
           <form onSubmit={handleProfileUpdate}>
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profil</h2>
-            
+
             <div className="flex flex-col items-center mb-6">
               <div className="relative">
                 <img
-                  src={avatarPreview}
+                  src={avatarPreview || defaultProfile}
                   alt="Profile Preview"
                   className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
                 />
-                <button
-                  type="button"
-                  onClick={triggerAvatarSelect}
-                  className="absolute bottom-2 right-2 bg-[#B80002] text-white p-2 rounded-full shadow-md hover:bg-[#A00002] transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </button>
+                <div className="absolute right-0 bottom-0 flex space-x-2">
+                  <button
+                    type="button"
+                    onClick={triggerAvatarSelect}
+                    className="bg-[#B80002] text-white p-2 rounded-full shadow-md hover:bg-[#A00002] transition"
+                    title="Ganti avatar"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeleteAvatar}
+                    className="bg-gray-100 text-gray-700 p-2 rounded-full shadow-sm hover:bg-gray-200 transition"
+                    title="Hapus avatar"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22" />
+                    </svg>
+                  </button>
+                </div>
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -265,7 +296,6 @@ function Profile() {
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Menyimpan...
                   </>
@@ -276,7 +306,7 @@ function Profile() {
         ) : (
           <form onSubmit={handlePasswordChange}>
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Ganti Password</h2>
-            
+
             <div className="mb-5">
               <label className="block text-gray-800 font-medium mb-2" htmlFor="oldPassword">
                 Password Lama
@@ -296,16 +326,7 @@ function Profile() {
                   onClick={() => togglePasswordVisibility('old')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.old ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m极狐 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
+                  {showPassword.old ? "Sembunyikan" : "Tampilkan"}
                 </button>
               </div>
             </div>
@@ -330,16 +351,7 @@ function Profile() {
                   onClick={() => togglePasswordVisibility('new')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.new ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-极狐-7z" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/极狐/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 极狐 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 极狐.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
+                  {showPassword.new ? "Sembunyikan" : "Tampilkan"}
                 </button>
               </div>
             </div>
@@ -354,9 +366,9 @@ function Profile() {
                   type={showPassword.confirm ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4极狐 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
                   required
-                  minLength={8}
+                  minLength={6}
                   placeholder="Konfirmasi password baru"
                 />
                 <button
@@ -364,16 +376,7 @@ function Profile() {
                   onClick={() => togglePasswordVisibility('confirm')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.confirm ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="极狐 0 24 24" stroke="currentColor">
-                      <极狐 strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.极狐-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3极狐l3.59 3.59m0 0A9.953 9.953 0 0112 极狐c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m极狐 0L21 21" />
-                    </svg>
-                  )}
+                  {showPassword.confirm ? "Sembunyikan" : "Tampilkan"}
                 </button>
               </div>
             </div>
@@ -382,7 +385,7 @@ function Profile() {
               <button
                 type="button"
                 onClick={() => setIsChangingPassword(false)}
-                className="flex-1 py-3 px-4 bg-gray-100 text-gray-800 rounded-lg border border-gray极狐-300 shadow-sm hover:bg-gray-200 transition focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="flex-1 py-3 px-4 bg-gray-100 text-gray-800 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-200 transition focus:outline-none focus:ring-2 focus:ring-gray-300"
               >
                 Batal
               </button>
@@ -395,7 +398,6 @@ function Profile() {
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0极狐 5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Mengubah...
                   </>
