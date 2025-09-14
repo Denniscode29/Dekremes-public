@@ -259,22 +259,30 @@ function App() {
             {favoriteMenus.map((menu, index) => (
               <div 
                 key={index}
-                className="flex flex-col items-center text-center bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all flex-shrink-0 border border-gray-100"
+                className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 flex-shrink-0"
                 style={{ 
                   width: `${menuItemWidth}px`,
                   minWidth: `${menuItemWidth}px`
                 }}
               >
-                <img src={menu.image} alt={menu.name} className="w-28 h-28 object-contain mb-3 mx-auto rounded-lg" />
-                <h3 className="font-bold text-lg mb-1 text-red-600">{menu.name}</h3>
-                <p className="text-xs text-gray-600 mb-3 line-clamp-2 h-10">
-                  {menu.description}
-                </p>
-                <div className="flex items-center justify-between w-full mt-2">
-                  <span className="font-bold text-red-600 text-base">{menu.price}</span>
-                  <button className="bg-red-600 text-white px-3 py-1 rounded-md text-xs font-semibold hover:bg-red-700 transition">
-                    Pesan
-                  </button>
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={menu.image} 
+                    alt={menu.name} 
+                    className="w-full h-full object-cover" 
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-xl font-bold text-red-600 mb-2">{menu.name}</h3>
+                  <p className="text-gray-700 text-sm mb-4 h-12 overflow-hidden">
+                    {menu.description}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-red-600">{menu.price}</span>
+                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
+                      Pesan
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -314,7 +322,10 @@ function App() {
 
         {/* View All Menu Button */}
         <div className="mt-8">
-          <button className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-red-700 transition transform hover:scale-105">
+          <button 
+            onClick={() => window.location.href = '/menu'}
+            className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-red-700 transition transform hover:scale-105"
+          >
             Lihat Semua Menu
           </button>
         </div>
@@ -322,7 +333,7 @@ function App() {
 
       {/* GALLERY SECTION - Tambahan section baru untuk gambar kegiatan */}
       <div className="py-12 bg-red-600">
-        <h2 className="text-3xl font-bold text-center mb-8">Galeri Kegiatan Dekremes</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-white">Galeri Kegiatan Dekremes</h2>
         <div className="overflow-hidden relative">
           <div className="flex animate-scroll">
             {kegiatanImages.concat(kegiatanImages).map((img, index) => (
