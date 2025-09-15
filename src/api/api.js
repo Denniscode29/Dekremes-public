@@ -9,4 +9,16 @@ const api = axios.create({
   },
 });
 
+// 🔑 Interceptor untuk otomatis nambah Authorization
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // ambil token dari localStorage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default api;

@@ -31,7 +31,8 @@ export default function TestimoniPage() {
   const fetchTestimonials = async () => {
     try {
       const response = await api.get("/testimonials");
-      setTestimonials(response.data);
+      setTestimonials(response.data.testimonials);
+
       
       // Calculate average rating
       if (response.data.length > 0) {
@@ -87,10 +88,10 @@ export default function TestimoniPage() {
     
     try {
       const formData = new FormData();
-      formData.append('komentar', komentar.trim());
+      formData.append('content', komentar.trim());
       formData.append('rating', rating);
       if (gambar) {
-        formData.append('gambar', gambar);
+        formData.append('product_photo', gambar);
       }
 
       await api.post("V1/testimonials", formData, {
@@ -219,7 +220,7 @@ export default function TestimoniPage() {
             >
               <div className="flex items-center space-x-4 mb-4">
                 <img
-                  src={t.user?.avatar || "/default-avatar.png"}
+                  src={t.user?.avatar_url || "/default-avatar.png"}
                   alt={t.user?.name}
                   className="w-12 h-12 rounded-full border border-gray-300"
                 />
@@ -247,12 +248,12 @@ export default function TestimoniPage() {
                 ))}
               </div>
               {/* PERBAIKAN: Ubah warna teks agar lebih terlihat */}
-              <p className="text-gray-900 mb-4">{t.komentar}</p>
+              <p className="text-gray-900 mb-4">{t.content}</p>
               
-              {t.gambar_url && (
+              {t.product_photo_url && (
                 <div className="mt-4">
                   <img
-                    src={t.gambar_url}
+                    src={t.product_photo_url}
                     alt="Gambar testimoni"
                     className="w-full h-48 object-cover rounded-lg"
                   />
