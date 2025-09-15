@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthController from "../controllers/AuthController";
 import defaultProfile from "../assets/profil.jpg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Profile() {
   const user = AuthController((state) => state.user);
@@ -24,11 +25,7 @@ function Profile() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
-  const [showPassword, setShowPassword] = useState({
-    old: false,
-    new: false,
-    confirm: false
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -64,6 +61,7 @@ function Profile() {
     reader.readAsDataURL(file);
   };
 
+  // PERBAIKAN: Menggunakan pendekatan dari kode yang berfungsi
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -72,12 +70,27 @@ function Profile() {
     try {
       const formData = new FormData();
       formData.append("name", name);
+      
+      // PERBAIKAN: Tambahkan password fields seperti pada kode yang berfungsi
+      if (newPassword) {
+        formData.append("password", newPassword);
+        formData.append("password_confirmation", confirmPassword);
+      }
+      
       if (avatar instanceof File) {
         formData.append("avatar", avatar);
       }
 
       const res = await updateProfile(formData);
       setMessage({ text: res?.message || "Profil berhasil diperbarui", type: "success" });
+      
+      // Refresh data user setelah update
+      await refreshUserStatus();
+      
+      // Reset password fields
+      setNewPassword("");
+      setConfirmPassword("");
+      
       setTimeout(() => setIsEditing(false), 1200);
     } catch (error) {
       const errMsg = error?.response?.data?.message || error.message || "Gagal memperbarui profil";
@@ -92,8 +105,8 @@ function Profile() {
     setLoading(true);
     setMessage({ text: "", type: "" });
 
-    if (newPassword.length < 6) {
-      setMessage({ text: "Password baru minimal 6 karakter", type: "error" });
+    if (newPassword.length < 8) {
+      setMessage({ text: "Password baru minimal 8 karakter", type: "error" });
       setLoading(false);
       return;
     }
@@ -132,6 +145,10 @@ function Profile() {
     try {
       const res = await deleteAvatar();
       setMessage({ text: res?.message || "Avatar dihapus", type: "success" });
+      
+      // Refresh data user setelah hapus avatar
+      await refreshUserStatus();
+      
       setAvatarPreview(res?.user?.avatar_url || defaultProfile);
     } catch (error) {
       const errMsg = error?.response?.data?.message || error.message || "Gagal menghapus avatar";
@@ -139,13 +156,6 @@ function Profile() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const togglePasswordVisibility = (field) => {
-    setShowPassword(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
   };
 
   return (
@@ -314,7 +324,7 @@ function Profile() {
               <div className="relative">
                 <input
                   id="oldPassword"
-                  type={showPassword.old ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
@@ -323,10 +333,10 @@ function Profile() {
                 />
                 <button
                   type="button"
-                  onClick={() => togglePasswordVisibility('old')}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.old ? "Sembunyikan" : "Tampilkan"}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
@@ -338,20 +348,20 @@ function Profile() {
               <div className="relative">
                 <input
                   id="newPassword"
-                  type={showPassword.new ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
                   required
-                  minLength={6}
-                  placeholder="Masukkan password baru (min. 6 karakter)"
+                  minLength={8}
+                  placeholder="Masukkan password baru (min. 8 karakter)"
                 />
                 <button
                   type="button"
-                  onClick={() => togglePasswordVisibility('new')}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.new ? "Sembunyikan" : "Tampilkan"}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
@@ -363,20 +373,20 @@ function Profile() {
               <div className="relative">
                 <input
                   id="confirmPassword"
-                  type={showPassword.confirm ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B80002] focus:border-transparent transition pr-10 text-gray-900 placeholder-gray-500"
                   required
-                  minLength={6}
+                  minLength={8}
                   placeholder="Konfirmasi password baru"
                 />
                 <button
                   type="button"
-                  onClick={() => togglePasswordVisibility('confirm')}
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword.confirm ? "Sembunyikan" : "Tampilkan"}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
