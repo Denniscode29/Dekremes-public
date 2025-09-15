@@ -96,11 +96,11 @@ const AuthController = create((set) => ({
     }
   },
 
-  // PERBAIKAN: Hapus header Content-Type saat mengirim FormData
+  // PERBAIKAN: Jangan hapus header Content-Type untuk FormData
   updateProfile: async (formData) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.put("/auth/profile", formData);
+      const res = await api.post("/auth/update-profile", formData);
       set({
         user: res.data.user,
         loading: false,
