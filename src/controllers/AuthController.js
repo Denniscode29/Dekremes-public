@@ -28,7 +28,7 @@ api.interceptors.response.use(
 
 const AuthController = create((set) => ({
   user: null,
-  isLoggedIn: false,
+  isLoggedIn: true,
   error: null,
   loading: false,
 

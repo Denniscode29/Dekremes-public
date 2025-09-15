@@ -28,6 +28,7 @@ function Navbar({ title }) {
   const isLoggedIn = AuthController((state) => state.isLoggedIn);
   const user = AuthController((state) => state.user);
   const logout = AuthController((state) => state.logout);
+  const refreshUserStatus = AuthController((state) => state.refreshUserStatus);
 
   // Navigasi langsung tanpa loading
   const handleNavigation = (path) => {
@@ -35,6 +36,13 @@ function Navbar({ title }) {
       navigate(path);
     }
   };
+
+  // Refresh user data saat komponen mount
+  useEffect(() => {
+    if (isLoggedIn) {
+      refreshUserStatus();
+    }
+  }, [isLoggedIn, refreshUserStatus]);
 
   // Fetch notifications
   useEffect(() => {
@@ -301,7 +309,7 @@ function Navbar({ title }) {
               ) : (
                 <div className="relative">
                   <img
-                    src={user?.avatar || defaultProfile}
+                    src={user?.avatar_url || defaultProfile}
                     alt="Profile"
                     className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
                       showProfileMenu

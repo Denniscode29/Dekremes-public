@@ -93,7 +93,7 @@ export default function TestimoniPage() {
         formData.append('gambar', gambar);
       }
 
-      await api.post("/testimonials", formData, {
+      await api.post("V1/testimonials", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
