@@ -1,12 +1,17 @@
+// src/controllers/AuthController.js
 import { create } from "zustand";
 import axios from "axios";
 
 // Setup axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 });
 
-// Tambahkan token otomatis
+// Tambahkan token otomatis di setiap request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -15,10 +20,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Helper untuk ekstrak pesan error dari response
+// Handle error global (misalnya token expired)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("authToken");
+      // Bisa redirect ke login kalau mau
+      // window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Helper untuk ekstrak pesan error
 const extractErrorMessage = (err, fallback = "Terjadi kesalahan.") => {
   if (err.response?.data?.errors) {
-    // Ambil error pertama dari Laravel validation
     const errors = err.response.data.errors;
     const firstKey = Object.keys(errors)[0];
     return errors[firstKey]?.[0] || fallback;
@@ -33,12 +50,12 @@ const AuthController = create((set, get) => ({
   loading: false,
 
   /**
-   * REGISTER - Hanya menerima email
+   * REGISTER - Hanya email
    */
   register: async ({ email }) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/api/v1/auth/register", { email });
+      const res = await api.post("/auth/register", { email });
       set({ loading: false });
       return res.data;
     } catch (err) {
@@ -49,12 +66,12 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * VERIFY CODE - setelah register
+   * VERIFY CODE
    */
   verifyCode: async (email, code) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/api/v1/auth/verify-code", { email, code });
+      const res = await api.post("/auth/verify-code", { email, code });
       if (res.data?.access_token) {
         localStorage.setItem("authToken", res.data.access_token);
       }
@@ -73,7 +90,7 @@ const AuthController = create((set, get) => ({
   resendVerificationCode: async (email) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/api/v1/auth/resend-verification-code", { email });
+      const res = await api.post("/auth/resend-verification-code", { email });
       set({ loading: false });
       return res.data;
     } catch (err) {
@@ -84,12 +101,12 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * LOGIN - Untuk user yang sudah lengkap profilnya
+   * LOGIN
    */
   login: async (email, password) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/api/v1/auth/login", { email, password });
+      const res = await api.post("/auth/login", { email, password });
 
       if (res.data?.access_token) {
         localStorage.setItem("authToken", res.data.access_token);
@@ -105,7 +122,6 @@ const AuthController = create((set, get) => ({
       const errorMsg = extractErrorMessage(err, "Email atau password salah.");
       set({ error: errorMsg, loading: false });
 
-      // Handle setup profile required
       if (err.response?.data?.requires_setup) {
         if (err.response?.data?.access_token) {
           localStorage.setItem("authToken", err.response.data.access_token);
@@ -117,7 +133,6 @@ const AuthController = create((set, get) => ({
         };
       }
 
-      // Handle verification required
       if (err.response?.data?.requires_verification) {
         throw {
           message: errorMsg,
@@ -134,16 +149,16 @@ const AuthController = create((set, get) => ({
    * LOGIN VIA GOOGLE
    */
   loginWithGoogle: () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/google/redirectgit `;
+    window.location.href = `${import.meta.env.VITE_API_URL}/google/redirect`;
   },
 
   /**
-   * LOGIN SUCCESS - setelah callback dari Google atau token dari URL
+   * LOGIN SUCCESS (setelah callback Google atau token URL)
    */
   loginSuccess: async (token) => {
     localStorage.setItem("authToken", token);
     try {
-      const res = await api.get("/api/v1/auth/profile");
+      const res = await api.get("/auth/profile");
       const userData = res.data?.user || res.data;
       set({
         user: userData,
@@ -152,23 +167,23 @@ const AuthController = create((set, get) => ({
       });
       return userData;
     } catch (err) {
-      console.error("Login success error:", err);
       localStorage.removeItem("authToken");
       set({ user: null, isLoggedIn: false, error: "Gagal memuat profil." });
+      console.error(err); // Log the error message
       throw new Error("Gagal memuat profil.");
     }
   },
 
   /**
-   * SETUP PROFILE - input name dan password
+   * SETUP PROFILE
    */
   setupProfile: async (data) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/api/v1/auth/setup-profile", {
+      const res = await api.post("/auth/setup-profile", {
         name: data.name,
         password: data.password,
-        password_confirmation: data.password, // untuk validasi confirmed
+        password_confirmation: data.password,
       });
 
       set({
@@ -185,11 +200,80 @@ const AuthController = create((set, get) => ({
   },
 
   /**
+   * UPDATE PROFILE
+   */
+  updateProfile: async (formData) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post("/auth/update-profile", formData);
+      set({ user: res.data.user, loading: false });
+      return res.data;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal update profil.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
+
+  /**
+   * UPLOAD AVATAR
+   */
+  uploadAvatar: async (formData) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post("/auth/upload-avatar", formData);
+      set({ user: res.data.user, loading: false });
+      return res.data;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal upload avatar.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
+
+  /**
+   * DELETE AVATAR
+   */
+  deleteAvatar: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.delete("/auth/avatar");
+      set({ user: res.data.user, loading: false });
+      return res.data;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal menghapus avatar.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
+
+  /**
+   * CHANGE PASSWORD
+   */
+  changePassword: async (currentPassword, newPassword, newPasswordConfirmation) => {
+    set({ loading: true, error: null });
+    try {
+      await api.post("/auth/change-password", {
+        current_password: currentPassword,
+        new_password: newPassword,
+        new_password_confirmation: newPasswordConfirmation ?? newPassword,
+      });
+
+      set({ loading: false });
+      return true;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal mengganti password.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
+
+  /**
    * LOGOUT
    */
   logout: async () => {
     try {
-      await api.post("/api/v1/auth/logout");
+      await api.post("/auth/logout");
     } catch (err) {
       console.warn("Logout error (ignored):", err);
     }
@@ -208,18 +292,18 @@ const AuthController = create((set, get) => ({
         return;
       }
 
-      const res = await api.get("/api/v1/auth/profile");
+      const res = await api.get("/auth/profile");
       const userData = res.data?.user || res.data;
       set({ user: userData, isLoggedIn: true, error: null });
     } catch (err) {
-      console.error("refreshUserStatus error:", err);
-      localStorage.removeItem("authToken");
-      set({ user: null, isLoggedIn: false });
-    }
+        console.error("An error occurred:", err);
+        localStorage.removeItem("authToken");
+        set({ user: null, isLoggedIn: false });
+      }
   },
 
   /**
-   * INIT AUTH - panggil saat app dimulai
+   * INIT AUTH
    */
   initAuth: async () => {
     await get().refreshUserStatus();
