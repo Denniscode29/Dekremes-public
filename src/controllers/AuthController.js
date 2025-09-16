@@ -134,7 +134,7 @@ const AuthController = create((set, get) => ({
    * LOGIN VIA GOOGLE
    */
   loginWithGoogle: () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/google/redirect`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/google/redirectgit `;
   },
 
   /**
