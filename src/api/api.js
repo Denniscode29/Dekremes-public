@@ -1,12 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1/auth`,
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
   },
 });
+
+export function setAuthToken(token) {
+  if (token) api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  else delete api.defaults.headers.common['Authorization'];
+}
 
 export default api;

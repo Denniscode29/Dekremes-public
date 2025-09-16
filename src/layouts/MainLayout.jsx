@@ -9,14 +9,15 @@ import LoadingScreen from "../components/LoadingScreen.jsx";
 function MainLayout() {
   const refreshUserStatus = AuthController((state) => state.refreshUserStatus);
   const [loading, setLoading] = useState(true);
-
+      
   useEffect(() => {
+    AuthController.getState().refreshUserStatus();
+
     const token = localStorage.getItem("token");
     if (token) {
       refreshUserStatus();
     }
-
-    // Simulasikan loading data
+    
     const timer = setTimeout(() => {
       setLoading(false);
     }, 3500); // Sesuaikan dengan kebutuhan

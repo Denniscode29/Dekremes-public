@@ -7,12 +7,15 @@ import Blog from "../pages/Blog";
 import Menu from "../pages/Menu";
 import Kontak from "../pages/Kontak";
 import Testimoni from "../pages/Testimoni";
-import Profile from "../pages/Profile"; // ✅ tambahin profile
-
+import Profile from "../pages/Profile";
 import MainLayout from "../layouts/MainLayout.jsx";
 
+// auth
+import Register from "../pages/auth2/Register.jsx";
 import Login from "../pages/auth2/Login";
-import Register from "../pages/auth2/Register";
+import LoginSuccess from "../pages/LoginSuccess.jsx";
+import VerifyCode from "../pages/auth2/VerifyCode.jsx";
+import SetupProfile from "../pages/auth2/SetupProfile.jsx";
 
 function AppRoute() {
   return (
@@ -25,12 +28,13 @@ function AppRoute() {
         <Route path="/menu" element={<Menu />} />
         <Route path="/kontak" element={<Kontak />} />
         <Route path="/testimoni" element={<Testimoni />} />
-        <Route path="/profile" element={<Profile />} /> {/* ✅ halaman profil */}
+        <Route path="/profile" element={<Profile />} /> 
       </Route>
-
-      {/* Auth route */}
-      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/login-success" element={<LoginSuccess />} />
+      <Route path="/verify-code" element={<VerifyCode />} />
+      <Route path="/setup-Profile" element={<SetupProfile />} />
     </Routes>
   );
 }
