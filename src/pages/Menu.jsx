@@ -2,16 +2,16 @@ function Menu() {
   // Data menu sarapan pagi
   const breakfastMenu = [
     {
-      name: "Egg & Cheese Muffin",
-      description: "Muffin lembut dengan telur dan keju leleh, cocok untuk sarapan pagi.",
-      price: "Rp 25.000",
-      image: "src/assets/chicken.png"
+      name: "Ayam Geprek",
+      description: "(tempe/tahu)/paha bawah/sayap + nasi pilihan salad/sayur",
+      price: "Rp 18.500",
+      image: "src/assets/produk/ayam_geprek.jpg"
     },
     {
-      name: "Chicken Muffin with Egg",
-      description: "Muffin dengan ayam crispy dan telur, kombinasi sempurna untuk mengawali hari.",
-      price: "Rp 28.000",
-      image: "src/assets/chicken.png"
+      name: "Ayam Keju",
+      description: "Ayam keju paha bawah/sayap nasi",
+      price: "Rp 16.000",
+      image: "src/assets/produk/ayam_keju.jpg"
     },
     {
       name: "Sausage McMuffin with Egg",
@@ -127,9 +127,9 @@ function Menu() {
       <div className="bg-[#FFF5CC] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-red-600 mb-4">Sarapan Pagi</h2>
+            <h2 className="text-4xl font-bold text-red-600 mb-4">Makan Nikmat</h2>
             <p className="text-gray-800 text-lg max-w-3xl mx-auto">
-              Awali harimu dengan sarapan lezat dan bergizi dari DeKremes & Crispy
+              Nikmati kerenyahan ayam crispy kami yang cocok untuk teman makan Anda
             </p>
           </div>
 

@@ -27,7 +27,7 @@ function MainLayout() {
   return (
     <>
       <ScrollToTop />
-      <Navbar title="DeKremes&Chicken" />
+      <Navbar title="DeKremes&Crispy" />
       <main>
         {loading && <LoadingScreen />}
         <Outlet />

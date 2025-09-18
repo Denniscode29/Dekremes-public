@@ -20,7 +20,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      // ❌ jangan auto redirect
+      // window.location.href = "/login"; 
+
+      // biarin AuthController handle state
     }
     return Promise.reject(error);
   }
