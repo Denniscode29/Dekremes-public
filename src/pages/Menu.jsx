@@ -2,79 +2,79 @@ function Menu() {
   // Data menu sarapan pagi
   const breakfastMenu = [
     {
-      name: "Ayam Geprek",
-      description: "(tempe/tahu)/paha bawah/sayap + nasi pilihan salad/sayur",
-      price: "Rp 18.500",
-      image: "src/assets/produk/ayam_geprek.jpg"
+      name: "Ayam Kremes Sambal Cobek",
+      description: "PAKET AYAM KREMES + SAMBAL COBEK",
+      price: "Rp 23.000",
+      image: "src/assets/produk/Kremes1.jpg"
     },
     {
-      name: "Ayam Keju",
-      description: "Ayam keju paha bawah/sayap nasi",
+      name: "Ayam Kremes Sambal Geprek",
+      description: "PAKET AYAM KREMES + SAMBAL GEPREK",
+      price: "Rp 22.000",
+      image: "src/assets/produk/Kremes2.jpg"
+    },
+    {
+      name: "Ayam Crispy Keju Paha Bawah",
+      description: "AYAM KEJU PAHA BAWAH NASI",
       price: "Rp 16.000",
-      image: "src/assets/produk/ayam_keju.jpg"
+      image: "src/assets/produk/keju1.jpg"
     },
     {
-      name: "Sausage McMuffin with Egg",
-      description: "Sosis gurih dengan telur dan muffin, sarapan penuh energi.",
-      price: "Rp 30.000",
+      name: "Ayam Crispy Original Sayap",
+      description: "AYAM KEJU SAYAP NASI",
+      price: "Rp 13.000",
+      image: "src/assets/produk/keju2.jpg"
+    },
+    {
+      name: "Ayam Crispy Original Dada",
+      description: "AYAM DADA NASI + SAUS SAMBAL",
+      price: "Rp 15.000",
       image: "src/assets/chicken.png"
     },
     {
-      name: "Sausage McMuffin",
-      description: "Sosis lezat dalam muffin hangat, praktis dan mengenyangkan.",
-      price: "Rp 27.000",
+      name: "Ayam Crispy Original Paha Atas",
+      description: "AYAM PAHA ATAS NASI + SAUS SAMBAL",
+      price: "Rp 15.000",
       image: "src/assets/chicken.png"
     },
     {
-      name: "Sausage Wrap",
-      description: "Sosis dibungkus tortilla dengan saus spesial, sarapan yang mudah dinikmati.",
-      price: "Rp 26.000",
-      image: "src/assets/chicken.png"
+      name: "Ayam Geprek Paha Bawah",
+      description: "AYAM GEPREK (TEMPE/TAHU/ PAHA BAWAH NASI + PILIHAN SALAD/SAYUR",
+      price: "Rp 18.500",
+      image: "src/assets/produk/geprek1.jpg"
     },
     {
-      name: "Big Breakfast",
-      description: "Paket lengkap dengan telur, sosis, kentang, dan muffin untuk sarapan besar.",
-      price: "Rp 35.000",
-      image: "src/assets/chicken.png"
-    },
-    {
-      name: "Ayam Crispy Original",
-      description: "Ayam crispy dengan bumbu original, renyah di luar lembut di dalam.",
-      price: "Rp 32.000",
-      image: "src/assets/chicken.png"
-    },
-    {
-      name: "Ayam Crispy Pedas",
-      description: "Ayam crispy dengan bumbu pedas spesial, untuk yang suka tantangan.",
+      name: "Ayam Geprek Sayap",
+      description: "AYAM GEPREK (TEMPE/TAHU/ SAYAP NASI + PILIHAN SALAD/SAYUR",
       price: "Rp 34.000",
-      image: "src/assets/chicken.png"
+      image: "src/assets/produk/geprek2.jpg"
     }
   ];
 
   // Data menu ayam crispy
   const chickenMenu = [
     {
-      name: "Ayam Crispy Original",
-      description: "Ayam crispy dengan bumbu original, renyah di luar lembut di dalam.",
-      price: "Rp 32.000",
+      name: "Ayam Crispy Original Paha Bawah",
+      description: "AYAM PAHA BAWAH NASI + SAUS SAMBAL",
+      price: "Rp 13.000",
       image: "src/assets/chicken.png"
     },
     {
-      name: "Ayam Crispy Pedas",
-      description: "Ayam crispy dengan bumbu pedas spesial, untuk yang suka tantangan.",
-      price: "Rp 34.000",
+      name: "Ayam Crispy Original Sayap",
+      description: "AYAM PAHA SAYAP NASI + SAUS SAMBAL",
+      price: "Rp 13.000",
       image: "src/assets/chicken.png"
     },
     {
-      name: "Ayam Crispy BBQ",
-      description: "Ayam crispy dengan saus BBQ, perpaduan manis dan gurih.",
-      price: "Rp 35.000",
+      name: "Ayam Crispy Original Dada",
+      description: "AYAM DADA NASI + SAUS SAMBAL",
+      price: "Rp 15.000",
       image: "src/assets/chicken.png"
     },
     {
-      name: "Ayam Crispy Keju",
-      description: "Ayam crispy dengan taburan keju leleh, semakin nikmat.",
-      price: "Rp 36.000",
+      name: "Ayam Crispy Original Paha Atas",
+      description: "AYAM PAHA ATAS NASI + SAUS SAMBAL",
+      price: "Rp 15.000",
       image: "src/assets/chicken.png"
     },
     {
@@ -127,7 +127,7 @@ function Menu() {
       <div className="bg-[#FFF5CC] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-red-600 mb-4">Makan Nikmat</h2>
+            <h2 className="text-4xl font-bold text-red-600 mb-4">Makan Spesial</h2>
             <p className="text-gray-800 text-lg max-w-3xl mx-auto">
               Nikmati kerenyahan ayam crispy kami yang cocok untuk teman makan Anda
             </p>
@@ -165,7 +165,7 @@ function Menu() {
       <div className="bg-red-700 py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">Ayam Crispy</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Makan Top</h2>
             <p className="text-gray-100 text-lg max-w-3xl mx-auto">
               Nikmati kelezatan ayam crispy dengan berbagai pilihan rasa dan paket spesial
             </p>
@@ -210,9 +210,7 @@ function Menu() {
             <button className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition">
               Pesan Sekarang
             </button>
-            <button className="bg-white text-red-600 border border-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-50 transition">
-              Lihat Menu Lainnya
-            </button>
+            
           </div>
         </div>
       </div>

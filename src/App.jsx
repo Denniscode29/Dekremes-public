@@ -377,7 +377,7 @@ function App() {
           {/* Kiri - Card Gambar */}
           <div className="bg-black p-3 rounded-xl shadow-lg flex justify-center hover:scale-105 transition">
             <img
-              src="src/assets/produk/ayam_geprek.jpg"
+              src="src/assets/produk/ciken.jpeg"
               alt="Ayam Geprek"
               className="w-52 md:w-72 lg:w-80 rounded-lg object-contain"
             />
@@ -386,13 +386,13 @@ function App() {
           {/* Kanan - Teks */}
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
-              Ayam Geprek
+              Ayam Crispy & Kentang
             </h2>
             <p className="text-gray-700 mb-4 text-base">
-              Ayam geprek kami dibuat dari ayam pilihan yang digoreng hingga renyah,
-               kemudian diulek bersama sambal spesial yang pedas dan menggugah selera.
-                Disajikan dengan nasi hangat dan lalapan segar, ayam geprek ini adalah
-                 pilihan sempurna untuk Anda yang menyukai cita rasa pedas dan gurih dalam satu hidangan.
+              Ayam Crispy kami dibuat dari ayam pilihan yang digoreng hingga renyah,
+               kemudian diulek bersama sambal spesial dan menggugah selera.
+                Disajikan dengan nasi hangat dan lalapan segar, ayam crispy ini adalah
+                 pilihan sempurna untuk Anda yang menyukai cita rasa nikmat dan gurih dalam satu hidangan.
             </p>
             <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
               ORDER NOW
