@@ -80,7 +80,7 @@ function Kontak() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">Telepon</p>
-                  <p className="text-gray-600">0909878765</p>
+                  <p className="text-gray-600">+62 858-4698-6524</p>
                   <a 
                     href="tel:0909878765" 
                     className="text-red-600 text-sm mt-1 inline-block hover:underline"
@@ -97,9 +97,9 @@ function Kontak() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">WhatsApp</p>
-                  <p className="text-gray-600">0909878765</p>
+                  <p className="text-gray-600">+62 858-4698-6524</p>
                   <a 
-                    href="https://wa.me/620909878765" 
+                    href="https://wa.me/+6285846986524" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-green-600 text-sm mt-1 inline-block hover:underline"
@@ -116,7 +116,7 @@ function Kontak() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">Alamat</p>
-                  <p className="text-gray-600">Jl. Bayangkhara no.1</p>
+                  <p className="text-gray-600">Dekremes & Crispy Jl. Cikujang, Dayeuhluhur, Kec. Warudoyong, Kota Sukabumi, Jawa Barat 43134</p>
                   <a 
                     href="https://goo.gl/maps/..." 
                     target="_blank" 
@@ -135,7 +135,7 @@ function Kontak() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">Email</p>
-                  <p className="text-gray-600">DeKremes@enak.com</p>
+                  <p className="text-gray-600">DeKremes&Crispy@gmail.com</p>
                   <a 
                     href="mailto:DeKremes@enak.com" 
                     className="text-yellow-600 text-sm mt-1 inline-block hover:underline"

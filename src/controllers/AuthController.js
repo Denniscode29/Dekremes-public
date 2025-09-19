@@ -1,8 +1,6 @@
-// src/controllers/AuthController.js
 import { create } from "zustand";
 import axios from "axios";
 
-// Setup axios instance
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   headers: {
@@ -20,7 +18,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle error global (misalnya token expired)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -33,7 +30,6 @@ api.interceptors.response.use(
   }
 );
 
-// Helper untuk ekstrak pesan error
 const extractErrorMessage = (err, fallback = "Terjadi kesalahan.") => {
   if (err.response?.data?.errors) {
     const errors = err.response.data.errors;
@@ -169,7 +165,7 @@ const AuthController = create((set, get) => ({
     } catch (err) {
       localStorage.removeItem("authToken");
       set({ user: null, isLoggedIn: false, error: "Gagal memuat profil." });
-      console.error(err); // Log the error message
+      console.error(err);
       throw new Error("Gagal memuat profil.");
     }
   },

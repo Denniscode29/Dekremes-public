@@ -227,14 +227,14 @@ function App() {
           </div>
 
           <p className="text-gray-200 text-base md:text-lg mb-6 max-w-2xl mx-auto">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Nikmati promo spesial kami dan rasakan kenikmatan ayam crispy terbaik di kota!
           </p>
 
           <div className="flex justify-center">
             <button
             onClick={() => window.location.href = '/menu'} 
             className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105 text-sm md:text-base">
-              ORDER NOW
+              PESAN SEKARANG
             </button>
           </div>
         </div>
@@ -379,8 +379,8 @@ function App() {
           {/* Kiri - Card Gambar */}
           <div className="bg-black p-3 rounded-xl shadow-lg flex justify-center hover:scale-105 transition">
             <img
-              src="src/assets/chicken.png"
-              alt="Chicken Potato Sauce"
+              src="src/assets/produk/ciken.jpeg"
+              alt="Ayam Geprek"
               className="w-52 md:w-72 lg:w-80 rounded-lg object-contain"
             />
           </div>
@@ -388,15 +388,92 @@ function App() {
           {/* Kanan - Teks */}
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
-              CHICKEN POTATO SAUCE
+              Ayam Crispy & Kentang
             </h2>
             <p className="text-gray-700 mb-4 text-base">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Vivamus lacinia odio vitae vestibulum vestibulum.
+              Ayam Crispy kami dibuat dari ayam pilihan yang digoreng hingga renyah,
+               kemudian diulek bersama sambal spesial dan menggugah selera.
+                Disajikan dengan nasi hangat dan lalapan segar, ayam crispy ini adalah
+                 pilihan sempurna untuk Anda yang menyukai cita rasa nikmat dan gurih dalam satu hidangan.
             </p>
             <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
               ORDER NOW
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* HALAL CERTIFICATION SECTION - Dengan efek 3D dan struktur yang diinginkan */}
+      <div className="relative bg-[#FFF5CC] pt-20 pb-16 overflow-hidden">
+        {/* Lengkungan gradien di atas */}
+        <div className="absolute top-0 left-0 w-full">
+          <img 
+            src="src/assets/payunggradien.png" 
+            alt="Gradient Curve" 
+            className="w-full h-24 object-cover"
+          />
+        </div>
+        
+        {/* Overlay merah dengan opasitas */}
+        <div className="absolute inset-0 bg-[#F60000] bg-opacity-10"></div>
+        
+        <div className="relative z-10 max-w-6xl mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+            {/* Teks - Lebih proporsional */}
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start mb-6">
+                <img 
+                  src="src/assets/Logo_Halal.png" 
+                  alt="Logo Halal MUI" 
+                  className="w-16 h-16 mr-4 drop-shadow-md"
+                />
+                <h2 className="text-3xl md:text-4xl font-bold text-[bg-white] drop-shadow-sm">BerSertifikasi Halal</h2>
+              </div>
+              <p className="text-[white] text-lg leading-relaxed mb-4 font-medium">
+                Kami berkomitmen untuk selalu menjaga kualitas dan kepercayaan pelanggan.
+              </p>
+              <p className="text-[white] text-lg leading-relaxed">
+                Seluruh produk kami telah tersedia dengan Sertifikat Halal resmi dari Majelis Ulama Indonesia (MUI), sehingga Anda tidak perlu khawatir dalam menikmati setiap menu yang kami sajikan.
+              </p>
+              
+              <div className="mt-8 flex justify-center lg:justify-start">
+                <div className="bg-gradient-to-r from-[#FFD700] to-[#FFB700] px-4 py-2 rounded-lg inline-flex items-center border border-[#8B0000] shadow-md hover:shadow-lg transition-shadow">
+                  <svg className="w-5 h-5 text-[#8B0000] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-[#8B0000] font-medium">Terdaftar resmi di MUI</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Gambar Sertifikat - Dengan efek 3D */}
+            <div className="lg:w-1/2 flex justify-center">
+              <div className="relative group">
+                {/* Efek latar belakang 3D */}
+                <div className="absolute -inset-4 bg-gradient-to-br from-[#FFD700] to-[#FF6B00] rounded-2xl transform group-hover:rotate-3 group-hover:scale-105 transition-all duration-500 opacity-70 blur-sm group-hover:blur-md"></div>
+                
+                {/* Frame sertifikat */}
+                <div className="relative bg-white p-3 rounded-2xl shadow-xl border-2 border-[#8B0000] transform group-hover:-translate-y-2 transition-transform duration-500">
+                  <img 
+                    src="src/assets/Halal_sertifikat.png" 
+                    alt="Sertifikat Halal MUI" 
+                    className="w-full max-w-md rounded-lg transform group-hover:scale-105 transition-transform duration-500"
+                  />
+                  
+                  {/* Stempel logo halal */}
+                  <div className="absolute -bottom-4 -right-4 bg-gradient-to-br from-[#FFD700] to-[#FF6B00] p-2 rounded-full shadow-lg border-2 border-[#8B0000] transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+                    <img 
+                      src="src/assets/Logo_Halal.png" 
+                      alt="Logo Halal MUI" 
+                      className="w-12 h-12"
+                    />
+                  </div>
+                  
+                  {/* Efek kilau saat hover */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
