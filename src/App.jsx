@@ -58,33 +58,8 @@ function App() {
   const [menuItemWidth, setMenuItemWidth] = useState(0);
 
   // State untuk banner carousel
-  const [currentBanner, setCurrentBanner] = useState(0);
-  const bannerData = [
-    {
-      image: "src/assets/banner.jpg",
-      title: "Promo Spesial 1",
-      description: "Diskon 20% untuk semua menu ayam crispy"
-    },
-    {
-      image: "src/assets/banner2.jpg", 
-      title: "Promo Spesial 2",
-      description: "Buy 1 Get 1 untuk pembelian minuman"
-    },
-    {
-      image: "src/assets/banner3.jpg",
-      title: "Promo Spesial 3",
-      description: "Paket keluarga dengan harga spesial"
-    }
-  ];
-
-  // Auto slide untuk banner carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % bannerData.length);
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, [bannerData.length]);
+  
+  
 
   // Auto slide untuk menu carousel
   useEffect(() => {
@@ -98,14 +73,7 @@ function App() {
     return () => clearInterval(interval);
   }, [favoriteMenus.length]);
 
-  // Fungsi navigasi banner carousel
-  const nextBanner = () => {
-    setCurrentBanner((prev) => (prev + 1) % bannerData.length);
-  };
 
-  const prevBanner = () => {
-    setCurrentBanner((prev) => (prev - 1 + bannerData.length) % bannerData.length);
-  };
 
   // Fungsi untuk mengatur lebar item menu carousel
   const updateMenuItemWidth = useCallback(() => {
@@ -175,54 +143,7 @@ function App() {
             <span className="block text-red-500">& Crispy</span>
           </h1>
 
-          {/* Banner Carousel - Diposisikan di bawah judul */}
-          <div className="relative mx-auto mb-8 max-w-4xl overflow-hidden rounded-xl shadow-2xl">
-            <div 
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${currentBanner * 100}%)` }}
-            >
-              {bannerData.map((banner, index) => (
-                <div key={index} className="w-full flex-shrink-0 relative">
-                  <img 
-                    src={banner.image} 
-                    className="w-full h-56 object-cover" 
-                    alt={`Promo ${index+1}`} 
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                    <h3 className="text-white text-xl font-bold">{banner.title}</h3>
-                    <p className="text-gray-200 text-sm">{banner.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Navigation buttons untuk banner carousel */}
-            <button 
-              onClick={prevBanner}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
-            >
-              &#10094;
-            </button>
-            <button 
-              onClick={nextBanner}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
-            >
-              &#10095;
-            </button>
-
-            {/* Indicator dots untuk banner carousel */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-              {bannerData.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentBanner(idx)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentBanner === idx ? 'bg-white scale-125' : 'bg-gray-400'
-                  }`}
-                ></button>
-              ))}
-            </div>
-          </div>
+          
 
           <p className="text-gray-200 text-base md:text-lg mb-6 max-w-2xl mx-auto">
             Nikmati promo spesial kami dan rasakan kenikmatan ayam crispy terbaik di kota!
