@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController.js";
 import { ArrowLeft } from "lucide-react";
 import Swal from "sweetalert2";
+import educator from "../../assets/undraw_barbecue_k11q (1).svg";
 
 export default function Register() {
   const [form, setForm] = useState({ email: "" });
@@ -58,7 +59,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-[#FFF5CC] relative p-4">
       <button
         onClick={() => navigate("/")}
-        className="absolute top-4 left-4 flex items-center gap-2 text-gray-700 hover:text-red-600 font-medium"
+        className="absolute top-6 left-6 flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-md text-gray-700 hover:text-red-600 font-medium transition-all hover:shadow-lg"
       >
         <ArrowLeft size={20} /> Kembali
       </button>
@@ -67,9 +68,9 @@ export default function Register() {
         {/* Kiri */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
           <img
-            src="https://placehold.co/300x200/cccccc/000000?text=Placeholder"
+            src={educator}
             alt="Educator"
-            className="w-72 h-auto rounded-xl shadow-lg"
+            className="w-64 h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
           />
           <h2 className="text-white text-2xl font-semibold mt-6 text-center">
             Buat akun dan lengkapi profilmu!
@@ -80,20 +81,24 @@ export default function Register() {
         </div>
 
         {/* Kanan */}
-        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
-          <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">
+        <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">
             Daftar
           </h2>
           <form className="space-y-5" onSubmit={handleRegister}>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-700 text-gray-900"
+                required
+              />
+              <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-gray-700 transition-all">
+                Email
+              </label>
+            </div>
 
             <button
               type="submit"

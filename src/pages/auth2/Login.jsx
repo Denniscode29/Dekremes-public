@@ -73,17 +73,17 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-[#FFF5CC] p-4 relative">
       <button 
         onClick={() => navigate("/")} 
-        className="absolute top-4 left-4 flex items-center gap-2 text-gray-700 hover:text-red-600 font-medium"
+        className="absolute top-6 left-6 flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-md text-gray-700 hover:text-red-600 font-medium transition-all hover:shadow-lg"
       >
         <ArrowLeft size={20} /> Kembali
       </button>
 
-      <div className="bg-white shadow-2xl rounded-2xl flex overflow-hidden w-full max-w-5xl h-[654px]">
-        <div className="w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
+      <div className="bg-white shadow-2xl rounded-2xl flex flex-col md:flex-row overflow-hidden w-full max-w-5xl">
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-red-500 to-red-700 flex flex-col items-center justify-center p-8">
           <img 
             src={educator} 
             alt="Educator" 
-            className="w-72 h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300" 
+            className="w-64 h-auto rounded-xl shadow-lg hover:scale-105 transition-transform duration-300" 
           />
           <h2 className="text-white text-2xl font-semibold mt-6 text-center">
             Selamat Datang Kembali!
@@ -93,27 +93,37 @@ export default function Login() {
           </p>
         </div>
 
-        <div className="w-1/2 p-10 flex flex-col justify-center">
-          <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">Masuk</h2>
+        <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center text-gray-800 mb-6">Masuk</h2>
           
           <form className="space-y-5" onSubmit={handleLogin}>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Email" 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
-              required 
-            />
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              placeholder="Password" 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
-              required 
-              minLength={8} 
-            />
+            <div className="relative">
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-700 text-gray-900" 
+                required 
+              />
+              <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-gray-700 transition-all">
+                Email
+              </label>
+            </div>
+            
+            <div className="relative">
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-700 text-gray-900" 
+                required 
+                minLength={8} 
+              />
+              <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-gray-700 transition-all">
+                Password
+              </label>
+            </div>
+            
             {error && <div className="text-red-600 text-sm text-center">{error}</div>}
             
             <button 

@@ -199,17 +199,22 @@ const AuthController = create((set, get) => ({
    * UPDATE PROFILE
    */
   updateProfile: async (formData) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await api.post("/auth/update-profile", formData);
-      set({ user: res.data.user, loading: false });
-      return res.data;
-    } catch (err) {
-      const errorMsg = extractErrorMessage(err, "Gagal update profil.");
-      set({ error: errorMsg, loading: false });
-      throw new Error(errorMsg);
-    }
-  },
+  set({ loading: true, error: null });
+  try {
+    const res = await api.post("/auth/update-profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    set({ user: res.data.user, loading: false });
+    return res.data;
+  } catch (err) {
+    const errorMsg = extractErrorMessage(err, "Gagal update profil.");
+    set({ error: errorMsg, loading: false });
+    throw new Error(errorMsg);
+  }
+},
+
 
   /**
    * UPLOAD AVATAR

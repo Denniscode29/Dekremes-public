@@ -10,7 +10,7 @@ export default function VerifySuccess() {
 
     if (token) {
       localStorage.setItem("auth_token", token);
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [navigate]);
 

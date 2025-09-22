@@ -36,7 +36,7 @@ export default function TestimoniPage() {
       if (response.data && response.data.testimonials) {
         setTestimonials(response.data.testimonials);
         
-        // Calculate average rating - PERBAIKAN: Pastikan perhitungan benar
+        // Calculate average rating
         if (response.data.testimonials.length > 0) {
           const totalRating = response.data.testimonials.reduce((sum, t) => sum + parseInt(t.rating), 0);
           const avg = totalRating / response.data.testimonials.length;
@@ -61,7 +61,8 @@ export default function TestimoniPage() {
 
   const checkUserTestimonialStatus = async () => {
     try {
-      const response = await api.get("/V1/testimonials/user-status");
+      // PERBAIKAN: Gunakan endpoint yang sesuai dengan backend
+      const response = await api.get("/testimonials/check");
       setUserTestimonialStatus(response.data);
       setHasSubmitted(response.data.hasSubmitted);
     } catch (error) {
@@ -119,11 +120,9 @@ export default function TestimoniPage() {
         formData.append('product_photo', gambar);
       }
 
-      await api.post("/V1/testimonials", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      // PERBAIKAN: Sesuaikan dengan route yang ada di backend
+      await api.post("/testimonials", formData);
+
       
       Swal.fire({
         icon: "success",
@@ -165,15 +164,13 @@ export default function TestimoniPage() {
 
     if (result.isConfirmed) {
       try {
-        await api.delete("/V1/testimonials");
+        // PERBAIKAN: Hapus fungsi delete jika tidak ada di backend
+        // Atau tambahkan route delete di backend
         Swal.fire({
-          icon: "success",
-          title: "Terhapus!",
-          text: "Testimoni Anda telah dihapus.",
+          icon: "error",
+          title: "Fitur belum tersedia",
+          text: "Fitur penghapusan testimoni belum tersedia.",
         });
-        setHasSubmitted(false);
-        setUserTestimonialStatus({ hasSubmitted: false, testimonial: null });
-        setRefreshData(prev => prev + 1);
       } catch (error) {
         console.error("Error deleting testimonial:", error);
         Swal.fire({
@@ -323,7 +320,7 @@ export default function TestimoniPage() {
             </div>
           </div>
         )}
-
+  
         {/* Form Testimoni - Hanya muncul jika user belum memiliki testimoni */}
         {isLoggedIn && !userTestimonialStatus?.hasSubmitted && (
           <div className="max-w-2xl mx-auto bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl mb-10">
