@@ -22,7 +22,7 @@ const useAuthStore = create((set) => ({
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const res = await api.get("V1/auth2/register", {
+      const res = await api.get("v1/auth2/register", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -40,7 +40,7 @@ const useAuthStore = create((set) => ({
   // Login
   login: async (email, password, navigate) => {
     try {
-      const res = await api.post("V1/auth2/login", { email, password });
+      const res = await api.post("v1/auth2/login", { email, password });
       const { token, user } = res.data;
 
       set({ token, user, error: null });
@@ -70,7 +70,7 @@ const useAuthStore = create((set) => ({
   // Register
   register: async (data, navigate) => {
     try {
-      const res = await api.post("V1/auth2/register", data);
+      const res = await api.post("v1/auth2/register", data);
       const user = res.data.user;
 
       set({ user, error: null });

@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import AuthController from "./controllers/AuthController.js";
+
 
 function App() {
   // Data untuk menu favorit

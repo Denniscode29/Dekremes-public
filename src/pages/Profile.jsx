@@ -29,7 +29,7 @@ function Profile() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     refreshUserStatus();
@@ -44,22 +44,29 @@ function Profile() {
   }, [user]);
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      setMessage({ text: "Ukuran file terlalu besar. Maksimal 2MB", type: "error" });
-      return;
-    }
+  // Validasi harus image
+  if (!file.type.startsWith("image/")) {
+    setMessage({ text: "File harus berupa gambar", type: "error" });
+    return;
+  }
 
-    setAvatar(file);
+  if (file.size > 2 * 1024 * 1024) {
+    setMessage({ text: "Ukuran file terlalu besar. Maksimal 2MB", type: "error" });
+    return;
+  }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAvatarPreview(reader.result);
-    };
-    reader.readAsDataURL(file);
+  setAvatar(file); // hanya simpan File asli
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    setAvatarPreview(reader.result); // preview base64 hanya untuk UI
   };
+  reader.readAsDataURL(file);
+};
+
 
   // PERBAIKAN: Menggunakan pendekatan dari kode yang berfungsi
   const handleProfileUpdate = async (e) => {
@@ -77,9 +84,9 @@ function Profile() {
         formData.append("password_confirmation", confirmPassword);
       }
       
-      if (avatar instanceof File) {
-        formData.append("avatar", avatar);
-      }
+      if (avatar && avatar instanceof File) {
+  formData.append("avatar", avatar);
+} 
 
       const res = await updateProfile(formData);
       setMessage({ text: res?.message || "Profil berhasil diperbarui", type: "success" });

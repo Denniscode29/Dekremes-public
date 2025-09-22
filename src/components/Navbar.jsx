@@ -1,11 +1,11 @@
 // components/Navbar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import AuthController from "../controllers/AuthController";
 import defaultProfile from "../assets/profil.jpg";
 import Swal from "sweetalert2";
 import api from "../api/api";
-import { Bell } from "lucide-react";
+import { Bell, Menu, X } from "lucide-react";
 
 function Navbar({ title }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -15,29 +15,31 @@ function Navbar({ title }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuRef = useRef();
   const notificationsRef = useRef();
   const navigate = useNavigate();
   const lastScrollY = useRef(0);
-
   const location = useLocation();
+
   const solidBgRoutes = ["/tentang", "/blog", "/menu", "/kontak", "/testimoni"];
 
-  // ambil state auth dari AuthController (zustand)
+  // Auth state
   const isLoggedIn = AuthController((state) => state.isLoggedIn);
   const user = AuthController((state) => state.user);
   const logout = AuthController((state) => state.logout);
   const refreshUserStatus = AuthController((state) => state.refreshUserStatus);
 
-  // Navigasi langsung tanpa loading
+  // Navigasi
   const handleNavigation = (path) => {
     if (location.pathname !== path) {
       navigate(path);
+      setMobileMenuOpen(false); // close mobile menu
     }
   };
 
-  // Refresh user data saat komponen mount
+  // Refresh user saat mount
   useEffect(() => {
     if (isLoggedIn) {
       refreshUserStatus();
@@ -49,12 +51,11 @@ function Navbar({ title }) {
     if (isLoggedIn) {
       fetchNotifications();
       fetchUnreadCount();
-      
-      // Poll for new notifications every 30 seconds
+
       const interval = setInterval(() => {
         fetchUnreadCount();
       }, 30000);
-      
+
       return () => clearInterval(interval);
     }
   }, [isLoggedIn]);
@@ -80,10 +81,12 @@ function Navbar({ title }) {
   const markAsRead = async (id) => {
     try {
       await api.post(`/notifications/${id}/read`);
-      setUnreadCount(prev => Math.max(0, prev - 1));
-      setNotifications(notifications.map(n => 
-        n.id === id ? {...n, dibaca: true} : n
-      ));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+      setNotifications((notifications) =>
+        notifications.map((n) =>
+          n.id === id ? { ...n, dibaca: true } : n
+        )
+      );
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -93,12 +96,15 @@ function Navbar({ title }) {
     try {
       await api.post("/notifications/read-all");
       setUnreadCount(0);
-      setNotifications(notifications.map(n => ({...n, dibaca: true})));
+      setNotifications((notifications) =>
+        notifications.map((n) => ({ ...n, dibaca: true }))
+      );
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
     }
   };
 
+  // Logout
   const handleLogout = async () => {
     setIsLoggingOut(true);
     Swal.fire({
@@ -126,13 +132,16 @@ function Navbar({ title }) {
     }
   };
 
-  // klik luar untuk nutup dropdown
+  // Klik luar → close dropdown
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowProfileMenu(false);
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
         setShowNotifications(false);
       }
     }
@@ -140,86 +149,117 @@ function Navbar({ title }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // kontrol scroll navbar
-  useEffect(() => {
-    const controlNavbar = () => {
-      if (typeof window !== "undefined") {
-        if (window.scrollY > 50) {
-          setNavbarBackground(true);
-        } else {
-          setNavbarBackground(false);
-        }
+  // Scroll kontrol navbar
+  const controlNavbar = useCallback(() => {
+    setNavbarBackground(window.scrollY > 50);
 
-        if (window.scrollY > lastScrollY.current && window.scrollY > 100) {
-          setNavbarVisible(false);
-        } else {
-          setNavbarVisible(true);
-        }
+    if (window.scrollY > lastScrollY.current && window.scrollY > 100) {
+      setNavbarVisible(false);
+    } else {
+      setNavbarVisible(true);
+    }
 
-        lastScrollY.current = window.scrollY;
-      }
-    };
-
-    window.addEventListener("scroll", controlNavbar);
-    return () => window.removeEventListener("scroll", controlNavbar);
+    lastScrollY.current = window.scrollY;
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("scroll", controlNavbar);
+    return () => window.removeEventListener("scroll", controlNavbar);
+  }, [controlNavbar]);
+
+  // Menu items
+  const menuItems = [
+    { name: "Beranda", path: "/" },
+    { name: "Tentang", path: "/tentang" },
+    { name: "Blog", path: "/blog" },
+    { name: "Menu", path: "/menu" },
+    { name: "Kontak", path: "/kontak" },
+    { name: "Testimoni", path: "/testimoni" },
+  ];
+
   return (
-    <>
-      <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 
-          ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
-          ${
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 
+        ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
+        ${
+          navbarBackground || solidBgRoutes.includes(location.pathname)
+            ? "bg-[#FFF5CC] shadow-lg"
+            : "bg-transparent"
+        }`}
+    >
+      <div className="flex justify-between items-center py-4 px-6 md:px-12">
+        {/* Logo */}
+        <div
+          className={`font-extrabold text-2xl md:text-3xl tracking-wide transition-colors duration-300 ${
             navbarBackground || solidBgRoutes.includes(location.pathname)
-              ? "bg-[#FFF5CC] shadow-lg"
-              : "bg-transparent"
+              ? "text-gray-800"
+              : "text-white"
           }`}
-      >
-        <div className="flex justify-between items-center py-4 px-6 md:px-12">
-          {/* Logo */}
-          <div
-            className={`font-extrabold text-2xl md:text-3xl tracking-wide transition-colors duration-300 ${
-              navbarBackground || solidBgRoutes.includes(location.pathname)
-                ? "text-gray-800"
-                : "text-white"
-            }`}
-          >
-            {title}
-          </div>
+        >
+          {title}
+        </div>
 
-          {/* Menu */}
-          <div className="hidden md:flex items-center space-x-10">
-            {["Beranda", "Tentang", "Blog", "Menu", "Kontak", "Testimoni"].map(
-              (item) => {
-                const path =
-                  item === "Beranda" ? "/" : `/${item.toLowerCase()}`;
-                return (
-                  <Link
-                    key={item}
-                    to={path}
-                    onClick={() => handleNavigation(path)}
-                    className={`relative font-semibold transition duration-300 group ${
-                      navbarBackground || solidBgRoutes.includes(location.pathname)
-                        ? "text-black hover:text-[#B80002]"
-                        : "text-white hover:text-[#FFD700]"
-                    }`}
-                  >
-                    {item}
-                    <span className="absolute left-0 bottom-[-6px] w-0 h-[2px] bg-[#B80002] transition-all duration-300 group-hover:w-full"></span>
-                  </Link>
-                );
-              }
-            )}
-          </div>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-10">
+          {menuItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => handleNavigation(item.path)}
+              className={`relative font-semibold transition duration-300 group ${
+                navbarBackground || solidBgRoutes.includes(location.pathname)
+                  ? "text-black hover:text-[#B80002]"
+                  : "text-white hover:text-[#FFD700]"
+              }`}
+            >
+              {item.name}
+              <span className="absolute left-0 bottom-[-6px] w-0 h-[2px] bg-[#B80002] transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+          ))}
+        </div>
 
-          {/* Auth Section */}
-          <div className="flex items-center space-x-4">
-            {isLoggedIn && (
-              <div className="relative" ref={notificationsRef}>
+        {/* Mobile Menu Button */}
+        <button
+          className={`md:hidden ${
+            navbarBackground ? "text-gray-800" : "text-white"
+          }`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+
+        {/* Auth Section */}
+        <div className="flex items-center space-x-4 relative" ref={menuRef}>
+          {!isLoggedIn ? (
+            <>
+              <Link
+                to="/login"
+                onClick={() => handleNavigation("/login")}
+                className={`px-5 py-2 rounded-lg transition font-semibold ${
+                  navbarBackground || solidBgRoutes.includes(location.pathname)
+                    ? "bg-[#B80002] text-white hover:bg-[#a00002]"
+                    : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                }`}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => handleNavigation("/register")}
+                className="px-5 py-2 rounded-lg bg-[#B80002] text-white hover:bg-[#a00002] transition font-semibold"
+              >
+                Daftar
+              </Link>
+            </>
+          ) : (
+            <div className="relative">
+              {/* Notifications */}
+              <div className="absolute -left-12 top-1" ref={notificationsRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className={`relative p-2 rounded-full transition ${
-                    navbarBackground || solidBgRoutes.includes(location.pathname)
+                    navbarBackground ||
+                    solidBgRoutes.includes(location.pathname)
                       ? "text-gray-700 hover:bg-gray-100"
                       : "text-white hover:bg-white/20"
                   }`}
@@ -237,15 +277,14 @@ function Navbar({ title }) {
                     <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                       <h3 className="font-semibold text-gray-800">Notifikasi</h3>
                       {unreadCount > 0 && (
-                        <button 
+                        <button
                           onClick={markAllAsRead}
                           className="text-sm text-[#B80002] hover:underline"
                         >
-                          Tandai semua telah dibaca
+                          Tandai semua
                         </button>
                       )}
                     </div>
-
                     <div className="max-h-96 overflow-y-auto">
                       {notifications.length > 0 ? (
                         notifications.map((notification) => (
@@ -256,14 +295,18 @@ function Navbar({ title }) {
                             }`}
                             onClick={() => markAsRead(notification.id)}
                           >
-                            <p className="text-gray-800">{notification.pesan}</p>
+                            <p className="text-gray-800">
+                              {notification.pesan}
+                            </p>
                             <p className="text-xs text-gray-500 mt-1">
-                              {new Date(notification.created_at).toLocaleDateString("id-ID", {
+                              {new Date(
+                                notification.created_at
+                              ).toLocaleDateString("id-ID", {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
                                 hour: "2-digit",
-                                minute: "2-digit"
+                                minute: "2-digit",
                               })}
                             </p>
                           </div>
@@ -277,112 +320,94 @@ function Navbar({ title }) {
                   </div>
                 )}
               </div>
-            )}
 
-            <div className="relative flex items-center space-x-3" ref={menuRef}>
-              {!isLoggedIn ? (
-                // 🔓 belum login → tombol Login & Daftar
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => handleNavigation("/login")}
-                    className={`text-center px-4 py-2 rounded-lg transition font-semibold ${
-                      navbarBackground || solidBgRoutes.includes(location.pathname)
-                        ? "bg-[#B80002] text-white hover:bg-[#a00002]"
-                        : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
-                    }`}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => handleNavigation("/register")}
-                    className={`text-center px-4 py-2 rounded-lg transition font-semibold ${
-                      navbarBackground || solidBgRoutes.includes(location.pathname)
-                        ? "border border-[#B80002] text-[#B80002] hover:bg-[#B80002] hover:text-white"
-                        : "border border-white text-white hover:bg-white hover:text-[#B80002]"
-                    }`}
-                  >
-                    Daftar
-                  </Link>
-                </>
-              ) : (
-                <div className="relative">
-                  <img
-                    src={user?.avatar_url || defaultProfile}
-                    alt="Profile"
-                    className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
-                      showProfileMenu
-                        ? "border-[#B80002] scale-105"
-                        : navbarBackground ||
-                          solidBgRoutes.includes(location.pathname)
-                        ? "border-gray-300 hover:border-[#B80002]"
-                        : "border-white/50 hover:border-white"
-                    }`}
-                    onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  />
-                  {showProfileMenu && (
-                    <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
-                      <div className="p-4 border-b border-gray-100 bg-gray-50">
-                        <p className="text-gray-800 font-medium">
-                          Halo, {user?.name || "User"}
-                        </p>
-                      </div>
-
-                      <div className="p-2">
-                        <Link
-                          to="/profile"
-                          className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
-                          onClick={() => {
-                            setShowProfileMenu(false);
-                            handleNavigation("/profile");
-                          }}
-                        >
-                          Edit Profil
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          disabled={isLoggingOut}
-                          className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition mt-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
-                        >
-                          {isLoggingOut ? (
-                            <>
-                              <svg
-                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                              Logging out...
-                            </>
-                          ) : (
-                            "Logout"
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  )}
+              {/* Profile */}
+              <img
+                src={user?.avatar_url || defaultProfile}
+                alt="Profile"
+                className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
+                  showProfileMenu
+                    ? "border-[#B80002] scale-105"
+                    : "border-gray-300 hover:border-[#B80002]"
+                }`}
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+              />
+              {showProfileMenu && (
+                <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50 animate-fadeIn">
+                  <div className="p-4 border-b border-gray-100 bg-gray-50">
+                    <p className="text-gray-800 font-medium">
+                      Halo, {user?.name || "User"}
+                    </p>
+                  </div>
+                  <div className="p-2">
+                    <Link
+                      to="/profile"
+                      className="block text-center text-gray-700 font-medium mb-2 hover:bg-gray-100 rounded-md py-2 transition-colors"
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        handleNavigation("/profile");
+                      }}
+                    >
+                      Edit Profil
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                      className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition mt-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                      {isLoggingOut ? "Logging out..." : "Logout"}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
-          </div>
+          )}
         </div>
-      </nav>
-    </>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-[#FFF5CC] shadow-lg px-6 py-4 space-y-4">
+          {menuItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => handleNavigation(item.path)}
+              className="block text-gray-800 font-semibold hover:text-[#B80002]"
+            >
+              {item.name}
+            </Link>
+          ))}
+
+          {!isLoggedIn ? (
+            <div className="flex flex-col space-y-2">
+              <Link
+                to="/login"
+                onClick={() => handleNavigation("/login")}
+                className="px-5 py-2 rounded-lg bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002]"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => handleNavigation("/register")}
+                className="px-5 py-2 rounded-lg bg-[#FFD700] text-black text-center font-semibold hover:bg-[#e6c200]"
+              >
+                Daftar
+              </Link>
+            </div>
+          ) : (
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="w-full bg-[#B80002] text-white py-2 rounded-md hover:bg-[#a00002] transition font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </button>
+          )}
+        </div>
+      )}
+    </nav>
   );
 }
 
