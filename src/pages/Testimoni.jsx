@@ -1,4 +1,3 @@
-// pages/Testimoni.jsx
 import { useState, useEffect } from "react";
 import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,7 +32,7 @@ export default function TestimoniPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await api.get("/V1/testimonials");
+      const response = await api.get("/auth/testimonials");
       if (response.data && response.data.testimonials) {
         setTestimonials(response.data.testimonials);
         
