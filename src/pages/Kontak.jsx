@@ -56,14 +56,20 @@ function Kontak() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
       
       {/* Left Column - Contact Info */}
-      <div>
-        <h2 className="text-4xl font-extrabold text-red-700 mb-6">
-          CONTACT US
-        </h2>
-        
-        <p className="text-gray-700 text-lg mb-8 max-w-md">
-          Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami melalui telepon, WhatsApp, email, atau formulir di samping.
-        </p>
+     <div>
+  {/* Judul Section */}
+  <h2 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#8B0000] via-[#FF6B00] to-[#FFD700] mb-6 drop-shadow-lg">
+    CONTACT US
+  </h2>
+
+  {/* Deskripsi */}
+  <p className="text-gray-800 text-lg md:text-xl leading-relaxed mb-8 max-w-lg font-medium">
+    <span className="text-[#8B0000] font-bold">Ada pertanyaan?</span>  
+    Jangan ragu untuk menghubungi kami melalui <span className="text-[#FF6B00] font-semibold">Telepon</span>,  
+    <span className="text-[#25D366] font-semibold"> WhatsApp</span>,  
+    <span className="text-[#1D4ED8] font-semibold"> Email</span>, atau isi formulir yang telah kami sediakan.  
+    Tim kami siap membantu Anda dengan cepat dan ramah ✨
+  </p>
 
         {/* Contact Info Card */}
         <div className="relative rounded-2xl p-[2px] bg-gradient-to-r from-red-500 via-red-600 to-red-700 shadow-xl hover:shadow-red-500/50 transition duration-500 hover:scale-105">
