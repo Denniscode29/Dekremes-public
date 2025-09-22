@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController.js";
 import { ArrowLeft } from "lucide-react";
 import Swal from "sweetalert2";
-import educator from "../../assets/undraw_personal-information_h7kf.svg";
+import educator from "../../assets/undraw_barbecue_k11q (1).svg";
 
 export default function Register() {
   const [form, setForm] = useState({ email: "" });

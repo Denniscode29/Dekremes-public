@@ -1,16 +1,18 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/api/V1", 
+  baseURL: import.meta.env.VITE_API_URL + "/api/v1",
+  withCredentials: true,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
   },
 });
 
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    // PERBAIKAN: Gunakan authToken yang sama dengan AuthController
+    const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +25,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
+      // PERBAIKAN: Hapus authToken yang sama dengan AuthController
+      localStorage.removeItem("authToken");
+      // Optional: redirect to login
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -32,10 +37,10 @@ api.interceptors.response.use(
 export function setAuthToken(token) {
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    localStorage.setItem("token", token);
+    localStorage.setItem("authToken", token);
   } else {
     delete api.defaults.headers.common["Authorization"];
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
   }
 }
 

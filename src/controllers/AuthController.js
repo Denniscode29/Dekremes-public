@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/V1`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -199,17 +199,22 @@ const AuthController = create((set, get) => ({
    * UPDATE PROFILE
    */
   updateProfile: async (formData) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await api.post("/auth/update-profile", formData);
-      set({ user: res.data.user, loading: false });
-      return res.data;
-    } catch (err) {
-      const errorMsg = extractErrorMessage(err, "Gagal update profil.");
-      set({ error: errorMsg, loading: false });
-      throw new Error(errorMsg);
-    }
-  },
+  set({ loading: true, error: null });
+  try {
+    const res = await api.post("/auth/update-profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    set({ user: res.data.user, loading: false });
+    return res.data;
+  } catch (err) {
+    const errorMsg = extractErrorMessage(err, "Gagal update profil.");
+    set({ error: errorMsg, loading: false });
+    throw new Error(errorMsg);
+  }
+},
+
 
   /**
    * UPLOAD AVATAR

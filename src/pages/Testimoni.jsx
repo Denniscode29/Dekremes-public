@@ -123,11 +123,8 @@ export default function TestimoniPage() {
       }
 
       // PERBAIKAN: Sesuaikan dengan route yang ada di backend
-      await api.post("/testimonials", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      await api.post("/testimonials", formData);
+
       
       Swal.fire({
         icon: "success",
