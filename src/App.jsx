@@ -323,7 +323,7 @@ function App() {
             dalam satu hidangan.
           </p>
           <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
-            ORDER NOW
+            Pesan Sekarang
           </button>
         </div>
       </div>
