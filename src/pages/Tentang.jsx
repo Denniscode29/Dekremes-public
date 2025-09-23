@@ -29,7 +29,7 @@ function Tentang() {
               DeKremes & Crispy adalah franchise makanan crispy yang berkomitmen menyajikan cita rasa terbaik 
               dengan kualitas premium. Kami melayani berbagai pesanan untuk acara sekolah, pengajian, ulang tahun, 
               dan acara spesial lainnya. Dengan pengalaman dalam bidang kuliner, kami hadir untuk memenuhi kebutuhan 
-              catering dengan harga terjangkau dan rasa yang istimewa.
+              pesanan dengan harga terjangkau dan rasa yang istimewa.
             </p>
           </div>
 
@@ -124,7 +124,7 @@ function Tentang() {
                     <span className="font-bold text-red-700">DeKremes & Crispy</span>{" "}
                     berdedikasi untuk menyajikan produk terbaik dengan harga terjangkau.
                     Kami percaya bahwa makanan enak tidak harus mahal, dan setiap acara
-                    layak mendapatkan catering terbaik.
+                    layak mendapatkan pesanan terbaik.
                   </p>
                   {/* Inner Glow */}
                   <div className="absolute inset-0 rounded-3xl ring-1 ring-yellow-300/20 pointer-events-none"></div>

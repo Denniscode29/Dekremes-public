@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import AuthController from "./controllers/AuthController.js";
+
 
 function App() {
   // Data untuk menu favorit
@@ -57,6 +59,10 @@ function App() {
   const menuCarouselRef = useRef(null);
   const [menuItemWidth, setMenuItemWidth] = useState(0);
 
+  // State untuk banner carousel
+  
+  
+
   // Auto slide untuk menu carousel
   useEffect(() => {
     const interval = setInterval(() => {
@@ -68,6 +74,8 @@ function App() {
     
     return () => clearInterval(interval);
   }, [favoriteMenus.length]);
+
+
 
   // Fungsi untuk mengatur lebar item menu carousel
   const updateMenuItemWidth = useCallback(() => {
@@ -118,7 +126,7 @@ function App() {
 
   return (
     <>
-      {/* HERO SECTION - Full gambar seperti sebelumnya */}
+      {/* HERO SECTION */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background full layer */}
         <img
@@ -137,22 +145,23 @@ function App() {
             <span className="block text-red-500">& Crispy</span>
           </h1>
 
+          
+
           <p className="text-gray-200 text-base md:text-lg mb-6 max-w-2xl mx-auto">
             Nikmati promo spesial kami dan rasakan kenikmatan ayam crispy terbaik di kota!
           </p>
 
           <div className="flex justify-center">
             <button
-              onClick={() => window.location.href = '/menu'} 
-              className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105 text-sm md:text-base"
-            >
+            onClick={() => window.location.href = '/menu'} 
+            className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105 text-sm md:text-base">
               PESAN SEKARANG
             </button>
           </div>
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION - TIDAK DIUBAH (sama seperti sebelumnya) */}
+      {/* MENU FAVORIT SECTION - Background diubah menjadi #FFF5CC */}
       <div className="text-black w-full py-12 flex flex-col items-center justify-center" style={{backgroundColor: '#FFF5CC'}}>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Menu Favorit</h2>
         <p className="max-w-2xl text-center mb-8 text-base md:text-lg mx-auto px-4">
@@ -245,167 +254,142 @@ function App() {
         </div>
       </div>
 
-      {/* GALLERY SECTION - Dengan animasi yang lebih keren */}
-      <div className="py-16 bg-red-600 relative overflow-hidden">
-        {/* Background effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800"></div>
-        
-        <h2 className="text-4xl font-bold text-center mb-12 text-white relative z-10">
-          Galeri Kegiatan Dekremes
-        </h2>
-        
-        <div className="relative overflow-hidden">
-          <div className="flex animate-scroll space-x-6 px-6">
+      {/* GALLERY SECTION - Tambahan section baru untuk gambar kegiatan */}
+      <div className="py-12 bg-red-600">
+        <h2 className="text-3xl font-bold text-center mb-8 text-white">Galeri Kegiatan Dekremes</h2>
+        <div className="overflow-hidden relative">
+          <div className="flex animate-scroll">
             {kegiatanImages.concat(kegiatanImages).map((img, index) => (
-              <div key={index} className="relative group flex-shrink-0">
-                <img 
-                  src={img} 
-                  alt="Kegiatan Dekremes" 
-                  className="h-64 w-64 object-cover rounded-2xl shadow-2xl transition-transform duration-500 group-hover:scale-110" 
-                />
-                <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </div>
+              <img 
+                key={index} 
+                src={img} 
+                alt="Kegiatan Dekremes" 
+                className="h-48 md:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
+              />
             ))}
           </div>
         </div>
       </div>
 
-      {/* CHICKEN POTATO SAUCE SECTION - Dengan animasi */}
-      <div className="min-h-screen bg-[#FFF5CC] flex items-center relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-yellow-400/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-400/10 rounded-full translate-x-1/2 translate-y-1/2"></div>
+      {/* CHICKEN POTATO SAUCE */}
+      <div className="bg-[#FFF5CC] py-16 flex items-center relative overflow-hidden">
+        {/* Tomat Dekorasi di background */}
+        <img
+          src="src/assets/tomatokiri.png"
+          alt="Tomat"
+          className="absolute top-10 left-10 w-24 opacity-90"
+        />
+        <img
+          src="src/assets/tomato.png"
+          alt="Tomat"
+          className="absolute top-16 right-8 w-28 opacity-90"
+        />
+        <img
+          src="src/assets/tomato.png"
+          alt="Tomat"
+          className="absolute bottom-12 left-16 w-20 opacity-90"
+        />
+        <img
+          src="src/assets/tomato.png"
+          alt="Tomat"
+          className="absolute bottom-8 right-12 w-24 opacity-90"
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full items-center px-12 md:px-20 gap-8 max-w-7xl mx-auto">
-          {/* Image Card dengan animasi */}
-          <div className="flex justify-center md:justify-end">
-            <div className="relative group">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl opacity-75 blur-xl animate-pulse"></div>
-              
-              <div className="relative bg-black p-3 rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-105">
-                <img
-                  src="src/assets/produk/ciken.jpeg"
-                  alt="Ayam Geprek"
-                  className="w-72 md:w-96 lg:w-[420px] rounded-lg object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Text Content dengan animasi */}
-          <div className="text-center md:text-left md:pl-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-red-600 mb-6">
-              Ayam Crispy <span className="text-yellow-600">& Kentang</span>
-            </h2>
-            <p className="text-gray-700 mb-8 text-lg md:text-xl leading-relaxed">
-              Ayam Crispy kami dibuat dari ayam pilihan yang digoreng hingga renyah,
-              kemudian diulek bersama sambal spesial dan menggugah selera.
-              Disajikan dengan nasi hangat dan lalapan segar, ayam crispy ini adalah
-              pilihan sempurna untuk Anda yang menyukai cita rasa nikmat dan gurih
-              dalam satu hidangan.
-            </p>
-            <button className="bg-gradient-to-r from-red-600 to-red-700 text-white font-bold px-8 py-4 rounded-full shadow-2xl hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 text-lg">
-              ORDER NOW
-            </button>
+        {/* Isi Konten */}
+          <div className="min-h-screen bg-[#FFF5CC] flex items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full items-center px-12 md:px-20 gap-4">
+        
+        {/* Kiri - Card Gambar */}
+        <div className="flex md:justify-end justify-center">
+          <div className="bg-black p-3 rounded-xl shadow-lg hover:scale-105 transition">
+            <img
+              src="src/assets/produk/ciken.jpeg"
+              alt="Ayam Geprek"
+              className="w-72 md:w-96 lg:w-[420px] rounded-lg object-contain"
+            />
           </div>
         </div>
-      </div>
 
-      {/* HALAL CERTIFICATION SECTION - Dengan animasi mewah */}
-      <div className="relative bg-gradient-to-br from-red-700 via-red-600 to-red-800 py-20 px-8 overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-black/20"></div>
-        
-        {/* Content */}
-        <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Certificate Image dengan animasi */}
-          <div className="flex justify-center md:justify-start">
-            <div className="relative group">
-              <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl opacity-75 blur-xl animate-pulse"></div>
+        {/* Kanan - Teks */}
+        <div className="text-center md:text-left md:pl-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
+            Ayam Crispy & Kentang
+          </h2>
+          <p className="text-gray-700 mb-4 text-base md:text-lg">
+            Ayam Crispy kami dibuat dari ayam pilihan yang digoreng hingga renyah,
+            kemudian diulek bersama sambal spesial dan menggugah selera.
+            Disajikan dengan nasi hangat dan lalapan segar, ayam crispy ini adalah
+            pilihan sempurna untuk Anda yang menyukai cita rasa nikmat dan gurih
+            dalam satu hidangan.
+          </p>
+          <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
+            ORDER NOW
+          </button>
+        </div>
+      </div>
+    </div>
+          </div>
+
+
+      <div className="relative bg-[#F60000] py-16 px-8 overflow-hidden">
+          {/* Konten */}
+          <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
+            {/* Gambar Sertifikat */}
+            <div className="flex justify-center md:justify-start">
               <img
                 src="src/assets/Halal_sertifikat.png"
                 alt="Sertifikat Halal MUI"
-                className="relative w-72 md:w-[320px] rounded-2xl shadow-2xl border-4 border-white transition-transform duration-500 group-hover:scale-105"
+                className="w-72 md:w-[320px] rounded-lg shadow-lg border-2 border-white"
               />
             </div>
-          </div>
 
-          {/* Text Content dengan animasi */}
-          <div className="text-white text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              BerSertifikasi <span className="text-yellow-300">Halal</span>
-            </h2>
-            <div className="space-y-4 text-lg md:text-xl">
-              <p className="flex items-center justify-center md:justify-start gap-3">
-                <span className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </span>
+            {/* Text */}
+            <div className="text-white text-center md:text-left -ml-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                BerSertifikasi halal
+              </h2>
+              <p className="mb-2 text-lg md:text-xl leading-relaxed">
                 Kami berkomitmen untuk selalu menjaga kualitas dan kepercayaan pelanggan.
               </p>
-              <p className="flex items-center justify-center md:justify-start gap-3">
-                <span className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </span>
+              <p className="text-lg md:text-xl leading-relaxed">
                 Seluruh produk kami telah tersedia dengan Sertifikat Halal resmi dari
                 Majelis Ulama Indonesia (MUI), sehingga Anda tidak perlu khawatir dalam
                 menikmati setiap menu yang kami sajikan.
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Halal Logo dengan animasi */}
-        <div className="absolute bottom-8 right-8">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-yellow-400 rounded-full animate-ping opacity-20"></div>
+          {/* Logo Halal di kanan bawah */}
+          <div className="absolute bottom-6 right-6 opacity-90">
             <img
               src="src/assets/Logo_Halal.png"
               alt="Logo Halal MUI"
-              className="relative w-20 h-20 md:w-24 md:h-24 drop-shadow-2xl animate-float"
+              className="w-24 h-24"
             />
           </div>
         </div>
 
-        {/* Floating elements */}
-        <div className="absolute top-8 left-8 w-16 h-16 bg-yellow-400/20 rounded-full animate-bounce"></div>
-        <div className="absolute top-16 right-16 w-12 h-12 bg-white/10 rounded-full animate-pulse"></div>
-      </div>
-
-      {/* Custom Styles untuk animasi */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(2deg); }
-        }
-        
-        @keyframes scroll {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animate-scroll {
-          animation: scroll 40s linear infinite;
-          display: flex;
-          width: max-content;
-        }
-        
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
+      {/* CSS untuk animasi scroll otomatis */}
+      <style>
+        {`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .animate-scroll {
+            animation: scroll 30s linear infinite;
+            display: flex;
+            width: max-content;
+          }
+          .animate-scroll:hover {
+            animation-play-state: paused;
+          }
+        `}
+      </style>
     </>
   );
 }
