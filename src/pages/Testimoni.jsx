@@ -166,58 +166,64 @@ export default function TestimoniPage() {
     }
   };
 
-  const handleEditTestimonial = () => {
-    if (userTestimonialStatus?.testimonial) {
-      const testimonial = userTestimonialStatus.testimonial;
-      setKomentar(testimonial.content);
-      setRating(testimonial.rating);
-      setGambar(null);
-      
-      // Set gambar preview jika ada
-      if (testimonial.product_photo_url) {
-        setGambarPreview(testimonial.product_photo_url);
-      }
-      
-      setIsEditing(true);
-      setEditingTestimonialId(testimonial.id);
-      setShowForm(true);
+  const handleEditTestimonial = async () => {
+  if (userTestimonialStatus?.testimonial) {
+    const testimonial = userTestimonialStatus.testimonial;
+    setKomentar(testimonial.content);
+    setRating(testimonial.rating);
+    setGambar(null);
+    
+    // Set gambar preview jika ada
+    if (testimonial.product_photo_url) {
+      setGambarPreview(testimonial.product_photo_url);
     }
-  };
+    
+    setIsEditing(true);
+    setEditingTestimonialId(testimonial.id);
+    setShowForm(true);
+  }
+};
 
-  const handleDeleteTestimonial = async () => {
-    const result = await Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: "Testimoni yang dihapus tidak dapat dikembalikan!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#B80002',
-      cancelButtonColor: '#6B7280',
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal'
-    });
+const handleDeleteTestimonial = async () => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: "Testimoni yang dihapus tidak dapat dikembalikan!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#B80002',
+    cancelButtonColor: '#6B7280',
+    confirmButtonText: 'Ya, hapus!',
+    cancelButtonText: 'Batal'
+  });
 
-    if (result.isConfirmed) {
-      try {
-        await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
-        
-        Swal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Testimoni berhasil dihapus.",
-        });
-        
-        setRefreshData(prev => prev + 1);
-        checkUserTestimonialStatus();
-      } catch (error) {
-        console.error("Error deleting testimonial:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
-        });
-      }
+  if (result.isConfirmed) {
+    try {
+      await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
+      
+      Swal.fire({
+        icon: "success",
+        title: "Terhapus",
+        text: "Testimoni berhasil dihapus.",
+      });
+      
+      // Refresh data dan status
+      setRefreshData(prev => prev + 1);
+      await checkUserTestimonialStatus();
+      
+      // Reset form state
+      setShowForm(false);
+      setIsEditing(false);
+      setEditingTestimonialId(null);
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
+      });
     }
-  };
+  }
+};
 
   const renderTestimonialStatus = () => {
     if (!userTestimonialStatus?.hasSubmitted) return null;
