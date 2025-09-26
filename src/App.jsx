@@ -7,37 +7,43 @@ function App() {
       name: "Big Mac®",
       description: "Dua patty daging sapi spesial dengan saus Big Mac, selada, keju, acar, bawang.",
       image: "src/assets/chicken.png",
-      price: "Rp 35.000"
+      price: "Rp 35.000",
+      badge: "BEST SELLER"
     },
     {
       name: "Pallas 1",
       description: "Ayam krispi terbaik dengan saus spesial dan sayuran segar dalam roti premium.",
       image: "src/assets/chicken.png",
-      price: "Rp 32.000"
+      price: "Rp 32.000",
+      badge: "NEW"
     },
     {
       name: "Pallas Special",
       description: "Kreasi istimewa dengan daging ayam pilihan, saus rahasia, dan sayuran segar.",
       image: "src/assets/chicken.png",
-      price: "Rp 38.000"
+      price: "Rp 38.000",
+      badge: "PREMIUM"
     },
     {
       name: "McChicken",
       description: "Potongan ayam gurih dilapisi tepung krispi, dengan mayones dan selada segar.",
       image: "src/assets/chicken.png",
-      price: "Rp 30.000"
+      price: "Rp 30.000",
+      badge: "FAVORITE"
     },
     {
       name: "McNuggets®",
       description: "Potongan ayam tanpa tulang yang digoreng hingga garing, cocok dengan saus.",
       image: "src/assets/chicken.png",
-      price: "Rp 28.000"
+      price: "Rp 28.000",
+      badge: "POPULAR"
     },
     {
       name: "Crispy Deluxe",
       description: "Ayam crispy dengan saus spesial dan sayuran segar dalam roti premium.",
       image: "src/assets/chicken.png",
-      price: "Rp 36.000"
+      price: "Rp 36.000",
+      badge: "SPECIAL"
     }
   ];
 
@@ -52,14 +58,18 @@ function App() {
     "src/assets/kegiatan/IMG20250619072923.jpg"
   ];
 
-  // State untuk carousel menu favorit
+  // State untuk menu favorit
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [animationClass, setAnimationClass] = useState("");
   const menuCarouselRef = useRef(null);
   const [menuItemWidth, setMenuItemWidth] = useState(0);
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const heroRef = useRef(null);
+  const modalRef = useRef(null);
 
-  // Intersection Observer untuk hero section saja
+  // Intersection Observer untuk hero section
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -95,7 +105,7 @@ function App() {
         const visibleItems = getVisibleItemsCount();
         return (prev + 1) % (favoriteMenus.length - visibleItems + 1);
       });
-    }, 3000);
+    }, 4000);
     
     return () => clearInterval(interval);
   }, [favoriteMenus.length]);
@@ -104,7 +114,7 @@ function App() {
   const updateMenuItemWidth = useCallback(() => {
     const containerWidth = window.innerWidth;
     const visibleItems = getVisibleItemsCount();
-    const gap = 16;
+    const gap = 24;
     const padding = 32;
     
     const calculatedWidth = (containerWidth - padding - (gap * (visibleItems - 1))) / visibleItems;
@@ -142,9 +152,49 @@ function App() {
 
   // Menghitung translateX untuk carousel
   const calculateTranslateX = () => {
-    const gap = 16;
+    const gap = 24;
     return -currentMenuIndex * (menuItemWidth + gap);
   };
+
+  // Fungsi untuk menangani klik menu
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+    setAnimationClass("animate-pop-in");
+    setShowModal(true);
+    
+    // Reset animation setelah selesai
+    setTimeout(() => {
+      setAnimationClass("animate-float");
+    }, 500);
+  };
+
+  // Tutup modal
+  const closeModal = () => {
+    setAnimationClass("animate-pop-out");
+    setTimeout(() => {
+      setShowModal(false);
+      setSelectedMenu(null);
+    }, 300);
+  };
+
+  // Effect untuk close modal ketika klik outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
 
   // Reset hero animation ketika component mount
   useEffect(() => {
@@ -157,7 +207,7 @@ function App() {
 
   return (
     <>
-      {/* HERO SECTION - WARNA MERAH FULL */}
+      {/* HERO SECTION - JUDUL MERAH SOLID */}
       <div 
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700"
@@ -174,7 +224,7 @@ function App() {
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
         
-        {/* Animated Background Elements - MERAH */}
+        {/* Animated Background Elements - KEMBALI KE AWAL */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(15)].map((_, i) => (
             <div
@@ -190,32 +240,32 @@ function App() {
           ))}
         </div>
 
-        {/* Main Content - WARNA MERAH FULL */}
+        {/* Main Content - JUDUL MERAH SOLID */}
         <div className={`relative z-10 text-center px-6 transition-all duration-1000 transform ${
           isHeroVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
-          {/* Logo/Title dengan efek mewah - MERAH */}
+          {/* Logo/Title dengan efek mewah - MERAH SOLID */}
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
               DeKremes
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-red-400 to-red-500">
+              <span className="block text-red-500">
                 & Crispy
               </span>
             </h1>
-            <div className="w-32 h-1 bg-gradient-to-r from-red-400 to-red-500 mx-auto rounded-full mb-6"></div>
+            <div className="w-32 h-1 bg-red-500 mx-auto rounded-full mb-6"></div>
           </div>
 
           {/* Tagline - MERAH */}
           <p className="text-gray-200 text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-            Nikmati <span className="text-red-300 font-semibold">promo spesial</span> kami dan rasakan 
-            kenikmatan ayam crispy <span className="text-red-300 font-semibold">terbaik</span> di kota!
+            Nikmati <span className="text-red-500 font-semibold">promo spesial</span> kami dan rasakan 
+            kenikmatan ayam crispy <span className="text-red-500 font-semibold">terbaik</span> di kota!
           </p>
 
           {/* CTA Buttons - MERAH */}
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <button
               onClick={() => window.location.href = '/menu'} 
-              className="group relative bg-gradient-to-r from-red-400 to-red-600 text-white px-10 py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 font-bold text-lg md:text-xl overflow-hidden"
+              className="group relative bg-gradient-to-r from-red-500 to-red-600 text-white px-10 py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 font-bold text-lg md:text-xl overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-3">
                 <svg className="w-6 h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
@@ -223,7 +273,7 @@ function App() {
                 </svg>
                 PESAN SEKARANG
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
             
             <button className="group relative border-3 border-red-400 text-red-400 px-10 py-5 rounded-full hover:bg-red-400 hover:text-white transition-all duration-300 font-bold text-lg md:text-xl overflow-hidden">
@@ -244,94 +294,249 @@ function App() {
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION - Tetap sama */}
-      <div className="text-black w-full py-12 flex flex-col items-center justify-center" style={{backgroundColor: '#FFF5CC'}}>
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Menu Favorit</h2>
-        <p className="max-w-2xl text-center mb-8 text-base md:text-lg mx-auto px-4">
-          Temukan menu-menu favorit pelanggan kami yang selalu dinantikan kehadirannya.
-        </p>
+      {/* MENU FAVORIT SECTION - DESIGN MEWAH */}
+      <div className="relative py-20 bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] overflow-hidden">
+        {/* Background Elements Mewah */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-red-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-yellow-400/5 rounded-full blur-3xl"></div>
+        </div>
 
-        <div className="relative w-full overflow-hidden px-4">
-          <div 
-            ref={menuCarouselRef}
-            className="flex transition-transform duration-500 ease-out gap-4"
-            style={{ 
-              transform: `translateX(${calculateTranslateX()}px)`,
-              userSelect: 'none'
-            }}
-          >
-            {favoriteMenus.map((menu, index) => (
+        {/* Floating Food Icons */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-6 h-6 bg-red-400/20 rounded-full animate-float-slow"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${Math.random() * 8 + 6}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
+          {/* Section Header Mewah */}
+          <div className="text-center mb-16">
+            <div className="inline-block relative">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
+                MENU FAVORIT
+              </h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-red-400 rounded-full"></div>
+            </div>
+            <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto mt-6 leading-relaxed">
+              Temukan <span className="text-red-600 font-semibold">menu-menu spesial</span> yang selalu dinantikan oleh pelanggan setia kami
+            </p>
+          </div>
+
+          {/* Carousel Container Mewah */}
+          <div className="relative">
+            {/* Navigation Arrows */}
+            <button 
+              onClick={prevMenu}
+              disabled={currentMenuIndex === 0}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group"
+            >
+              <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              onClick={nextMenu}
+              disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - getVisibleItemsCount())}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group"
+            >
+              <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Carousel Items */}
+            <div className="relative overflow-hidden rounded-3xl">
               <div 
-                key={index}
-                className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 flex-shrink-0"
+                ref={menuCarouselRef}
+                className="flex transition-transform duration-700 ease-out gap-6 py-4"
                 style={{ 
-                  width: `${menuItemWidth}px`,
-                  minWidth: `${menuItemWidth}px`
+                  transform: `translateX(${calculateTranslateX()}px)`,
+                  userSelect: 'none'
                 }}
               >
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={menu.image} 
-                    alt={menu.name} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-bold text-red-600 mb-2">{menu.name}</h3>
-                  <p className="text-gray-700 text-sm mb-4 h-12 overflow-hidden">
-                    {menu.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-red-600">{menu.price}</span>
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
-                      Pesan
-                    </button>
+                {favoriteMenus.map((menu, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => handleMenuClick(menu)}
+                    className="group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95"
+                    style={{ 
+                      width: `${menuItemWidth}px`,
+                      minWidth: `${menuItemWidth}px`
+                    }}
+                  >
+                    {/* Card Mewah */}
+                    <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-red-400 group-hover:shadow-3xl transition-all duration-300">
+                      {/* Badge */}
+                      <div className="absolute top-4 left-4 z-10">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg ${
+                          menu.badge === "BEST SELLER" ? "bg-red-600" :
+                          menu.badge === "NEW" ? "bg-green-500" :
+                          menu.badge === "PREMIUM" ? "bg-purple-500" :
+                          menu.badge === "FAVORITE" ? "bg-pink-500" :
+                          menu.badge === "POPULAR" ? "bg-blue-500" : "bg-orange-500"
+                        }`}>
+                          {menu.badge}
+                        </span>
+                      </div>
+
+                      {/* Image Container */}
+                      <div className="relative h-56 overflow-hidden">
+                        <img 
+                          src={menu.image} 
+                          alt={menu.name} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                        />
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-3">
+                          <h3 className="text-xl font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300">
+                            {menu.name}
+                          </h3>
+                          <div className="w-2 h-2 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+                          {menu.description}
+                        </p>
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-2xl font-black text-red-600">{menu.price}</span>
+                          <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg group-hover:shadow-xl">
+                            Pesan
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Hover Effect */}
+                      <div className="absolute inset-0 border-4 border-red-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="flex justify-center mt-6 space-x-3 items-center">
-          <button 
-            onClick={prevMenu}
-            disabled={currentMenuIndex === 0}
-            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &#10094;
-          </button>
-          
-          <div className="flex space-x-2">
-            {Array.from({ length: Math.max(1, favoriteMenus.length - getVisibleItemsCount() + 1) }).map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all ${currentMenuIndex === index ? 'bg-red-600 scale-125' : 'bg-gray-300'}`}
-                onClick={() => setCurrentMenuIndex(index)}
-              />
-            ))}
+            {/* Dots Indicator */}
+            <div className="flex justify-center mt-8 space-x-3">
+              {Array.from({ length: Math.max(1, favoriteMenus.length - getVisibleItemsCount() + 1) }).map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentMenuIndex === index 
+                      ? 'bg-red-600 scale-125 shadow-lg' 
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  onClick={() => setCurrentMenuIndex(index)}
+                />
+              ))}
+            </div>
           </div>
-          
-          <button 
-            onClick={nextMenu}
-            disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - getVisibleItemsCount())}
-            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &#10095;
-          </button>
-        </div>
 
-        <div className="mt-8">
-          <button 
-            onClick={() => window.location.href = '/menu'}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-red-700 transition transform hover:scale-105"
-          >
-            Lihat Semua Menu
-          </button>
+          {/* CTA Button */}
+          <div className="text-center mt-12">
+            <button className="relative bg-gradient-to-r from-red-600 to-red-700 text-white px-12 py-4 rounded-full font-bold text-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden">
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                </svg>
+                LIHAT SEMUA MENU
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* GALLERY SECTION - Tetap sama */}
+      {/* MODAL DETAIL MENU MEWAH */}
+      {showModal && selectedMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div 
+            ref={modalRef}
+            className={`relative bg-white rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
+          >
+            {/* Close Button */}
+            <button 
+              onClick={closeModal}
+              className="absolute top-4 right-4 z-20 w-10 h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Modal Content */}
+            <div className="relative">
+              {/* Image Section */}
+              <div className="relative h-64 md:h-80 overflow-hidden">
+                <img 
+                  src={selectedMenu.image} 
+                  alt={selectedMenu.name}
+                  className="w-full h-full object-cover" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                
+                {/* Badge */}
+                <div className="absolute top-4 left-4">
+                  <span className={`px-4 py-2 rounded-full text-sm font-bold text-white shadow-2xl ${
+                    selectedMenu.badge === "BEST SELLER" ? "bg-red-600" :
+                    selectedMenu.badge === "NEW" ? "bg-green-500" :
+                    selectedMenu.badge === "PREMIUM" ? "bg-purple-500" :
+                    selectedMenu.badge === "FAVORITE" ? "bg-pink-500" :
+                    selectedMenu.badge === "POPULAR" ? "bg-blue-500" : "bg-orange-500"
+                  }`}>
+                    {selectedMenu.badge}
+                  </span>
+                </div>
+              </div>
+
+              {/* Content Section */}
+              <div className="p-8">
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl md:text-4xl font-black text-gray-800 mb-2">
+                    {selectedMenu.name}
+                  </h3>
+                  <div className="w-20 h-1 bg-red-500 rounded-full mx-auto"></div>
+                </div>
+
+                <p className="text-gray-600 text-lg leading-relaxed mb-6 text-center">
+                  {selectedMenu.description}
+                </p>
+
+                <div className="text-center mb-8">
+                  <span className="text-4xl font-black text-red-600">{selectedMenu.price}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <button className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
+                    Tambah Ke Keranjang
+                  </button>
+                  <button className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105">
+                    Pesan Sekarang
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GALLERY SECTION */}
       <div className="py-12 bg-red-600">
         <h2 className="text-3xl font-bold text-center mb-8 text-white">Galeri Kegiatan Dekremes</h2>
         <div className="overflow-hidden relative">
@@ -348,7 +553,7 @@ function App() {
         </div>
       </div>
 
-      {/* AYAM CRISPY & KENTANG SECTION - Dengan Logo Makanan */}
+      {/* AYAM CRISPY & KENTANG SECTION */}
       <div className="min-h-screen bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] flex items-center relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute top-0 left-0 w-80 h-80 bg-red-400/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
@@ -410,7 +615,7 @@ function App() {
                   & Kentang Spesial
                 </span>
               </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-red-500 rounded-full mb-6"></div>
+              <div className="w-24 h-1 bg-red-500 rounded-full mb-6"></div>
             </div>
 
             <div className="space-y-4 mb-8">
@@ -458,7 +663,7 @@ function App() {
         </div>
       </div>
 
-      {/* HALAL CERTIFICATION SECTION - DESIGN MEWAH DENGAN LOGO */}
+      {/* HALAL CERTIFICATION SECTION */}
       <div className="relative bg-gradient-to-br from-red-800 via-red-700 to-red-600 py-20 px-8 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-black/20"></div>
@@ -510,12 +715,6 @@ function App() {
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
-
-              {/* Corner Decorations */}
-              <div className="absolute -top-2 -left-2 w-6 h-6 bg-red-500 rounded-full"></div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full"></div>
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-red-500 rounded-full"></div>
-              <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-red-500 rounded-full"></div>
             </div>
           </div>
 
@@ -523,11 +722,11 @@ function App() {
           <div className="text-white text-center lg:text-left">
             <div className="mb-8">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-200 to-red-400">
+                <span className="text-red-200">
                   BerSertifikasi Halal
                 </span>
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-red-300 to-red-400 rounded-full mb-6"></div>
+              <div className="w-20 h-1 bg-red-400 rounded-full mb-6"></div>
             </div>
 
             <div className="space-y-6 text-lg lg:text-xl">
@@ -557,7 +756,7 @@ function App() {
 
             {/* Trust Badges Mewah */}
             <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-              {['MUI Certified', '100% Halal', 'Quality Guarantee'].map((badge, index) => (
+              {['MUI Certified', '100% Halal', 'Quality Guarantee','FAQ'].map((badge, index) => (
                 <span key={index} className="bg-red-500/30 text-red-200 px-4 py-2 rounded-full text-sm font-semibold border border-red-400/50 backdrop-blur-sm">
                   {badge}
                 </span>
@@ -588,6 +787,22 @@ function App() {
           50% { transform: translateY(-10px) rotate(2deg); }
         }
         
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pop-in {
+          0% { transform: scale(0.5); opacity: 0; }
+          70% { transform: scale(1.05); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes pop-out {
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(0.5); opacity: 0; }
+        }
+        
         @keyframes scroll {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
@@ -595,6 +810,18 @@ function App() {
         
         .animate-float {
           animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        
+        .animate-pop-in {
+          animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .animate-pop-out {
+          animation: pop-out 0.3s ease-in;
         }
         
         .animate-scroll {
@@ -605,6 +832,13 @@ function App() {
         
         .animate-scroll:hover {
           animation-play-state: paused;
+        }
+        
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </>
