@@ -22,6 +22,7 @@ function Navbar({ title }) {
 
   const menuRef = useRef();
   const notificationsRef = useRef();
+  const mobileMenuRef = useRef();
   const navigate = useNavigate();
   const lastScrollY = useRef(0);
   const location = useLocation();
@@ -261,6 +262,7 @@ function Navbar({ title }) {
       logout();
       setShowProfileMenu(false);
       setShowNotifications(false);
+      setMobileMenuOpen(false);
       Swal.close();
       navigate("/");
     } catch (err) {
@@ -283,6 +285,9 @@ function Navbar({ title }) {
       }
       if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
         setShowNotifications(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -318,83 +323,280 @@ function Navbar({ title }) {
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 
-        ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
-        ${
-          navbarBackground || solidBgRoutes.includes(location.pathname)
-            ? "bg-[#FFF5CC] shadow-lg"
-            : "bg-transparent"
-        }`}
-    >
-      <div className="flex justify-between items-center py-4 px-6 md:px-12">
-        {/* Logo */}
-        <div
-          className={`font-extrabold text-2xl md:text-3xl tracking-wide transition-colors duration-300 ${
+    <>
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-400 
+          ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
+          ${
             navbarBackground || solidBgRoutes.includes(location.pathname)
-              ? "text-gray-800"
-              : "text-white"
+              ? "bg-[#FFF5CC] shadow-lg"
+              : "bg-transparent"
           }`}
-        >
-          {title}
-        </div>
+      >
+        <div className="flex justify-between items-center py-3 px-4 sm:px-6 lg:px-12">
+          {/* Logo */}
+          <div
+            className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-colors duration-300 ${
+              navbarBackground || solidBgRoutes.includes(location.pathname)
+                ? "text-gray-800"
+                : "text-white"
+            }`}
+          >
+            {title}
+          </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-10">
-          {menuItems.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              onClick={() => handleNavigation(item.path)}
-              className={`relative font-semibold transition duration-300 group ${
-                navbarBackground || solidBgRoutes.includes(location.pathname)
-                  ? "text-black hover:text-[#B80002]"
-                  : "text-white hover:text-[#FFD700]"
-              }`}
-            >
-              {item.name}
-              <span className="absolute left-0 bottom-[-6px] w-0 h-[2px] bg-[#B80002] transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-          ))}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className={`md:hidden ${
-            navbarBackground ? "text-gray-800" : "text-white"
-          }`}
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-
-        {/* Auth Section */}
-        <div className="flex items-center space-x-4 relative" ref={menuRef}>
-          {!isLoggedIn ? (
-            <>
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {menuItems.map((item) => (
               <Link
-                to="/login"
-                onClick={() => handleNavigation("/login")}
-                className={`px-5 py-2 rounded-lg transition font-semibold ${
-                  navbarBackground || solidBgRoutes.includes(location.pathname)
-                    ? "bg-[#B80002] text-white hover:bg-[#a00002]"
-                    : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                key={item.name}
+                to={item.path}
+                onClick={() => handleNavigation(item.path)}
+                className={`relative font-semibold transition duration-300 group ${
+                  location.pathname === item.path
+                    ? navbarBackground || solidBgRoutes.includes(location.pathname)
+                      ? "text-[#B80002]"
+                      : "text-[#FFD700]"
+                    : navbarBackground || solidBgRoutes.includes(location.pathname)
+                      ? "text-black hover:text-[#B80002]"
+                      : "text-white hover:text-[#FFD700]"
                 }`}
               >
-                Login
+                {item.name}
+                <span 
+                  className={`absolute left-0 bottom-[-6px] h-[2px] bg-[#B80002] transition-all duration-300 ${
+                    location.pathname === item.path ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                ></span>
               </Link>
-              <Link
-                to="/register"
-                onClick={() => handleNavigation("/register")}
-                className="px-5 py-2 rounded-lg bg-[#B80002] text-white hover:bg-[#a00002] transition font-semibold"
-              >
-                Daftar
-              </Link>
-            </>
-          ) : (
-            <div className="relative">
-              {/* Notifications */}
-              <div className="absolute -left-12 top-1" ref={notificationsRef}>
+            ))}
+          </div>
+
+          {/* Auth Section - Desktop */}
+          <div className="hidden lg:flex items-center space-x-4 relative" ref={menuRef}>
+            {!isLoggedIn ? (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => handleNavigation("/login")}
+                  className={`px-5 py-2 rounded-lg transition font-semibold ${
+                    navbarBackground || solidBgRoutes.includes(location.pathname)
+                      ? "bg-[#B80002] text-white hover:bg-[#a00002]"
+                      : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                  }`}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => handleNavigation("/register")}
+                  className="px-5 py-2 rounded-lg bg-[#B80002] text-white hover:bg-[#a00002] transition font-semibold"
+                >
+                  Daftar
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                {/* Notifications */}
+                <div className="relative" ref={notificationsRef}>
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className={`relative p-2 rounded-full transition ${
+                      navbarBackground || solidBgRoutes.includes(location.pathname)
+                        ? "text-gray-700 hover:bg-gray-100"
+                        : "text-white hover:bg-white/20"
+                    }`}
+                  >
+                    <Bell className="w-6 h-6" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                      <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                        <h3 className="font-semibold text-gray-800">Notifikasi</h3>
+                        {unreadCount > 0 && (
+                          <button
+                            onClick={markAllAsRead}
+                            className="text-sm text-[#B80002] hover:underline font-medium"
+                          >
+                            Tandai semua dibaca
+                          </button>
+                        )}
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {notifications.length > 0 ? (
+                          notifications.map((notification) => (
+                            <div
+                              key={notification.id}
+                              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${getNotificationBgColor(notification)}`}
+                              onClick={() => {
+                                markAsRead(notification.id);
+                                if (notification.testimonial_id) {
+                                  handleNavigation('/testimoni');
+                                  setShowNotifications(false);
+                                }
+                              }}
+                            >
+                              <div className="flex items-start space-x-3">
+                                <div className="flex-shrink-0 mt-1">
+                                  {getNotificationIcon(notification.type)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-gray-800 text-sm leading-relaxed break-words">
+                                    {notification.pesan}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    {formatDate(notification.created_at)}
+                                  </p>
+                                  {notification.testimonial_id && (
+                                    <span className="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                                      Testimoni
+                                    </span>
+                                  )}
+                                </div>
+                                {!notification.dibaca && (
+                                  <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-2"></div>
+                                )}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="p-4 text-center text-gray-500">
+                            <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                            <p>Tidak ada notifikasi</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile */}
+                <div className="relative">
+                  <img
+                    src={user?.avatar_url || defaultProfile}
+                    alt="Profile"
+                    className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
+                      showProfileMenu
+                        ? "border-[#B80002] scale-105"
+                        : "border-gray-300 hover:border-[#B80002]"
+                    }`}
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  />
+                  {/* Indicator untuk testimonial message */}
+                  {(hasNewTestimonialNotification || testimonialMessage) && !showProfileMenu && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-ping"></div>
+                  )}
+                </div>
+                
+                {showProfileMenu && (
+                  <div className="absolute right-0 top-12 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fadeIn">
+                    {/* Header dengan info user */}
+                    <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl">
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src={user?.avatar_url || defaultProfile}
+                          alt="Profile"
+                          className="w-12 h-12 rounded-full border-2 border-white shadow-md"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-gray-800 font-semibold truncate">
+                            {user?.name || "User"}
+                          </p>
+                          <p className="text-xs text-gray-600 truncate">{user?.email}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Status Testimoni */}
+                      {testimonialStatus && (
+                        <div className="mt-3 p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-gray-700">Status Testimoni:</span>
+                            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                              testimonialStatus === 'Disetujui' ? 'bg-green-100 text-green-800' :
+                              testimonialStatus === 'Ditolak' ? 'bg-red-100 text-red-800' :
+                              'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonialStatus}
+                            </span>
+                          </div>
+                          {/* Tampilkan pesan testimonial jika ada */}
+                          {testimonialMessage && (
+                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                              {testimonialMessage}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="p-2">
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          handleNavigation("/profile");
+                        }}
+                        className="w-full flex items-center space-x-3 px-3 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors mb-1"
+                      >
+                        <User className="w-4 h-4 text-gray-500" />
+                        <span>Edit Profil</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          handleNavigation("/testimoni");
+                        }}
+                        className="w-full flex items-center space-x-3 px-3 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors mb-1"
+                      >
+                        <Star className="w-4 h-4 text-yellow-500" />
+                        <span>Testimoni Saya</span>
+                        {hasNewTestimonialNotification && (
+                          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        )}
+                      </button>
+
+                      {(hasNewTestimonialNotification || unreadCount > 0) && (
+                        <button
+                          onClick={() => {
+                            setShowProfileMenu(false);
+                            markAllAsRead();
+                          }}
+                          className="w-full flex items-center space-x-3 px-3 py-2 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors mb-1"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Tandai Sudah Dibaca</span>
+                        </button>
+                      )}
+
+                      <div className="border-t border-gray-200 my-2"></div>
+
+                      <button
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="w-full flex items-center space-x-3 px-3 py-2 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Section - Auth + Hamburger */}
+          <div className="flex lg:hidden items-center space-x-3">
+            {/* Mobile Notifications - hanya jika logged in */}
+            {isLoggedIn && (
+              <div className="relative" ref={notificationsRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className={`relative p-2 rounded-full transition ${
@@ -403,33 +605,33 @@ function Navbar({ title }) {
                       : "text-white hover:bg-white/20"
                   }`}
                 >
-                  <Bell className="w-6 h-6" />
+                  <Bell className="w-5 h-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
                       {unreadCount > 9 ? "9+" : unreadCount}
                     </span>
                   )}
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
-                    <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                      <h3 className="font-semibold text-gray-800">Notifikasi</h3>
+                  <div className="absolute right-0 top-12 w-72 sm:w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                    <div className="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                      <h3 className="font-semibold text-gray-800 text-sm">Notifikasi</h3>
                       {unreadCount > 0 && (
                         <button
                           onClick={markAllAsRead}
-                          className="text-sm text-[#B80002] hover:underline font-medium"
+                          className="text-xs text-[#B80002] hover:underline font-medium"
                         >
                           Tandai semua dibaca
                         </button>
                       )}
                     </div>
-                    <div className="max-h-96 overflow-y-auto">
+                    <div className="max-h-80 overflow-y-auto">
                       {notifications.length > 0 ? (
                         notifications.map((notification) => (
                           <div
                             key={notification.id}
-                            className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${getNotificationBgColor(notification)}`}
+                            className={`p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${getNotificationBgColor(notification)}`}
                             onClick={() => {
                               markAsRead(notification.id);
                               if (notification.testimonial_id) {
@@ -443,7 +645,7 @@ function Navbar({ title }) {
                                 {getNotificationIcon(notification.type)}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-gray-800 text-sm leading-relaxed break-words">
+                                <p className="text-gray-800 text-xs leading-relaxed break-words">
                                   {notification.pesan}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">
@@ -463,188 +665,219 @@ function Navbar({ title }) {
                         ))
                       ) : (
                         <div className="p-4 text-center text-gray-500">
-                          <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p>Tidak ada notifikasi</p>
+                          <MessageSquare className="w-6 h-6 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm">Tidak ada notifikasi</p>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
               </div>
+            )}
 
-              {/* Profile */}
-              <div className="relative">
+            {/* Hamburger Menu Button */}
+            <button
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                navbarBackground || solidBgRoutes.includes(location.pathname)
+                  ? "text-gray-800 hover:bg-gray-100"
+                  : "text-white hover:bg-white/20"
+              }`}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <div className="relative w-6 h-6">
+                <span
+                  className={`absolute top-0 left-0 w-6 h-0.5 bg-current transition-all duration-300 transform ${
+                    mobileMenuOpen ? 'rotate-45 translate-y-2.5' : 'rotate-0 translate-y-0'
+                  }`}
+                />
+                <span
+                  className={`absolute top-2.5 left-0 w-6 h-0.5 bg-current transition-all duration-300 ${
+                    mobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                  }`}
+                />
+                <span
+                  className={`absolute top-5 left-0 w-6 h-0.5 bg-current transition-all duration-300 transform ${
+                    mobileMenuOpen ? '-rotate-45 -translate-y-2.5' : 'rotate-0 translate-y-0'
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
+          mobileMenuOpen 
+            ? 'bg-black/50 backdrop-blur-sm visible opacity-100' 
+            : 'bg-transparent invisible opacity-0'
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
+      {/* Mobile Menu */}
+      <div
+        ref={mobileMenuRef}
+        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFF5CC] shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Mobile Menu Header */}
+        <div className="bg-gradient-to-r from-[#B80002] to-[#a00002] p-4 text-white">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold">{title}</h3>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 rounded-full hover:bg-white/20 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu Content */}
+        <div className="flex flex-col h-full">
+          {/* User Info - jika logged in */}
+          {isLoggedIn && (
+            <div className="p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center space-x-3">
                 <img
                   src={user?.avatar_url || defaultProfile}
                   alt="Profile"
-                  className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 ${
-                    showProfileMenu
-                      ? "border-[#B80002] scale-105"
-                      : "border-gray-300 hover:border-[#B80002]"
-                  }`}
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="w-12 h-12 rounded-full border-2 border-white shadow-md"
                 />
-                {/* Indicator untuk testimonial message */}
-                {(hasNewTestimonialNotification || testimonialMessage) && !showProfileMenu && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full animate-ping"></div>
-                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-800 font-semibold truncate text-sm">
+                    {user?.name || "User"}
+                  </p>
+                  <p className="text-xs text-gray-600 truncate">{user?.email}</p>
+                </div>
               </div>
               
-              {showProfileMenu && (
-                <div className="absolute right-0 top-12 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fadeIn">
-                  {/* Header dengan info user */}
-                  <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl">
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={user?.avatar_url || defaultProfile}
-                        alt="Profile"
-                        className="w-12 h-12 rounded-full border-2 border-white shadow-md"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-gray-800 font-semibold truncate">
-                          {user?.name || "User"}
-                        </p>
-                        <p className="text-xs text-gray-600 truncate">{user?.email}</p>
-                      </div>
-                    </div>
-                    
-                    {/* Status Testimoni */}
-                    {testimonialStatus && (
-                      <div className="mt-3 p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-gray-700">Status Testimoni:</span>
-                          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                            testimonialStatus === 'Disetujui' ? 'bg-green-100 text-green-800' :
-                            testimonialStatus === 'Ditolak' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {testimonialStatus}
-                          </span>
-                        </div>
-                        {/* Tampilkan pesan testimonial jika ada */}
-                        {testimonialMessage && (
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                            {testimonialMessage}
-                          </p>
-                        )}
-                      </div>
-                    )}
+              {/* Status Testimoni - Mobile */}
+              {testimonialStatus && (
+                <div className="mt-3 p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-gray-700">Status Testimoni:</span>
+                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                      testimonialStatus === 'Disetujui' ? 'bg-green-100 text-green-800' :
+                      testimonialStatus === 'Ditolak' ? 'bg-red-100 text-red-800' :
+                      'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {testimonialStatus}
+                    </span>
                   </div>
-
-                  {/* Menu Items */}
-                  <div className="p-2">
-                    <button
-                      onClick={() => {
-                        setShowProfileMenu(false);
-                        handleNavigation("/profile");
-                      }}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors mb-1"
-                    >
-                      <User className="w-4 h-4 text-gray-500" />
-                      <span>Edit Profil</span>
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setShowProfileMenu(false);
-                        handleNavigation("/testimoni");
-                      }}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors mb-1"
-                    >
-                      <Star className="w-4 h-4 text-yellow-500" />
-                      <span>Testimoni Saya</span>
-                      {hasNewTestimonialNotification && (
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                      )}
-                    </button>
-
-                    {(hasNewTestimonialNotification || unreadCount > 0) && (
-                      <button
-                        onClick={() => {
-                          setShowProfileMenu(false);
-                          markAllAsRead();
-                        }}
-                        className="w-full flex items-center space-x-3 px-3 py-2 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors mb-1"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        <span>Tandai Sudah Dibaca</span>
-                      </button>
-                    )}
-
-                    <div className="border-t border-gray-200 my-2"></div>
-
-                    <button
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                      className="w-full flex items-center space-x-3 px-3 py-2 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
-                    </button>
-                  </div>
+                  {testimonialMessage && (
+                    <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                      {testimonialMessage}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#FFF5CC] shadow-lg px-6 py-4 space-y-4">
-          {menuItems.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              onClick={() => handleNavigation(item.path)}
-              className="block text-gray-800 font-semibold hover:text-[#B80002] transition-colors py-2"
-            >
-              {item.name}
-            </Link>
-          ))}
+          {/* Navigation Menu */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-4 space-y-2">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  className={`flex items-center px-4 py-3 rounded-lg text-gray-800 font-medium transition-all duration-200 ${
+                    location.pathname === item.path 
+                      ? 'bg-[#B80002] text-white shadow-md' 
+                      : 'hover:bg-yellow-300 active:bg-gray-200'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              
+              {/* User Menu Items - Mobile */}
+              {isLoggedIn && (
+                <>
+                  <div className="border-t border-gray-200 my-4"></div>
+                  
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigation("/profile");
+                    }}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <User className="w-4 h-4 text-gray-500" />
+                    <span>Edit Profil</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavigation("/testimoni");
+                    }}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span>Testimoni Saya</span>
+                    {hasNewTestimonialNotification && (
+                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                    )}
+                  </button>
 
-          {!isLoggedIn ? (
-            <div className="flex flex-col space-y-2 pt-4">
-              <Link
-                to="/login"
-                onClick={() => handleNavigation("/login")}
-                className="px-5 py-3 rounded-lg bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002] transition"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => handleNavigation("/register")}
-                className="px-5 py-3 rounded-lg bg-[#FFD700] text-black text-center font-semibold hover:bg-[#e6c200] transition"
-              >
-                Daftar
-              </Link>
+                  {(hasNewTestimonialNotification || unreadCount > 0) && (
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        markAllAsRead();
+                      }}
+                      className="w-full flex items-center space-x-3 px-4 py-3 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors"
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Tandai Sudah Dibaca</span>
+                    </button>
+                  )}
+
+                  {/* Logout Button - TAMBAHAN DI BAWAH TESTIMONI SAYA */}
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 mt-4 border border-red-200"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+                  </button>
+                </>
+              )}
             </div>
-          ) : (
-            <div className="pt-4 border-t border-gray-300">
-              <div className="flex items-center space-x-3 mb-4 p-3 bg-white rounded-lg shadow-sm">
-                <img
-                  src={user?.avatar_url || defaultProfile}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full border-2 border-gray-300"
-                />
-                <div>
-                  <p className="font-semibold text-gray-800">{user?.name}</p>
-                  <p className="text-xs text-gray-600">{user?.email}</p>
-                </div>
+          </div>
+
+          {/* Mobile Menu Footer - untuk yang belum login */}
+          {!isLoggedIn && (
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="space-y-3">
+                <Link
+                  to="/login"
+                  onClick={() => handleNavigation("/login")}
+                  className="block w-full px-4 py-3 rounded-lg bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002] transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => handleNavigation("/register")}
+                  className="block w-full px-4 py-3 rounded-lg border-2 border-[#B80002] text-[#B80002] text-center font-semibold hover:bg-[#B80002] hover:text-white transition-colors"
+                >
+                  Daftar
+                </Link>
               </div>
-              <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="w-full bg-[#B80002] text-white py-3 rounded-lg hover:bg-[#a00002] transition font-semibold disabled:opacity-70"
-              >
-                {isLoggingOut ? "Logging out..." : "Logout"}
-              </button>
             </div>
           )}
         </div>
-      )}
-    </nav>
+      </div>
+    </>
   );
 }
 

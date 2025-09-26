@@ -179,7 +179,7 @@ function App() {
           {[...Array(15)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 bg-red-400 rounded-full opacity-30 animate-float"
+              className="absolute w-2 h-2 bg-red-800 rounded-full opacity-30 animate-float"
               style={{
                 top: `${Math.random() * 100}%`,
                 left: `${Math.random() * 100}%`,
@@ -198,24 +198,24 @@ function App() {
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
               DeKremes
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-red-400 to-red-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-600 to-red-900">
                 & Crispy
               </span>
             </h1>
-            <div className="w-32 h-1 bg-gradient-to-r from-red-400 to-red-500 mx-auto rounded-full mb-6"></div>
+            <div className="w-32 h-1 bg-gradient-to-r from-red-800 to-red-900 mx-auto rounded-full mb-6"></div>
           </div>
 
           {/* Tagline - MERAH */}
           <p className="text-gray-200 text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-            Nikmati <span className="text-red-300 font-semibold">promo spesial</span> kami dan rasakan 
-            kenikmatan ayam crispy <span className="text-red-300 font-semibold">terbaik</span> di kota!
+            Nikmati <span className="text-red-500 font-semibold">promo spesial</span> kami dan rasakan 
+            kenikmatan ayam crispy <span className="text-red-500 font-semibold">terbaik</span> di kota!
           </p>
 
           {/* CTA Buttons - MERAH */}
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <button
               onClick={() => window.location.href = '/menu'} 
-              className="group relative bg-gradient-to-r from-red-400 to-red-600 text-white px-10 py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 font-bold text-lg md:text-xl overflow-hidden"
+              className="group relative bg-gradient-to-r from-red-500 to-red-600 text-white px-10 py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 font-bold text-lg md:text-xl overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-3">
                 <svg className="w-6 h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
@@ -226,9 +226,9 @@ function App() {
               <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
             
-            <button className="group relative border-3 border-red-400 text-red-400 px-10 py-5 rounded-full hover:bg-red-400 hover:text-white transition-all duration-300 font-bold text-lg md:text-xl overflow-hidden">
+            <button className="group relative border-3 border-red-400 text-red-400 px-10 py-5 rounded-full hover:bg-red-700 hover:text-white transition-all duration-300 font-bold text-lg md:text-xl overflow-hidden">
               <span className="relative z-10">LIHAT MENU LENGKAP</span>
-              <div className="absolute inset-0 bg-red-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+              <div className="absolute inset-0 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
             </button>
           </div>
         </div>
