@@ -58,6 +58,42 @@ function App() {
     "src/assets/kegiatan/IMG20250619072923.jpg"
   ];
 
+  // Data FAQ
+  const faqData = [
+    {
+      question: "Apa saja menu andalan DeKremes & Crispy?",
+      answer: "Kami memiliki beberapa menu andalan seperti Ayam Crispy Original, Ayam Kremes Spesial, Big Mac®, Pallas Special, dan berbagai varian burger premium. Semua menu menggunakan bahan-bahan segar dan berkualitas tinggi."
+    },
+    {
+      question: "Apakah DeKremes & Crispy menyediakan layanan pesan antar?",
+      answer: "Ya, kami menyediakan layanan pesan antar melalui berbagai platform seperti GoFood, GrabFood, dan juga pesanan langsung via WhatsApp. Minimal pesan Rp 50.000 untuk area tertentu."
+    },
+    {
+      question: "Bagaimana sistem pembayaran yang tersedia?",
+      answer: "Kami menerima pembayaran tunai, transfer bank (BCA, BRI, Mandiri), e-wallet (GoPay, OVO, Dana), dan QRIS. Untuk pesanan online, pembayaran dapat dilakukan melalui aplikasi mitra kami."
+    },
+    {
+      question: "Apakah ada promo atau diskon khusus?",
+      answer: "Ya, kami selalu memiliki promo menarik setiap bulannya. Untuk info promo terkini, follow Instagram kami @dekremes_crispy atau cek website secara rutin. Member kartu setia juga dapat penawaran spesial!"
+    },
+    {
+      question: "Berapa lama waktu pengiriman pesanan?",
+      answer: "Waktu pengiriman bervariasi tergantung lokasi dan volume pesanan. Rata-rata 30-45 menit untuk area dalam kota, dan maksimal 60 menit untuk area pinggiran. Pesanan siap pickup dalam 15-20 menit."
+    },
+    {
+      question: "Apakah DeKremes & Crispy halal?",
+      answer: "Sangat halal! Kami memiliki sertifikat halal resmi dari MUI dan semua bahan yang digunakan dipastikan kehalalannya. Daging ayam kami berasal dari supplier terpercaya dengan sistem penyembelihan sesuai syariat Islam."
+    },
+    {
+      question: "Apakah bisa pesan untuk acara catering?",
+      answer: "Tentu bisa! Kami melayani pesanan catering untuk berbagai acara seperti ulang tahun, meeting kantor, arisan, dan acara keluarga. Minimal pesan 50 porsi dengan pemesanan H-3. Hubungi kami untuk penawaran khusus."
+    },
+    {
+      question: "Bagaimana cara menjadi member setia?",
+      answer: "Daftar member gratis di outlet kami dan dapatkan kartu member. Setiap pembelian terkumpul poin yang bisa ditukar dengan menu gratis atau diskon spesial. Member juga dapat info promo eksklusif!"
+    }
+  ];
+
   // State untuk menu favorit
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
   const [selectedMenu, setSelectedMenu] = useState(null);
@@ -68,6 +104,12 @@ function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const heroRef = useRef(null);
   const modalRef = useRef(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
+  // Fungsi toggle FAQ
+  const toggleFaq = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
 
   // Intersection Observer untuk hero section
   useEffect(() => {
@@ -248,7 +290,7 @@ function App() {
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
               DeKremes
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-red-400 to-red-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-700 to-red-500">
                 & Crispy
               </span>
             </h1>
@@ -756,7 +798,7 @@ function App() {
 
             {/* Trust Badges Mewah */}
             <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
-              {['MUI Certified', '100% Halal', 'Quality Guarantee','FAQ'].map((badge, index) => (
+              {['MUI Certified', '100% Halal', 'Quality Guarantee'].map((badge, index) => (
                 <span key={index} className="bg-red-500/30 text-red-200 px-4 py-2 rounded-full text-sm font-semibold border border-red-400/50 backdrop-blur-sm">
                   {badge}
                 </span>
@@ -775,6 +817,90 @@ function App() {
                 alt="Logo Halal MUI"
                 className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-lg"
               />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ SECTION - BARU DITAMBAHKAN */}
+      <div className="relative py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-red-400/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-block relative">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
+                FAQ
+              </h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-red-400 rounded-full"></div>
+            </div>
+            <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto mt-6 leading-relaxed">
+              Pertanyaan yang sering diajukan tentang <span className="text-red-600 font-semibold">DeKremes & Crispy</span>
+            </p>
+          </div>
+
+          {/* FAQ Items */}
+          <div className="space-y-4">
+            {faqData.map((faq, index) => (
+              <div 
+                key={index}
+                className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
+              >
+                <button
+                  onClick={() => toggleFaq(index)}
+                  className="w-full px-6 py-6 text-left flex justify-between items-center focus:outline-none"
+                >
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-800 pr-4">
+                    {faq.question}
+                  </h3>
+                  <svg 
+                    className={`w-6 h-6 text-red-600 transition-transform duration-300 flex-shrink-0 ${
+                      openFaqIndex === index ? 'transform rotate-180' : ''
+                    }`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                <div 
+                  className={`px-6 overflow-hidden transition-all duration-300 ${
+                    openFaqIndex === index ? 'max-h-96 pb-6' : 'max-h-0'
+                  }`}
+                >
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center mt-12">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-8 shadow-2xl">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                Masih ada pertanyaan?
+              </h3>
+              <p className="text-red-100 mb-6 text-lg">
+                Hubungi customer service kami yang siap membantu 24/7
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <button className="bg-white text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                  📞 Hubungi Kami
+                </button>
+                <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-all duration-300">
+                  💬 Chat WhatsApp
+                </button>
+              </div>
             </div>
           </div>
         </div>
