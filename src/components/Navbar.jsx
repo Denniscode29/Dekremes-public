@@ -420,7 +420,6 @@ function Navbar({ title }) {
   const menuItems = [
     { name: "Beranda", path: "/" },
     { name: "Tentang", path: "/tentang" },
-    { name: "Blog", path: "/blog" },
     { name: "Menu", path: "/menu" },
     { name: "Kontak", path: "/kontak" },
     { name: "Testimoni", path: "/testimoni" },
@@ -438,16 +437,24 @@ function Navbar({ title }) {
           }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-4 sm:px-6 lg:px-8">
-          {/* Logo */}
+          {/* Logo - DIUBAH: Efek hover yang lebih smooth */}
           <Link
             to="/"
-            className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-colors duration-300 hover:scale-105 transform ${
+            className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-all duration-500 ease-in-out hover:scale-105 transform relative group ${
               navbarBackground || solidBgRoutes.includes(location.pathname)
                 ? "text-gray-800"
                 : "text-white drop-shadow-lg"
             }`}
           >
             {title}
+            {/* Garis bawah animasi */}
+            <span 
+              className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#B80002] transition-all duration-500 ease-out group-hover:w-full ${
+                navbarBackground || solidBgRoutes.includes(location.pathname)
+                  ? "bg-[#B80002]"
+                  : "bg-[#FFD700]"
+              }`}
+            ></span>
           </Link>
 
           {/* Desktop Menu */}

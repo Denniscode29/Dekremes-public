@@ -156,10 +156,10 @@ function App() {
   const updateMenuItemWidth = useCallback(() => {
     const containerWidth = window.innerWidth;
     const visibleItems = getVisibleItemsCount();
-    const gap = 24;
-    const padding = 32;
+    const gap = 16;
+    const padding = containerWidth < 768 ? 16 : 32;
     
-    const calculatedWidth = (containerWidth - padding - (gap * (visibleItems - 1))) / visibleItems;
+    const calculatedWidth = (containerWidth - (padding * 2) - (gap * (visibleItems - 1))) / visibleItems;
     setMenuItemWidth(calculatedWidth);
   }, []);
 
@@ -173,14 +173,14 @@ function App() {
   // Menghitung jumlah item yang ditampilkan berdasarkan lebar layar
   const getVisibleItemsCount = () => {
     if (window.innerWidth < 640) return 1;
-    if (window.innerWidth < 768) return 2;
-    if (window.innerWidth < 1024) return 3;
-    return 4;
+    if (window.innerWidth < 768) return 1.5;
+    if (window.innerWidth < 1024) return 2.5;
+    return 3.5;
   };
 
   // Navigasi menu carousel
   const nextMenu = () => {
-    const visibleItems = getVisibleItemsCount();
+    const visibleItems = Math.floor(getVisibleItemsCount());
     if (currentMenuIndex < favoriteMenus.length - visibleItems) {
       setCurrentMenuIndex(currentMenuIndex + 1);
     }
@@ -194,7 +194,7 @@ function App() {
 
   // Menghitung translateX untuk carousel
   const calculateTranslateX = () => {
-    const gap = 24;
+    const gap = 16;
     return -currentMenuIndex * (menuItemWidth + gap);
   };
 
@@ -288,9 +288,9 @@ function App() {
         }`}>
           {/* Logo/Title dengan efek mewah - MERAH SOLID */}
           <div className="mb-8">
-            <h1 className="text-6xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
+            <h1 className="text-5xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
               DeKremes
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-700 to-red-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-700 to-red-500 text-4xl md:text-7xl">
                 & Crispy
               </span>
             </h1>
@@ -298,19 +298,19 @@ function App() {
           </div>
 
           {/* Tagline - MERAH */}
-          <p className="text-gray-200 text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-gray-200 text-lg md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             Nikmati <span className="text-red-500 font-semibold">promo spesial</span> kami dan rasakan 
             kenikmatan ayam crispy <span className="text-red-500 font-semibold">terbaik</span> di kota!
           </p>
 
           {/* CTA Buttons - MERAH */}
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
             <button
               onClick={() => window.location.href = '/menu'} 
-              className="group relative bg-gradient-to-r from-red-500 to-red-600 text-white px-10 py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 font-bold text-lg md:text-xl overflow-hidden"
+              className="group relative bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 md:px-10 md:py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 font-bold text-base md:text-xl overflow-hidden"
             >
-              <span className="relative z-10 flex items-center justify-center gap-3">
-                <svg className="w-6 h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+              <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+                <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
                 </svg>
                 PESAN SEKARANG
@@ -318,7 +318,7 @@ function App() {
               <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
             
-            <button className="group relative border-3 border-red-400 text-red-400 px-10 py-5 rounded-full hover:bg-red-700 hover:text-white transition-all duration-300 font-bold text-lg md:text-xl overflow-hidden">
+            <button className="group relative border-2 md:border-3 border-red-400 text-red-400 px-6 py-4 md:px-10 md:py-5 rounded-full hover:bg-red-700 hover:text-white transition-all duration-300 font-bold text-base md:text-xl overflow-hidden">
               <span className="relative z-10">LIHAT MENU LENGKAP</span>
               <div className="absolute inset-0 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
             </button>
@@ -336,13 +336,13 @@ function App() {
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION - DESIGN MEWAH */}
-      <div className="relative py-20 bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] overflow-hidden">
+      {/* MENU FAVORIT SECTION - DESIGN MEWAH YANG DIPERBAIKI */}
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] overflow-hidden">
         {/* Background Elements Mewah */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-red-400/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-yellow-400/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 left-0 w-48 md:w-72 h-48 md:h-72 bg-red-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/4 w-32 md:w-64 h-32 md:h-64 bg-yellow-400/5 rounded-full blur-3xl"></div>
         </div>
 
         {/* Floating Food Icons */}
@@ -363,47 +363,47 @@ function App() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4">
           {/* Section Header Mewah */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <div className="inline-block relative">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
                 MENU FAVORIT
               </h2>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-48 h-2 bg-red-500 rounded-full"></div>
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-red-400 rounded-full"></div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 md:w-48 h-1 md:h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-24 md:w-40 h-0.5 md:h-1 bg-red-400 rounded-full"></div>
             </div>
-            <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto mt-6 leading-relaxed">
+            <p className="text-gray-700 text-base md:text-lg lg:text-xl max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
               Temukan <span className="text-red-600 font-semibold">menu-menu spesial</span> yang selalu dinantikan oleh pelanggan setia kami
             </p>
           </div>
 
-          {/* Carousel Container Mewah */}
+          {/* Carousel Container Mewah - DESIGN BARU */}
           <div className="relative">
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - IMPROVED */}
             <button 
               onClick={prevMenu}
               disabled={currentMenuIndex === 0}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group"
+              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
             >
-              <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             
             <button 
               onClick={nextMenu}
-              disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - getVisibleItemsCount())}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group"
+              disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - Math.floor(getVisibleItemsCount()))}
+              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
             >
-              <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
 
-            {/* Carousel Items */}
-            <div className="relative overflow-hidden rounded-3xl">
+            {/* Carousel Items - IMPROVED DESIGN */}
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
               <div 
                 ref={menuCarouselRef}
-                className="flex transition-transform duration-700 ease-out gap-6 py-4"
+                className="flex transition-transform duration-700 ease-out gap-4 py-4"
                 style={{ 
                   transform: `translateX(${calculateTranslateX()}px)`,
                   userSelect: 'none'
@@ -413,17 +413,17 @@ function App() {
                   <div 
                     key={index}
                     onClick={() => handleMenuClick(menu)}
-                    className="group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95"
+                    className="group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95 flex-shrink-0"
                     style={{ 
                       width: `${menuItemWidth}px`,
                       minWidth: `${menuItemWidth}px`
                     }}
                   >
-                    {/* Card Mewah */}
-                    <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-red-400 group-hover:shadow-3xl transition-all duration-300">
-                      {/* Badge */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg ${
+                    {/* Card Mewah - IMPROVED DESIGN */}
+                    <div className="relative bg-white rounded-xl md:rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-red-400 group-hover:shadow-3xl transition-all duration-300 h-full flex flex-col">
+                      {/* Badge - IMPROVED */}
+                      <div className="absolute top-3 md:top-4 left-3 md:left-4 z-10">
+                        <span className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold text-white shadow-lg ${
                           menu.badge === "BEST SELLER" ? "bg-red-600" :
                           menu.badge === "NEW" ? "bg-green-500" :
                           menu.badge === "PREMIUM" ? "bg-purple-500" :
@@ -434,52 +434,65 @@ function App() {
                         </span>
                       </div>
 
-                      {/* Image Container */}
-                      <div className="relative h-56 overflow-hidden">
+                      {/* Image Container - IMPROVED */}
+                      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden bg-gray-100">
                         <img 
                           src={menu.image} 
                           alt={menu.name} 
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                         />
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                        
+                        {/* Quick View Button */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Content */}
-                      <div className="p-6">
-                        <div className="flex justify-between items-start mb-3">
-                          <h3 className="text-xl font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300">
+                      {/* Content - IMPROVED */}
+                      <div className="p-4 md:p-6 flex-1 flex flex-col">
+                        <div className="flex justify-between items-start mb-3 md:mb-4">
+                          <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300 leading-tight">
                             {menu.name}
                           </h3>
-                          <div className="w-2 h-2 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          <div className="w-2 h-2 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2"></div>
                         </div>
                         
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+                        <p className="text-gray-600 text-sm md:text-base mb-4 md:mb-6 line-clamp-2 leading-relaxed flex-1">
                           {menu.description}
                         </p>
                         
-                        <div className="flex justify-between items-center">
-                          <span className="text-2xl font-black text-red-600">{menu.price}</span>
-                          <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg group-hover:shadow-xl">
+                        <div className="flex justify-between items-center mt-auto">
+                          <span className="text-xl md:text-2xl lg:text-3xl font-black text-red-600">{menu.price}</span>
+                          <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg group-hover:shadow-xl text-sm md:text-base flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                            </svg>
                             Pesan
                           </button>
                         </div>
                       </div>
 
                       {/* Hover Effect */}
-                      <div className="absolute inset-0 border-4 border-red-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+                      <div className="absolute inset-0 border-2 md:border-4 border-red-400 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Dots Indicator */}
-            <div className="flex justify-center mt-8 space-x-3">
-              {Array.from({ length: Math.max(1, favoriteMenus.length - getVisibleItemsCount() + 1) }).map((_, index) => (
+            {/* Dots Indicator - IMPROVED */}
+            <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
+              {Array.from({ length: Math.max(1, favoriteMenus.length - Math.floor(getVisibleItemsCount()) + 1) }).map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-300 ${
                     currentMenuIndex === index 
                       ? 'bg-red-600 scale-125 shadow-lg' 
                       : 'bg-gray-300 hover:bg-gray-400'
@@ -490,11 +503,11 @@ function App() {
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className="text-center mt-12">
-            <button className="relative bg-gradient-to-r from-red-600 to-red-700 text-white px-12 py-4 rounded-full font-bold text-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden">
+          {/* CTA Button - IMPROVED */}
+          <div className="text-center mt-8 md:mt-12">
+            <button className="relative bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 md:px-12 md:py-5 rounded-full font-bold text-lg md:text-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden">
               <span className="relative z-10 flex items-center justify-center gap-3">
-                <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
                 </svg>
                 LIHAT SEMUA MENU
@@ -510,14 +523,14 @@ function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div 
             ref={modalRef}
-            className={`relative bg-white rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
+            className={`relative bg-white rounded-2xl md:rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
           >
             {/* Close Button */}
             <button 
               onClick={closeModal}
-              className="absolute top-4 right-4 z-20 w-10 h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
+              className="absolute top-3 right-3 md:top-4 md:right-4 z-20 w-8 h-8 md:w-10 md:h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -525,7 +538,7 @@ function App() {
             {/* Modal Content */}
             <div className="relative">
               {/* Image Section */}
-              <div className="relative h-64 md:h-80 overflow-hidden">
+              <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden">
                 <img 
                   src={selectedMenu.image} 
                   alt={selectedMenu.name}
@@ -534,8 +547,8 @@ function App() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 
                 {/* Badge */}
-                <div className="absolute top-4 left-4">
-                  <span className={`px-4 py-2 rounded-full text-sm font-bold text-white shadow-2xl ${
+                <div className="absolute top-3 md:top-4 left-3 md:left-4">
+                  <span className={`px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold text-white shadow-2xl ${
                     selectedMenu.badge === "BEST SELLER" ? "bg-red-600" :
                     selectedMenu.badge === "NEW" ? "bg-green-500" :
                     selectedMenu.badge === "PREMIUM" ? "bg-purple-500" :
@@ -548,27 +561,27 @@ function App() {
               </div>
 
               {/* Content Section */}
-              <div className="p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-3xl md:text-4xl font-black text-gray-800 mb-2">
+              <div className="p-4 md:p-6 lg:p-8">
+                <div className="text-center mb-4 md:mb-6">
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-800 mb-2">
                     {selectedMenu.name}
                   </h3>
-                  <div className="w-20 h-1 bg-red-500 rounded-full mx-auto"></div>
+                  <div className="w-16 md:w-20 h-1 bg-red-500 rounded-full mx-auto"></div>
                 </div>
 
-                <p className="text-gray-600 text-lg leading-relaxed mb-6 text-center">
+                <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4 md:mb-6 text-center">
                   {selectedMenu.description}
                 </p>
 
-                <div className="text-center mb-8">
-                  <span className="text-4xl font-black text-red-600">{selectedMenu.price}</span>
+                <div className="text-center mb-6 md:mb-8">
+                  <span className="text-2xl md:text-3xl lg:text-4xl font-black text-red-600">{selectedMenu.price}</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <button className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <button className="bg-gray-100 text-gray-700 px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 text-sm md:text-base">
                     Tambah Ke Keranjang
                   </button>
-                  <button className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105">
+                  <button className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
                     Pesan Sekarang
                   </button>
                 </div>
@@ -579,8 +592,8 @@ function App() {
       )}
 
       {/* GALLERY SECTION */}
-      <div className="py-12 bg-red-600">
-        <h2 className="text-3xl font-bold text-center mb-8 text-white">Galeri Kegiatan Dekremes</h2>
+      <div className="py-8 md:py-12 bg-red-600">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-white">Galeri Kegiatan Dekremes</h2>
         <div className="overflow-hidden relative">
           <div className="flex animate-scroll">
             {kegiatanImages.concat(kegiatanImages).map((img, index) => (
@@ -588,59 +601,56 @@ function App() {
                 key={index} 
                 src={img} 
                 alt="Kegiatan Dekremes" 
-                className="h-48 md:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
+                className="h-32 md:h-48 lg:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* AYAM CRISPY & KENTANG SECTION */}
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] flex items-center relative overflow-hidden">
+      {/* AYAM CRISPY & KENTANG SECTION - RESPONSIVE FIX */}
+      <div className="min-h-screen bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] flex items-center relative overflow-hidden py-12 md:py-0">
         {/* Background Elements */}
-        <div className="absolute top-0 left-0 w-80 h-80 bg-red-400/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-400/15 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-48 md:w-80 h-48 md:h-80 bg-red-400/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-400/15 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
         
-        {/* Logo Bulat Ayam */}
-        <div className="absolute top-20 left-20 animate-bounce">
-          <div className="w-20 h-20 bg-red-500/30 rounded-full flex items-center justify-center shadow-2xl border-4 border-red-400/50">
-            <svg className="w-10 h-10 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+        {/* Logo Bulat Ayam - Responsive Positioning */}
+        <div className="absolute top-6 left-6 md:top-20 md:left-20 animate-bounce z-10">
+          <div className="w-12 h-12 md:w-20 md:h-20 bg-red-500/30 rounded-full flex items-center justify-center shadow-2xl border-2 md:border-4 border-red-400/50">
+            <svg className="w-6 h-6 md:w-10 md:h-10 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              </svg>
+          </div>
+        </div>
+
+        {/* Logo Bulat Kentang - Responsive Positioning */}
+        <div className="absolute bottom-8 right-8 md:bottom-32 md:right-32 animate-bounce delay-1000 z-10">
+          <div className="w-10 h-10 md:w-16 md:h-16 bg-yellow-500/40 rounded-full flex items-center justify-center shadow-2xl border-2 md:border-4 border-yellow-400/50">
+            <svg className="w-5 h-5 md:w-8 md:h-8 text-yellow-700" fill="currentColor" viewBox="0 0 20 20">
             </svg>
           </div>
         </div>
 
-        {/* Logo Bulat Kentang */}
-        <div className="absolute bottom-32 right-32 animate-bounce delay-1000">
-          <div className="w-16 h-16 bg-yellow-500/40 rounded-full flex items-center justify-center shadow-2xl border-4 border-yellow-400/50">
-            <svg className="w-8 h-8 text-yellow-700" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"/>
-            </svg>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 w-full items-center px-8 lg:px-20 gap-12 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 w-full items-center px-4 md:px-8 lg:px-20 gap-8 md:gap-12 max-w-7xl mx-auto">
           {/* Image Card dengan Logo Ayam */}
-          <div className="flex justify-center lg:justify-end relative">
+          <div className="flex justify-center lg:justify-end relative order-2 lg:order-1">
             <div className="relative group">
-              <div className="relative bg-white p-4 rounded-2xl shadow-xl transition-transform duration-500 group-hover:scale-105">
-                <div className="relative overflow-hidden rounded-xl">
+              <div className="relative bg-white p-3 md:p-4 rounded-xl md:rounded-2xl shadow-xl transition-transform duration-500 group-hover:scale-105">
+                <div className="relative overflow-hidden rounded-lg md:rounded-xl">
                   <img
                     src="src/assets/produk/ciken.jpeg"
                     alt="Ayam Crispy & Kentang"
-                    className="w-80 lg:w-96 xl:w-[450px] rounded-xl border-2 border-gray-100 transition-transform duration-700 group-hover:scale-110"
+                    className="w-64 md:w-80 lg:w-96 xl:w-[450px] rounded-lg md:rounded-xl border-2 border-gray-100 transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
                 
                 {/* Badge Merah */}
-                <div className="absolute -top-2 -right-2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                <div className="absolute -top-2 -right-2 bg-red-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-bold shadow-lg">
                   BEST SELLER
                 </div>
 
                 {/* Logo Ayam Kecil */}
-                <div className="absolute -bottom-2 -left-2 w-12 h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 md:w-12 md:h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
                   </svg>
                 </div>
@@ -649,47 +659,47 @@ function App() {
           </div>
 
           {/* Text Content */}
-          <div className="text-center lg:text-left lg:pl-8">
-            <div className="mb-8">
-              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-red-600 mb-4 leading-tight">
+          <div className="text-center lg:text-left lg:pl-4 md:lg:pl-8 order-1 lg:order-2">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-red-600 mb-3 md:mb-4 leading-tight">
                 Ayam Crispy 
-                <span className="block text-red-500">
+                <span className="block text-red-500 text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                   & Kentang Spesial
                 </span>
               </h2>
-              <div className="w-24 h-1 bg-red-500 rounded-full mb-6"></div>
+              <div className="w-16 md:w-24 h-1 bg-red-500 rounded-full mb-4 md:mb-6 mx-auto lg:mx-0"></div>
             </div>
 
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-center lg:justify-start gap-3">
-                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-lg font-medium">Ayam pilihan berkualitas premium</p>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Ayam pilihan berkualitas premium</p>
               </div>
               
-              <div className="flex items-center justify-center lg:justify-start gap-3">
-                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-lg font-medium">Kentang goreng renyah dan gurih</p>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Kentang goreng renyah dan gurih</p>
               </div>
               
-              <div className="flex items-center justify-center lg:justify-start gap-3">
-                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-lg font-medium">Sambal spesial racikan tradisional</p>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Sambal spesial racikan tradisional</p>
               </div>
             </div>
 
-            <p className="text-gray-600 text-lg lg:text-xl mb-8 leading-relaxed">
+            <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed">
               Ayam Crispy kami dibuat dari <span className="text-red-600 font-semibold">ayam pilihan terbaik</span> yang digoreng 
               dengan teknik khusus hingga mencapai tingkat kerenyahan sempurna. Disajikan bersama 
               <span className="text-red-500 font-semibold"> kentang goreng premium</span> dan sambal spesial yang menggugah selera.
@@ -697,7 +707,7 @@ function App() {
 
             {/* Single CTA Button Merah */}
             <div className="flex justify-center lg:justify-start">
-              <button className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition-transform transform hover:scale-105 text-lg shadow-lg">
+              <button className="bg-red-600 text-white px-6 py-3 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-red-700 transition-transform transform hover:scale-105 text-base md:text-lg shadow-lg">
                 ORDER SEKARANG
               </button>
             </div>
@@ -706,44 +716,44 @@ function App() {
       </div>
 
       {/* HALAL CERTIFICATION SECTION */}
-      <div className="relative bg-gradient-to-br from-red-800 via-red-700 to-red-600 py-20 px-8 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-red-800 via-red-700 to-red-600 py-12 md:py-20 px-4 md:px-8 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Logo Bulat Dekorasi */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-red-400/20 rounded-full animate-pulse border-4 border-red-300/30">
+        <div className="absolute top-6 left-6 md:top-10 md:left-10 w-12 h-12 md:w-20 md:h-20 bg-red-400/20 rounded-full animate-pulse border-2 md:border-4 border-red-300/30">
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-300" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-5 h-5 md:w-8 md:h-8 text-red-300" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
           </div>
         </div>
 
-        <div className="absolute bottom-10 right-10 w-16 h-16 bg-white/10 rounded-full animate-bounce">
+        <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 w-10 h-10 md:w-16 md:h-16 bg-white/10 rounded-full animate-bounce">
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
         </div>
 
-        <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-red-300/20 rounded-full animate-ping"></div>
+        <div className="absolute top-1/2 left-1/4 w-8 h-8 md:w-12 md:h-12 bg-red-300/20 rounded-full animate-ping"></div>
 
         {/* Main Content */}
-        <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Certificate dengan Frame Mewah */}
-          <div className="flex justify-center lg:justify-start">
+          <div className="flex justify-center lg:justify-start order-2 lg:order-1">
             <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-red-400 to-red-600 rounded-3xl opacity-40 blur-2xl animate-pulse"></div>
+              <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-r from-red-400 to-red-600 rounded-2xl md:rounded-3xl opacity-40 blur-xl md:blur-2xl animate-pulse"></div>
               
               {/* Gold Frame */}
-              <div className="relative bg-gradient-to-br from-red-300 via-red-400 to-red-500 p-4 rounded-2xl shadow-2xl">
-                <div className="relative overflow-hidden rounded-lg border-4 border-white">
+              <div className="relative bg-gradient-to-br from-red-300 via-red-400 to-red-500 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-2xl">
+                <div className="relative overflow-hidden rounded-lg border-2 md:border-4 border-white">
                   <img
                     src="src/assets/Halal_sertifikat.png"
                     alt="Sertifikat Halal MUI"
-                    className="w-80 lg:w-96 rounded-lg transition-transform duration-700 group-hover:scale-105"
+                    className="w-64 md:w-80 lg:w-96 rounded-lg transition-transform duration-700 group-hover:scale-105"
                   />
                   
                   {/* Shine Effect on Hover */}
@@ -752,8 +762,8 @@ function App() {
               </div>
 
               {/* Seal Badge */}
-              <div className="absolute -top-3 -right-3 w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl animate-bounce border-2 border-white">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-8 h-8 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl animate-bounce border-2 border-white">
+                <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -761,35 +771,35 @@ function App() {
           </div>
 
           {/* Text Content Mewah */}
-          <div className="text-white text-center lg:text-left">
-            <div className="mb-8">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <div className="text-white text-center lg:text-left order-1 lg:order-2">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
                 <span className="text-red-200">
                   BerSertifikasi Halal
                 </span>
               </h2>
-              <div className="w-20 h-1 bg-red-400 rounded-full mb-6"></div>
+              <div className="w-12 md:w-20 h-1 bg-red-400 rounded-full mb-4 md:mb-6 mx-auto lg:mx-0"></div>
             </div>
 
-            <div className="space-y-6 text-lg lg:text-xl">
-              <div className="flex items-center justify-center lg:justify-start gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="space-y-4 md:space-y-6 text-base md:text-lg lg:text-xl">
+              <div className="flex items-center justify-center lg:justify-start gap-3 md:gap-4 p-3 md:p-4 bg-white/10 rounded-xl md:rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="flex-shrink-0 w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-white/90 leading-relaxed">
+                <p className="text-white/90 leading-relaxed text-sm md:text-base">
                   Kami berkomitmen untuk selalu menjaga <span className="text-red-300 font-semibold">kualitas dan kepercayaan</span> pelanggan.
                 </p>
               </div>
 
-              <div className="flex items-center justify-center lg:justify-start gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center justify-center lg:justify-start gap-3 md:gap-4 p-3 md:p-4 bg-white/10 rounded-xl md:rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="flex-shrink-0 w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-white/90 leading-relaxed">
+                <p className="text-white/90 leading-relaxed text-sm md:text-base">
                   Seluruh produk kami telah tersedia dengan <span className="text-red-300 font-semibold">Sertifikat Halal resmi</span> dari
                   Majelis Ulama Indonesia (MUI).
                 </p>
@@ -797,9 +807,9 @@ function App() {
             </div>
 
             {/* Trust Badges Mewah */}
-            <div className="flex flex-wrap gap-4 mt-8 justify-center lg:justify-start">
+            <div className="flex flex-wrap gap-2 md:gap-4 mt-6 md:mt-8 justify-center lg:justify-start">
               {['MUI Certified', '100% Halal', 'Quality Guarantee'].map((badge, index) => (
-                <span key={index} className="bg-red-500/30 text-red-200 px-4 py-2 rounded-full text-sm font-semibold border border-red-400/50 backdrop-blur-sm">
+                <span key={index} className="bg-red-500/30 text-red-200 px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold border border-red-400/50 backdrop-blur-sm">
                   {badge}
                 </span>
               ))}
@@ -808,14 +818,14 @@ function App() {
         </div>
 
         {/* Animated Halal Logo */}
-        <div className="absolute bottom-8 right-8">
+        <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8">
           <div className="relative group">
             <div className="absolute inset-0 bg-red-400 rounded-full animate-ping opacity-30"></div>
-            <div className="relative bg-gradient-to-br from-red-300 to-red-500 p-3 rounded-full shadow-2xl border-2 border-white">
+            <div className="relative bg-gradient-to-br from-red-300 to-red-500 p-2 md:p-3 rounded-full shadow-2xl border-2 border-white">
               <img
                 src="src/assets/Logo_Halal.png"
                 alt="Logo Halal MUI"
-                className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-lg"
+                className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 drop-shadow-lg"
               />
             </div>
           </div>
@@ -823,42 +833,42 @@ function App() {
       </div>
 
       {/* FAQ SECTION - BARU DITAMBAHKAN */}
-      <div className="relative py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden">
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-red-400/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-red-400/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-48 md:w-80 h-48 md:h-80 bg-red-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto px-4">
           {/* Section Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <div className="inline-block relative">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-red-600 mb-3 md:mb-4 relative z-10">
                 FAQ
               </h2>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-red-500 rounded-full"></div>
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-red-400 rounded-full"></div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 md:w-32 h-1 md:h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 md:w-28 h-0.5 md:h-1 bg-red-400 rounded-full"></div>
             </div>
-            <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto mt-6 leading-relaxed">
+            <p className="text-gray-700 text-base md:text-lg lg:text-xl max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
               Pertanyaan yang sering diajukan tentang <span className="text-red-600 font-semibold">DeKremes & Crispy</span>
             </p>
           </div>
 
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {faqData.map((faq, index) => (
               <div 
                 key={index}
-                className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
+                className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
               >
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="w-full px-6 py-6 text-left flex justify-between items-center focus:outline-none"
+                  className="w-full px-4 py-4 md:px-6 md:py-6 text-left flex justify-between items-center focus:outline-none"
                 >
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-800 pr-4">
+                  <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 pr-3 md:pr-4 text-left">
                     {faq.question}
                   </h3>
                   <svg 
-                    className={`w-6 h-6 text-red-600 transition-transform duration-300 flex-shrink-0 ${
+                    className={`w-5 h-5 md:w-6 md:h-6 text-red-600 transition-transform duration-300 flex-shrink-0 ${
                       openFaqIndex === index ? 'transform rotate-180' : ''
                     }`}
                     fill="none" 
@@ -870,12 +880,12 @@ function App() {
                 </button>
                 
                 <div 
-                  className={`px-6 overflow-hidden transition-all duration-300 ${
-                    openFaqIndex === index ? 'max-h-96 pb-6' : 'max-h-0'
+                  className={`px-4 md:px-6 overflow-hidden transition-all duration-300 ${
+                    openFaqIndex === index ? 'max-h-96 pb-4 md:pb-6' : 'max-h-0'
                   }`}
                 >
-                  <div className="border-t border-gray-200 pt-4">
-                    <p className="text-gray-600 leading-relaxed">
+                  <div className="border-t border-gray-200 pt-3 md:pt-4">
+                    <p className="text-gray-600 leading-relaxed text-sm md:text-base">
                       {faq.answer}
                     </p>
                   </div>
@@ -885,19 +895,19 @@ function App() {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center mt-12">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-8 shadow-2xl">
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <div className="text-center mt-8 md:mt-12">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl md:rounded-2xl p-6 md:p-8 shadow-2xl">
+              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 md:mb-4">
                 Masih ada pertanyaan?
               </h3>
-              <p className="text-red-100 mb-6 text-lg">
+              <p className="text-red-100 mb-4 md:mb-6 text-base md:text-lg">
                 Hubungi customer service kami yang siap membantu 24/7
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <button className="bg-white text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
+                <button className="bg-white text-red-600 px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
                   📞 Hubungi Kami
                 </button>
-                <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-all duration-300">
+                <button className="border-2 border-white text-white px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-all duration-300 text-sm md:text-base">
                   💬 Chat WhatsApp
                 </button>
               </div>

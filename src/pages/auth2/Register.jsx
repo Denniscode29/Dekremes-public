@@ -142,11 +142,11 @@ export default function Register() {
               />
               <label htmlFor="terms" className="text-xs sm:text-sm text-gray-600 leading-tight cursor-pointer">
                 Saya menyetujui{" "}
-                <Link to="/terms" className="text-red-600 hover:text-red-800 underline font-medium">
+                <Link to="/Syarat" className="text-red-600 hover:text-red-800 underline font-medium">
                   syarat dan ketentuan
                 </Link>{" "}
                 serta{" "}
-                <Link to="/privacy" className="text-red-600 hover:text-red-800 underline font-medium">
+                <Link to="/Kebijakan" className="text-red-600 hover:text-red-800 underline font-medium">
                   kebijakan privasi
                 </Link>
               </label>
