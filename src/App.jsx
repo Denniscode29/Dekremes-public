@@ -337,7 +337,7 @@ function App() {
       </div>
 
       {/* MENU FAVORIT SECTION - DESIGN MEWAH YANG DIPERBAIKI */}
-      <div className="relative py-12 md:py-20 bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] overflow-hidden">
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-[#FFFFFF] via-[#FFFFFF] to-[#FFFFFF] overflow-hidden">
         {/* Background Elements Mewah */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-48 md:w-72 h-48 md:h-72 bg-red-400/10 rounded-full blur-3xl"></div>
@@ -609,7 +609,7 @@ function App() {
       </div>
 
       {/* AYAM CRISPY & KENTANG SECTION - RESPONSIVE FIX */}
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF5CC] via-[#FFEBB5] to-[#FFF5CC] flex items-center relative overflow-hidden py-12 md:py-0">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#FFFFFF] to-[#FFFFFF] flex items-center relative overflow-hidden py-12 md:py-0">
         {/* Background Elements */}
         <div className="absolute top-0 left-0 w-48 md:w-80 h-48 md:h-80 bg-red-400/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-400/15 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>

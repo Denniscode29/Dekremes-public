@@ -50,7 +50,7 @@ function Kontak() {
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#FFF5CC] py-16 px-6 md:px-20">
+      <div className="bg-[#FFFFFF] py-16 px-6 md:px-20">
   <div className="max-w-7xl mx-auto">
     {/* Contact Section */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">

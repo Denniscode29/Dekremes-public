@@ -432,7 +432,7 @@ function Navbar({ title }) {
           ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
           ${
             navbarBackground || solidBgRoutes.includes(location.pathname)
-              ? "bg-[#FFF5CC] shadow-lg backdrop-blur-sm bg-opacity-95"
+              ? "bg-[#FFFFFF] shadow-lg backdrop-blur-sm bg-opacity-95"
               : "bg-transparent"
           }`}
       >

@@ -124,7 +124,7 @@ function Menu() {
       </div>
 
       {/* Sarapan Pagi Section */}
-      <div className="bg-[#FFF5CC] py-16 px-6">
+      <div className="bg-[#FFFFFF] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-red-600 mb-4">Makan Spesial</h2>
@@ -200,7 +200,7 @@ function Menu() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-[#FFF5CC] py-16 px-6">
+      <div className="bg-[#FFFFFF] py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-red-600 mb-6">Tertarik dengan menu kami?</h2>
           <p className="text-gray-800 text-lg mb-8">
