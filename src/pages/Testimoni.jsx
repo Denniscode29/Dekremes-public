@@ -310,7 +310,7 @@ const handleDeleteTestimonial = async () => {
         </div>
       </div>
 
-      <div className="min-h-screen bg-[#FFF5CC] py-12 px-6 md:px-20">
+      <div className="min-h-screen bg-[#FFFFFF] py-12 px-6 md:px-20">
         {/* Summary Rating */}
         <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl max-w-2xl mx-auto mb-10">
           <div className="bg-white rounded-2xl p-6 text-center">
