@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthController from "../controllers/AuthController";
 import api from "../api/api";
 import Swal from "sweetalert2";
@@ -16,9 +16,8 @@ export default function TestimoniPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userTestimonialStatus, setUserTestimonialStatus] = useState(null);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [refreshData, setRefreshData] = useState(0);
-  const navigate = useNavigate();
+  const [showThankYou, setShowThankYou] = useState(false);
 
   // auth state
   const { isLoggedIn, user } = AuthController();
@@ -32,11 +31,10 @@ export default function TestimoniPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await api.get("/auth/testimonials");
+      const response = await api.get("/testimonials");
       if (response.data && response.data.testimonials) {
         setTestimonials(response.data.testimonials);
         
-        // Calculate average rating
         if (response.data.testimonials.length > 0) {
           const totalRating = response.data.testimonials.reduce((sum, t) => sum + parseInt(t.rating), 0);
           const avg = totalRating / response.data.testimonials.length;
@@ -61,10 +59,13 @@ export default function TestimoniPage() {
 
   const checkUserTestimonialStatus = async () => {
     try {
-      // PERBAIKAN: Gunakan endpoint yang sesuai dengan backend
       const response = await api.get("/testimonials/check");
       setUserTestimonialStatus(response.data);
-      setHasSubmitted(response.data.hasSubmitted);
+      
+      // Reset status terima kasih jika testimoni sudah ada
+      if (response.data.hasSubmitted) {
+        setShowThankYou(false);
+      }
     } catch (error) {
       console.error("Error checking user testimonial status:", error);
       setUserTestimonialStatus({ hasSubmitted: false, testimonial: null });
@@ -120,24 +121,21 @@ export default function TestimoniPage() {
         formData.append('product_photo', gambar);
       }
 
-      // PERBAIKAN: Sesuaikan dengan route yang ada di backend
       await api.post("/testimonials", formData);
 
-      
-      Swal.fire({
-        icon: "success",
-        title: "Terima Kasih!",
-        text: "Testimoni Anda telah dikirim dan menunggu verifikasi admin.",
-      });
-      
+      // Tampilkan pesan terima kasih dan reset form
+      setShowThankYou(true);
       setKomentar("");
       setRating(0);
       setGambar(null);
       setGambarPreview(null);
       setShowForm(false);
-      setHasSubmitted(true);
-      checkUserTestimonialStatus();
-      setRefreshData(prev => prev + 1);
+      
+      // Refresh data setelah 2 detik
+      setTimeout(() => {
+        setRefreshData(prev => prev + 1);
+        checkUserTestimonialStatus();
+      }, 2000);
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       Swal.fire({
@@ -164,13 +162,17 @@ export default function TestimoniPage() {
 
     if (result.isConfirmed) {
       try {
-        // PERBAIKAN: Hapus fungsi delete jika tidak ada di backend
-        // Atau tambahkan route delete di backend
+        // Hapus testimoni
+        await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
+        
         Swal.fire({
-          icon: "error",
-          title: "Fitur belum tersedia",
-          text: "Fitur penghapusan testimoni belum tersedia.",
+          icon: "success",
+          title: "Terhapus",
+          text: "Testimoni berhasil dihapus.",
         });
+        
+        setRefreshData(prev => prev + 1);
+        checkUserTestimonialStatus();
       } catch (error) {
         console.error("Error deleting testimonial:", error);
         Swal.fire({
@@ -230,6 +232,8 @@ export default function TestimoniPage() {
   // Fungsi untuk memformat tanggal dengan benar
   const formatDate = (dateString) => {
     try {
+      if (!dateString) return "Tanggal tidak valid";
+      
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
         return "Tanggal tidak valid";
@@ -247,7 +251,7 @@ export default function TestimoniPage() {
 
   return (
     <>
-      {/* Header Section - Menggunakan gambar seperti di Tentang.jsx */}
+      {/* Header Section */}
       <div className="relative h-96 flex items-center justify-center overflow-hidden">
         <img
           src="src/assets/chicken1.jpg"
@@ -307,7 +311,7 @@ export default function TestimoniPage() {
         {isLoggedIn && renderTestimonialStatus()}
 
         {/* Tampilan setelah berhasil submit */}
-        {isLoggedIn && hasSubmitted && userTestimonialStatus?.testimonial?.status !== 'disetujui' && userTestimonialStatus?.testimonial?.status !== 'ditolak' && (
+        {isLoggedIn && showThankYou && (
           <div className="max-w-2xl mx-auto bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl mb-10">
             <div className="bg-white rounded-2xl p-6 text-center">
               <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
@@ -320,131 +324,134 @@ export default function TestimoniPage() {
             </div>
           </div>
         )}
-  
-        {/* Form Testimoni - Hanya muncul jika user belum memiliki testimoni */}
-        {isLoggedIn && !userTestimonialStatus?.hasSubmitted && (
+
+        {/* Tombol Tulis/Perbarui Testimoni - Selalu tampil jika user login dan tidak sedang menampilkan form atau thank you message */}
+        {isLoggedIn && !showForm && !showThankYou && (
+          <div className="max-w-2xl mx-auto mb-10">
+            <div className="text-center">
+              <button 
+                onClick={() => setShowForm(true)}
+                className="bg-gradient-to-r from-red-700 to-red-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto"
+              >
+                <MessageSquare className="w-5 h-5" />
+                Tulis/perbarui Testimoni Anda
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Form Testimoni - Muncul ketika showForm true */}
+        {isLoggedIn && showForm && (
           <div className="max-w-2xl mx-auto bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl mb-10">
             <div className="bg-white rounded-2xl p-6">
-              {!showForm ? (
-                <div className="text-center">
-                  <button 
-                    onClick={() => setShowForm(true)}
-                    className="bg-gradient-to-r from-red-700 to-red-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto"
+              <form onSubmit={handleSubmitTestimonial}>
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">Tulis Testimoni</h3>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-900 mb-2 font-medium">Rating</label>
+                  <div className="flex space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-8 h-8 cursor-pointer ${
+                          star <= (hoverRating || rating)
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        onClick={() => setRating(star)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-900 mb-2 font-medium">Komentar</label>
+                  <textarea
+                    value={komentar}
+                    onChange={(e) => setKomentar(e.target.value)}
+                    rows="4"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B80002] text-gray-900"
+                    placeholder="Bagikan pengalaman Anda..."
+                    style={{ color: '#000' }}
+                  ></textarea>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-gray-900 mb-2 font-medium">Gambar (Opsional)</label>
+                  <div className="flex items-center justify-center w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:border-gray-400">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <ImageIcon className="w-8 h-8 mb-4 text-gray-500" />
+                        <p className="mb-2 text-sm text-gray-500">
+                          <span className="font-semibold">Klik untuk upload</span> atau drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG, GIF (Max. 2MB)
+                        </p>
+                      </div>
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        onChange={handleGambarChange}
+                        accept="image/*"
+                      />
+                    </label>
+                  </div>
+                  
+                  {gambarPreview && (
+                    <div className="mt-4 relative">
+                      <img
+                        src={gambarPreview}
+                        alt="Preview"
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeGambar}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+                      >
+                        <XCircle className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false);
+                      setGambar(null);
+                      setGambarPreview(null);
+                    }}
+                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    <MessageSquare className="w-5 h-5" />
-                    Tulis/perbarui Testimoni Anda
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex items-center px-4 py-2 bg-gradient-to-r from-red-700 to-red-800 text-white rounded-md hover:opacity-90 disabled:opacity-50 transition-colors"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Mengirim...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-1" />
+                        Kirim Testimoni
+                      </>
+                    )}
                   </button>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmitTestimonial}>
-                  <h3 className="text-xl font-semibold mb-4 text-gray-900">Tulis Testimoni</h3>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-900 mb-2 font-medium">Rating</label>
-                    <div className="flex space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-8 h-8 cursor-pointer ${
-                            star <= (hoverRating || rating)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                          onMouseEnter={() => setHoverRating(star)}
-                          onMouseLeave={() => setHoverRating(0)}
-                          onClick={() => setRating(star)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-900 mb-2 font-medium">Komentar</label>
-                    <textarea
-                      value={komentar}
-                      onChange={(e) => setKomentar(e.target.value)}
-                      rows="4"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B80002] text-gray-900"
-                      placeholder="Bagikan pengalaman Anda..."
-                      style={{ color: '#000' }}
-                    ></textarea>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-gray-900 mb-2 font-medium">Gambar (Opsional)</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:border-gray-400">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <ImageIcon className="w-8 h-8 mb-4 text-gray-500" />
-                          <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">Klik untuk upload</span> atau drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            PNG, JPG, GIF (Max. 2MB)
-                          </p>
-                        </div>
-                        <input 
-                          type="file" 
-                          className="hidden" 
-                          onChange={handleGambarChange}
-                          accept="image/*"
-                        />
-                      </label>
-                    </div>
-                    
-                    {gambarPreview && (
-                      <div className="mt-4 relative">
-                        <img
-                          src={gambarPreview}
-                          alt="Preview"
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                        <button
-                          type="button"
-                          onClick={removeGambar}
-                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
-                        >
-                          <XCircle className="w-5 h-5" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowForm(false);
-                        setGambar(null);
-                        setGambarPreview(null);
-                      }}
-                      className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                    >
-                      Batal
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="flex items-center px-4 py-2 bg-gradient-to-r from-red-700 to-red-800 text-white rounded-md hover:opacity-90 disabled:opacity-50 transition-colors"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Mengirim...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4 mr-1" />
-                          Kirim Testimoni
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              )}
+              </form>
             </div>
           </div>
         )}
@@ -504,7 +511,7 @@ export default function TestimoniPage() {
 
                   <div className="flex justify-end space-x-2 mt-4">
                     <button
-                      onClick={() => navigate('/edit-testimoni')}
+                      onClick={() => setShowForm(true)}
                       className="flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                     >
                       <Edit className="w-4 h-4 mr-1" />
@@ -541,7 +548,7 @@ export default function TestimoniPage() {
                   <div>
                     <h3 className="font-semibold text-gray-800">{t.user?.name}</h3>
                     <p className="text-gray-500 text-sm">
-                      {formatDate(t.dibuat_pada)}
+                      {formatDate(t.created_at)}
                     </p>
                   </div>
                 </div>
