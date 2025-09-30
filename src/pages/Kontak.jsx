@@ -1,19 +1,30 @@
 import { useState } from "react";
-import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaEnvelope, FaClock, FaStar } from "react-icons/fa";
+import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaEnvelope, FaClock, FaStar, FaChevronDown } from "react-icons/fa";
 
 function Kontak() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
+    category: "",
     message: ""
   });
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleCategorySelect = (value) => {
+    setFormData({
+      ...formData,
+      category: value
+    });
+    setIsDropdownOpen(false);
   };
 
   const handleSubmit = (e) => {
@@ -24,9 +35,22 @@ function Kontak() {
       name: "",
       phone: "",
       email: "",
+      category: "",
       message: ""
     });
   };
+
+  const categories = [
+    { value: "pujian", label: "Pujian", icon: "⭐", color: "from-green-500 to-green-600" },
+    { value: "keluhan", label: "Keluhan", icon: "😔", color: "from-red-500 to-red-600" },
+    { value: "pertanyaan", label: "Pertanyaan", icon: "❓", color: "from-blue-500 to-blue-600" },
+    { value: "saran", label: "Saran", icon: "💡", color: "from-purple-500 to-purple-600" },
+    { value: "komentar", label: "Komentar", icon: "💬", color: "from-indigo-500 to-indigo-600" },
+    { value: "kerjasama", label: "Kerjasama", icon: "🤝", color: "from-amber-500 to-amber-600" },
+    { value: "catering", label: "Pemesanan Catering", icon: "🍽️", color: "from-orange-500 to-orange-600" }
+  ];
+
+  const selectedCategory = categories.find(cat => cat.value === formData.category);
 
   return (
     <>
@@ -79,7 +103,7 @@ function Kontak() {
                   <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
                 </div>
                 
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-red-700 bg-clip-text text-transparent">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-amber-500">
                   Mari Berkolaborasi <span className="text-amber-500">Bersama</span>
                 </h2>
                 
@@ -173,9 +197,9 @@ function Kontak() {
             {/* Right Column - Luxury Contact Form */}
             <div className="relative">
               <div className="absolute -inset-2 bg-gradient-to-r from-amber-400 to-red-500 rounded-3xl blur-lg opacity-20 animate-glow"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl border border-amber-100 h-full flex flex-col">
+              <div className="relative bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-amber-100 h-full flex flex-col">
                 <div className="text-center mb-6">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-red-700 bg-clip-text text-transparent mb-3">
+                  <h2 className="text-3xl font-bold text-amber-500 mb-3">
                     Konsultasi <span className="text-amber-500">Eksklusif</span>
                   </h2>
                   <p className="text-gray-600">Isi formulir untuk konsultasi menu dan penawaran spesial</p>
@@ -224,6 +248,61 @@ function Kontak() {
                     />
                   </div>
 
+                  {/* Custom Dropdown */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori Pesan</label>
+                    <div className="relative">
+                      {/* Dropdown Trigger */}
+                      <button
+                        type="button"
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg bg-white text-left flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-3">
+                          {selectedCategory ? (
+                            <>
+                              <span className="text-xl">{selectedCategory.icon}</span>
+                              <span className="font-medium">{selectedCategory.label}</span>
+                            </>
+                          ) : (
+                            <span className="text-gray-500">Pilih kategori pesan...</span>
+                          )}
+                        </div>
+                        <FaChevronDown 
+                          className={`text-gray-400 transition-transform duration-300 ${
+                            isDropdownOpen ? 'rotate-180' : ''
+                          }`} 
+                        />
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      {isDropdownOpen && (
+                        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden animate-dropdown-fade">
+                          <div className="max-h-60 overflow-y-auto">
+                            {categories.map((category) => (
+                              <button
+                                key={category.value}
+                                type="button"
+                                onClick={() => handleCategorySelect(category.value)}
+                                className={`w-full p-4 text-left hover:bg-gray-50 transition-all duration-200 flex items-center space-x-3 border-b border-gray-100 last:border-b-0 group ${
+                                  formData.category === category.value ? 'bg-amber-50 border-amber-200' : ''
+                                }`}
+                              >
+                                <span className="text-xl">{category.icon}</span>
+                                <span className="font-medium text-gray-800 group-hover:text-amber-600 transition-colors">
+                                  {category.label}
+                                </span>
+                                {formData.category === category.value && (
+                                  <div className="ml-auto w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Message */}
                   <div className="group flex-1 flex flex-col">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Pesan Spesial</label>
@@ -242,7 +321,7 @@ function Kontak() {
                   <div className="pt-4">
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:from-amber-600 hover:to-amber-700"
                     >
                       KIRIM PERMOHONAN KONSULTASI
                     </button>
@@ -262,7 +341,7 @@ function Kontak() {
                 </span>
                 <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-red-700 bg-clip-text text-transparent">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-amber-500">
                 Lokasi <span className="text-amber-500">Eksklusif</span> Kami
               </h2>
             </div>
@@ -285,7 +364,7 @@ function Kontak() {
                 </div>
                 
                 {/* Address Info */}
-                <div className="bg-gradient-to-br from-gray-900 to-red-900 text-white p-8 flex flex-col justify-center">
+                <div className="bg-gradient-to-br from-gray-900 to-red-900 text-white p-6 md:p-8 flex flex-col justify-center">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center">
                       <FaMapMarkerAlt className="text-white text-xl" />
@@ -327,7 +406,7 @@ function Kontak() {
           </div>
 
           {/* Premium Service Highlights */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: FaStar,
@@ -404,6 +483,17 @@ function Kontak() {
             }
           }
 
+          @keyframes dropdownFade {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
           .animate-fade-in-down {
             animation: fadeInDown 1s ease-out;
           }
@@ -414,6 +504,29 @@ function Kontak() {
 
           .animate-glow {
             animation: glow 3s ease-in-out infinite;
+          }
+
+          .animate-dropdown-fade {
+            animation: dropdownFade 0.2s ease-out;
+          }
+
+          /* Custom scrollbar for dropdown */
+          .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+          }
+
+          .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+          }
+
+          .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
           }
         `}
       </style>
