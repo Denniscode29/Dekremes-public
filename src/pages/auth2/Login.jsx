@@ -1,6 +1,6 @@
 // src/pages/auth2/Login.jsx
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AuthController from "../../controllers/AuthController.js";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_personal-information_h7kf.svg";
@@ -10,64 +10,23 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { login, loading, error } = AuthController();
+  const { login, loading, error, clearError } = AuthController();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  // ====================================================
-  // Handle Google Callback - DIPERBAIKI
-  // ====================================================
-  useEffect(() => {
-    const token = searchParams.get('token');
-    const userParam = searchParams.get('user');
-    const error = searchParams.get('error');
-
-    if (error) {
+  // Handle form submission
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    clearError();
+    
+    if (!email || !password) {
       Swal.fire({
         icon: "error",
-        title: "Login Google Gagal",
-        text: "Terjadi kesalahan saat login dengan Google. Silakan coba lagi.",
+        title: "Data tidak lengkap",
+        text: "Harap isi email dan password",
       });
-      // Hapus parameter dari URL
-      navigate('/login', { replace: true });
       return;
     }
 
-    if (token && userParam) {
-      try {
-        const user = JSON.parse(decodeURIComponent(userParam));
-        
-        // Simpan token dan user data ke localStorage
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        
-        Swal.fire({
-          icon: "success",
-          title: "Berhasil Login",
-          text: "Login dengan Google berhasil!",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-
-        // Redirect ke dashboard
-        navigate("/", { replace: true });
-      } catch (err) {
-        console.error('Error parsing user data:', err);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Terjadi kesalahan saat memproses data login.",
-        });
-        navigate('/login', { replace: true });
-      }
-    }
-  }, [searchParams, navigate]);
-
-  // ====================================================
-  // Fungsi Login Email/Password
-  // ====================================================
-  const handleLogin = async (e) => {
-    e.preventDefault();
     try {
       const result = await login(email, password);
       if (result.success) {
@@ -78,46 +37,48 @@ export default function Login() {
           timer: 2000,
           showConfirmButton: false,
         });
-        navigate("/"); // redirect ke dashboard
+        navigate("/", { replace: true });
       }
     } catch (err) {
+      console.error("Login error:", err);
+      
       if (err.requires_setup) {
         Swal.fire({
           icon: "info",
           title: "Profil Belum Lengkap",
           text: "Silakan lengkapi profil Anda terlebih dahulu.",
-          timer: 2000,
-          showConfirmButton: false,
+        }).then(() => {
+          navigate("/setup-profile");
         });
-        navigate("/setup-profile");
-      } else if (err.requires_verification) {
+        return;
+      }
+
+      if (err.requires_verification) {
         Swal.fire({
           icon: "warning",
           title: "Email Belum Terverifikasi",
           text: err.message,
           showCancelButton: true,
           confirmButtonText: "Verifikasi Sekarang",
-          cancelButtonText: "Batal",
+          cancelButtonText: "Nanti",
         }).then((result) => {
           if (result.isConfirmed) {
             navigate("/verify-code", { state: { email: err.email } });
           }
         });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal Login",
-          text: err.message || error || "Email atau password salah",
-        });
+        return;
       }
+
+      Swal.fire({
+        icon: "error",
+        title: "Gagal Login",
+        text: err.message || "Email atau password salah",
+      });
     }
   };
 
-  // ====================================================
-  // Fungsi Login Google - DIPERBAIKI
-  // ====================================================
+  // Handle Google Login
   const handleGoogleLogin = () => {
-    // Arahkan user ke backend Google OAuth - DIPERBAIKI URL
     const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
     window.location.href = `${apiUrl}/api/v1/auth/google`;
   };
@@ -248,7 +209,8 @@ export default function Login() {
           {/* Google Login Button */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center py-3 sm:py-4 rounded-xl font-semibold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:scale-95 transition-all duration-200 shadow-md"
+            disabled={loading}
+            className="w-full flex items-center justify-center py-3 sm:py-4 rounded-xl font-semibold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:scale-95 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
@@ -268,18 +230,8 @@ export default function Login() {
               Daftar
             </Link>
           </p>
-
-          {/* Mobile Footer */}
-          <div className="md:hidden mt-8 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              Dengan masuk, Anda menyetujui syarat dan ketentuan kami
-            </p>
-          </div>
         </div>
       </div>
-
-      {/* Background Decoration for Mobile */}
-      <div className="fixed bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-red-500/5 to-transparent pointer-events-none md:hidden"></div>
     </div>
   );
 }

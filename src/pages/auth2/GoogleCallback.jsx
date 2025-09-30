@@ -10,54 +10,63 @@ export default function GoogleCallback() {
   const { handleGoogleCallback } = AuthController();
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    const userParam = searchParams.get('user');
-    const error = searchParams.get('error');
+    const processGoogleCallback = async () => {
+      const token = searchParams.get('token');
+      const userParam = searchParams.get('user');
+      const error = searchParams.get('error');
+      const message = searchParams.get('message');
 
-    if (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Google Gagal',
-        text: 'Terjadi kesalahan saat login dengan Google. Silakan coba lagi.',
-      }).then(() => {
-        navigate('/login', { replace: true });
-      });
-      return;
-    }
-
-    if (token && userParam) {
-      try {
-        const user = JSON.parse(decodeURIComponent(userParam));
-        handleGoogleCallback(token, user);
-        
+      if (error) {
+        console.error('Google OAuth error:', message);
         Swal.fire({
-          icon: 'success',
-          title: 'Login Berhasil',
-          text: 'Anda berhasil login dengan Google!',
-          timer: 2000,
-          showConfirmButton: false,
+          icon: 'error',
+          title: 'Login Google Gagal',
+          text: message || 'Terjadi kesalahan saat login dengan Google. Silakan coba lagi.',
         }).then(() => {
-          navigate('/', { replace: true });
+          navigate('/login', { replace: true });
         });
-      } catch (err) {
-        console.error('Error parsing user data:', err);
+        return;
+      }
+
+      if (token && userParam) {
+        try {
+          const user = JSON.parse(decodeURIComponent(userParam));
+          const result = handleGoogleCallback(token, user);
+          
+          if (result.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Login Berhasil',
+              text: 'Anda berhasil login dengan Google!',
+              timer: 2000,
+              showConfirmButton: false,
+            }).then(() => {
+              navigate('/', { replace: true });
+            });
+          }
+        } catch (err) {
+          console.error('Error processing Google callback:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Terjadi kesalahan saat memproses data login.',
+          }).then(() => {
+            navigate('/login', { replace: true });
+          });
+        }
+      } else {
+        // Jika tidak ada parameter yang diharapkan
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Terjadi kesalahan saat memproses data login.',
+          text: 'Data login tidak lengkap. Silakan coba lagi.',
         }).then(() => {
           navigate('/login', { replace: true });
         });
       }
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Data login tidak lengkap.',
-      }).then(() => {
-        navigate('/login', { replace: true });
-      });
-    }
+    };
+
+    processGoogleCallback();
   }, [searchParams, navigate, handleGoogleCallback]);
 
   return (

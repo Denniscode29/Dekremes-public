@@ -24,6 +24,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
+      window.dispatchEvent(new Event('storage'));
     }
     return Promise.reject(error);
   }
@@ -39,8 +40,8 @@ const extractErrorMessage = (err, fallback = "Terjadi kesalahan.") => {
 };
 
 const AuthController = create((set, get) => ({
-  user: null,
-  isLoggedIn: false,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  isLoggedIn: !!localStorage.getItem("authToken"),
   error: null,
   loading: false,
 
@@ -86,8 +87,15 @@ const AuthController = create((set, get) => ({
       const res = await api.post("/auth/verify-code", { email, code });
       if (res.data?.access_token) {
         localStorage.setItem("authToken", res.data.access_token);
+        if (res.data.user) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          set({ 
+            user: res.data.user, 
+            isLoggedIn: true,
+            loading: false 
+          });
+        }
       }
-      set({ loading: false });
       return res.data;
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Kode verifikasi salah.");
@@ -122,6 +130,9 @@ const AuthController = create((set, get) => ({
 
       if (res.data?.access_token) {
         localStorage.setItem("authToken", res.data.access_token);
+        if (res.data.user) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+        }
         set({
           user: res.data.user,
           isLoggedIn: true,
@@ -134,23 +145,28 @@ const AuthController = create((set, get) => ({
       const errorMsg = extractErrorMessage(err, "Email atau password salah.");
       set({ error: errorMsg, loading: false });
 
-      if (err.response?.data?.requires_setup) {
-        if (err.response?.data?.access_token) {
-          localStorage.setItem("authToken", err.response.data.access_token);
+      // Handle special cases
+      if (err.response?.data) {
+        const responseData = err.response.data;
+        
+        if (responseData.requires_setup) {
+          if (responseData.access_token) {
+            localStorage.setItem("authToken", responseData.access_token);
+          }
+          throw {
+            message: responseData.message || errorMsg,
+            requires_setup: true,
+            access_token: responseData.access_token,
+          };
         }
-        throw {
-          message: errorMsg,
-          requires_setup: true,
-          access_token: err.response.data.access_token,
-        };
-      }
 
-      if (err.response?.data?.requires_verification) {
-        throw {
-          message: errorMsg,
-          requires_verification: true,
-          email: err.response.data.email,
-        };
+        if (responseData.requires_verification) {
+          throw {
+            message: responseData.message || errorMsg,
+            requires_verification: true,
+            email: responseData.email,
+          };
+        }
       }
 
       throw new Error(errorMsg);
@@ -158,7 +174,7 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * LOGIN WITH GOOGLE
+   * LOGIN WITH GOOGLE ACCESS TOKEN (for mobile/JS SDK)
    */
   loginWithGoogle: async (accessToken) => {
     set({ loading: true, error: null });
@@ -169,6 +185,7 @@ const AuthController = create((set, get) => ({
 
       if (res.data?.access_token) {
         localStorage.setItem("authToken", res.data.access_token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         set({
           user: res.data.user,
           isLoggedIn: true,
@@ -185,7 +202,7 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * HANDLE GOOGLE CALLBACK - DIPERBAIKI
+   * HANDLE GOOGLE CALLBACK - Untuk OAuth redirect flow
    */
   handleGoogleCallback: (token, userData) => {
     localStorage.setItem("authToken", token);
@@ -195,6 +212,7 @@ const AuthController = create((set, get) => ({
       isLoggedIn: true,
       error: null,
     });
+    return { success: true, user: userData };
   },
 
   /**
@@ -206,11 +224,14 @@ const AuthController = create((set, get) => ({
       const res = await api.post("/auth/setup-profile", {
         name: data.name,
         password: data.password,
-        password_confirmation: data.password,
+        password_confirmation: data.password_confirmation || data.password,
       });
 
+      // Update user data
+      const updatedUser = res.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       set({
-        user: res.data.user,
+        user: updatedUser,
         isLoggedIn: true,
         loading: false,
       });
@@ -233,7 +254,11 @@ const AuthController = create((set, get) => ({
           "Content-Type": "multipart/form-data",
         },
       });
-      set({ user: res.data.user, loading: false });
+      
+      // Update user data
+      const updatedUser = res.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      set({ user: updatedUser, loading: false });
       return res.data;
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Gagal update profil.");
@@ -248,8 +273,16 @@ const AuthController = create((set, get) => ({
   uploadAvatar: async (formData) => {
     set({ loading: true, error: null });
     try {
-      const res = await api.post("/auth/upload-avatar", formData);
-      set({ user: res.data.user, loading: false });
+      const res = await api.post("/auth/upload-avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+      // Update user data
+      const updatedUser = res.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      set({ user: updatedUser, loading: false });
       return res.data;
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Gagal upload avatar.");
@@ -265,7 +298,11 @@ const AuthController = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await api.delete("/auth/avatar");
-      set({ user: res.data.user, loading: false });
+      
+      // Update user data
+      const updatedUser = res.data.user;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      set({ user: updatedUser, loading: false });
       return res.data;
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Gagal menghapus avatar.");
@@ -283,11 +320,11 @@ const AuthController = create((set, get) => ({
       await api.post("/auth/change-password", {
         current_password: currentPassword,
         new_password: newPassword,
-        new_password_confirmation: newPasswordConfirmation ?? newPassword,
+        new_password_confirmation: newPasswordConfirmation || newPassword,
       });
 
       set({ loading: false });
-      return true;
+      return { success: true, message: "Password berhasil diubah" };
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Gagal mengganti password.");
       set({ error: errorMsg, loading: false });
@@ -303,50 +340,74 @@ const AuthController = create((set, get) => ({
       await api.post("/auth/logout");
     } catch (err) {
       console.warn("Logout error (ignored):", err);
-    }
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    set({ user: null, isLoggedIn: false, error: null });
-  },
-
-  /**
-   * REFRESH USER STATUS
-   */
-  refreshUserStatus: async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        set({ user: null, isLoggedIn: false });
-        return;
-      }
-
-      const res = await api.get("/auth/profile");
-      const userData = res.data?.user || res.data;
-      set({ user: userData, isLoggedIn: true, error: null });
-    } catch (err) {
-      console.error("An error occurred:", err);
+    } finally {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
-      set({ user: null, isLoggedIn: false });
+      set({ 
+        user: null, 
+        isLoggedIn: false, 
+        error: null,
+        loading: false 
+      });
     }
   },
 
   /**
-   * INIT AUTH
+   * GET USER PROFILE
    */
-  initAuth: async () => {
-    // Cek jika ada user di localStorage (untuk Google login)
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        set({ user: userData, isLoggedIn: true });
-      } catch (err) {
-        localStorage.removeItem("user");
-      }
+  getProfile: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.get("/auth/profile");
+      const userData = res.data?.user || res.data;
+      
+      // Update stored user data
+      localStorage.setItem("user", JSON.stringify(userData));
+      set({ 
+        user: userData, 
+        isLoggedIn: true, 
+        loading: false 
+      });
+      return userData;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal mengambil data profil.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
     }
+  },
+
+  /**
+   * REFRESH USER STATUS - Synchronous version
+   */
+  refreshUserStatus: () => {
+    const token = localStorage.getItem("authToken");
+    const user = localStorage.getItem("user");
     
-    await get().refreshUserStatus();
+    if (token && user) {
+      try {
+        const userData = JSON.parse(user);
+        set({ 
+          user: userData, 
+          isLoggedIn: true 
+        });
+        return userData;
+      } catch (err) {
+        console.error("Error parsing user data:", err);
+        localStorage.removeItem("user");
+        set({ user: null, isLoggedIn: false });
+        return null;
+      }
+    } else {
+      set({ user: null, isLoggedIn: false });
+      return null;
+    }
+  },
+
+  /**
+   * INIT AUTH - Initialize auth state from localStorage
+   */
+  initAuth: () => {
+    return get().refreshUserStatus();
   },
 
   /**
@@ -354,6 +415,13 @@ const AuthController = create((set, get) => ({
    */
   clearError: () => {
     set({ error: null });
+  },
+
+  /**
+   * SET LOADING
+   */
+  setLoading: (loading) => {
+    set({ loading });
   },
 }));
 
