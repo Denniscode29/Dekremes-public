@@ -23,6 +23,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
     }
     return Promise.reject(error);
   }
@@ -157,32 +158,43 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * LOGIN VIA GOOGLE
+   * LOGIN WITH GOOGLE
    */
-  loginWithGoogle: () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/google/redirect`;
+  loginWithGoogle: async (accessToken) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post("/auth/google/login", {
+        access_token: accessToken
+      });
+
+      if (res.data?.access_token) {
+        localStorage.setItem("authToken", res.data.access_token);
+        set({
+          user: res.data.user,
+          isLoggedIn: true,
+          loading: false,
+        });
+      }
+
+      return res.data;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Login dengan Google gagal.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
   },
 
   /**
-   * LOGIN SUCCESS (setelah callback Google atau token URL)
+   * HANDLE GOOGLE CALLBACK - DIPERBAIKI
    */
-  loginSuccess: async (token) => {
+  handleGoogleCallback: (token, userData) => {
     localStorage.setItem("authToken", token);
-    try {
-      const res = await api.get("/auth/profile");
-      const userData = res.data?.user || res.data;
-      set({
-        user: userData,
-        isLoggedIn: true,
-        error: null,
-      });
-      return userData;
-    } catch (err) {
-      localStorage.removeItem("authToken");
-      set({ user: null, isLoggedIn: false, error: "Gagal memuat profil." });
-      console.error(err);
-      throw new Error("Gagal memuat profil.");
-    }
+    localStorage.setItem("user", JSON.stringify(userData));
+    set({
+      user: userData,
+      isLoggedIn: true,
+      error: null,
+    });
   },
 
   /**
@@ -293,6 +305,7 @@ const AuthController = create((set, get) => ({
       console.warn("Logout error (ignored):", err);
     }
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
     set({ user: null, isLoggedIn: false, error: null });
   },
 
@@ -313,6 +326,7 @@ const AuthController = create((set, get) => ({
     } catch (err) {
       console.error("An error occurred:", err);
       localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
       set({ user: null, isLoggedIn: false });
     }
   },
@@ -321,6 +335,17 @@ const AuthController = create((set, get) => ({
    * INIT AUTH
    */
   initAuth: async () => {
+    // Cek jika ada user di localStorage (untuk Google login)
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        set({ user: userData, isLoggedIn: true });
+      } catch (err) {
+        localStorage.removeItem("user");
+      }
+    }
+    
     await get().refreshUserStatus();
   },
 

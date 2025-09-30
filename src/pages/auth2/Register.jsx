@@ -9,7 +9,7 @@ export default function Register() {
   const [form, setForm] = useState({ email: "" });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const { register, loading, loginWithGoogle, checkRegistrationStatus } = AuthController();
+  const { register, loading, checkRegistrationStatus } = AuthController();
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -146,10 +146,6 @@ export default function Register() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle();
-  };
-
   // Cek apakah form valid untuk enable tombol
   const isFormValid = form.email.includes("@") && acceptedTerms;
 
@@ -269,32 +265,6 @@ export default function Register() {
               )}
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="relative my-5 sm:my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300"></span>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-3 text-gray-500 text-xs sm:text-sm">
-                Atau daftar dengan
-              </span>
-            </div>
-          </div>
-
-          {/* Google Register Button */}
-          <button
-            onClick={handleGoogleLogin}
-            disabled={isCheckingEmail || loading}
-            className="w-full flex items-center justify-center py-3 sm:py-4 rounded-xl font-semibold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:scale-95 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <img
-              src="https://www.svgrepo.com/show/355037/google.svg"
-              alt="Google logo"
-              className="w-5 h-5 mr-3"
-            />{" "}
-            <span>Google</span>
-          </button>
 
           {/* Login Link */}
           <p className="mt-6 text-center text-gray-600 text-sm sm:text-base">

@@ -12,7 +12,7 @@ import MainLayout from "../layouts/MainLayout.jsx";
 import Syarat from "../pages/Syarat.jsx";
 import Kebijakan from "../pages/Kebijakan.jsx";
 import CaraMembeli from "../pages/CaraMembeli.jsx";
-
+import GoogleCallback from '../pages/auth2/GoogleCallback';
 // auth
 import Register from "../pages/auth2/Register.jsx";
 import Login from "../pages/auth2/Login";
@@ -41,6 +41,7 @@ function AppRoute() {
       <Route path="/syarat" element={<Syarat />} />
       <Route path="/kebijakan" element={<Kebijakan />} />
       <Route path="/CaraMembeli" element={<CaraMembeli />} />
+      <Route path="/auth/google/callback" element={<GoogleCallback />} />
     </Routes>
   );
 }

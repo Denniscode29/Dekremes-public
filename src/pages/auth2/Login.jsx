@@ -1,6 +1,6 @@
-// src/pages/auth/Login.jsx
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// src/pages/auth2/Login.jsx
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthController from "../../controllers/AuthController.js";
 import Swal from "sweetalert2";
 import educator from "../../assets/undraw_personal-information_h7kf.svg";
@@ -12,6 +12,56 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = AuthController();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // ====================================================
+  // Handle Google Callback - DIPERBAIKI
+  // ====================================================
+  useEffect(() => {
+    const token = searchParams.get('token');
+    const userParam = searchParams.get('user');
+    const error = searchParams.get('error');
+
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Google Gagal",
+        text: "Terjadi kesalahan saat login dengan Google. Silakan coba lagi.",
+      });
+      // Hapus parameter dari URL
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    if (token && userParam) {
+      try {
+        const user = JSON.parse(decodeURIComponent(userParam));
+        
+        // Simpan token dan user data ke localStorage
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil Login",
+          text: "Login dengan Google berhasil!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
+        // Redirect ke dashboard
+        navigate("/", { replace: true });
+      } catch (err) {
+        console.error('Error parsing user data:', err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Terjadi kesalahan saat memproses data login.",
+        });
+        navigate('/login', { replace: true });
+      }
+    }
+  }, [searchParams, navigate]);
 
   // ====================================================
   // Fungsi Login Email/Password
@@ -64,11 +114,12 @@ export default function Login() {
   };
 
   // ====================================================
-  // Fungsi Login Google
+  // Fungsi Login Google - DIPERBAIKI
   // ====================================================
   const handleGoogleLogin = () => {
-    // Arahkan user ke backend GoogleController
-    window.location.href = "http://127.0.0.1:8000/auth/google";
+    // Arahkan user ke backend Google OAuth - DIPERBAIKI URL
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+    window.location.href = `${apiUrl}/api/v1/auth/google`;
   };
 
   return (
