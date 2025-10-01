@@ -54,6 +54,10 @@ export default function Register() {
             text: "Email ini sudah terdaftar tetapi belum diverifikasi. Silakan lanjutkan verifikasi.",
             confirmButtonText: "Lanjutkan Verifikasi"
           });
+          
+          // SIMPAN EMAIL KE LOCALSTORAGE SEBELUM NAVIGASI
+          localStorage.setItem('temp_user_email', form.email);
+          
           navigate("/verify-code", { 
             state: { 
               email: form.email,
@@ -69,10 +73,13 @@ export default function Register() {
             text: "Email sudah terverifikasi. Silakan lengkapi profil Anda.",
             confirmButtonText: "Lanjutkan"
           });
+          
+          // SIMPAN EMAIL KE LOCALSTORAGE SEBELUM NAVIGASI
+          localStorage.setItem('temp_user_email', form.email);
+          
           navigate("/setup-profile", { 
             state: { 
-              email: form.email,
-              userData: status.userData 
+              email: form.email
             } 
           });
           return;
@@ -93,6 +100,9 @@ export default function Register() {
       const result = await register({ email: form.email });
       
       if (result.success) {
+        // SIMPAN EMAIL KE LOCALSTORAGE SETELAH REGISTER BERHASIL
+        localStorage.setItem('temp_user_email', form.email);
+        
         await Swal.fire({
           icon: "success",
           title: "Berhasil Daftar",
@@ -115,6 +125,9 @@ export default function Register() {
         try {
           const status = await checkRegistrationStatus(form.email);
           if (status.exists && !status.verified) {
+            // SIMPAN EMAIL KE LOCALSTORAGE
+            localStorage.setItem('temp_user_email', form.email);
+            
             navigate("/verify-code", { 
               state: { 
                 email: form.email,
@@ -123,16 +136,19 @@ export default function Register() {
             });
             return;
           } else if (status.exists && status.verified && !status.profile_completed) {
+            // SIMPAN EMAIL KE LOCALSTORAGE
+            localStorage.setItem('temp_user_email', form.email);
+            
             navigate("/setup-profile", { 
               state: { 
-                email: form.email,
-                userData: status.userData 
+                email: form.email
               } 
             });
             return;
           }
         } catch (checkError) {
           // Fallback ke error message biasa
+          console.error("Error checking status in catch:", checkError);
         }
       }
 

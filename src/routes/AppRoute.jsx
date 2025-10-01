@@ -37,7 +37,7 @@ function AppRoute() {
       <Route path="/login" element={<Login />} />
       <Route path="/login-success" element={<LoginSuccess />} />
       <Route path="/verify-code" element={<VerifyCode />} />
-      <Route path="/setup-Profile" element={<SetupProfile />} />
+      <Route path="/setup-profile" element={<SetupProfile />} />
       <Route path="/syarat" element={<Syarat />} />
       <Route path="/kebijakan" element={<Kebijakan />} />
       <Route path="/CaraMembeli" element={<CaraMembeli />} />

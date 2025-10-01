@@ -9,11 +9,26 @@ const api = axios.create({
   },
 });
 
-// Tambahkan token otomatis di setiap request
+// PERBAIKAN: Hapus interceptor token otomatis untuk endpoint setup-profile
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  // Jangan tambahkan token untuk endpoint pendaftaran dan setup-profile
+  const noTokenEndpoints = [
+    '/auth/register',
+    '/auth/verify-code', 
+    '/auth/resend-verification-code',
+    '/auth/check-registration-status',
+    '/auth/setup-profile' // TAMBAHKAN INI
+  ];
+  
+  const requiresToken = !noTokenEndpoints.some(endpoint => 
+    config.url.includes(endpoint)
+  );
+  
+  if (requiresToken) {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
@@ -79,23 +94,15 @@ const AuthController = create((set, get) => ({
   },
 
   /**
-   * VERIFY CODE
+   * VERIFY CODE - PERBAIKAN: Jangan simpan token, hanya verifikasi
    */
   verifyCode: async (email, code) => {
     set({ loading: true, error: null });
     try {
       const res = await api.post("/auth/verify-code", { email, code });
-      if (res.data?.access_token) {
-        localStorage.setItem("authToken", res.data.access_token);
-        if (res.data.user) {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          set({ 
-            user: res.data.user, 
-            isLoggedIn: true,
-            loading: false 
-          });
-        }
-      }
+      
+      // PERBAIKAN: Hanya return data tanpa menyimpan token
+      set({ loading: false });
       return res.data;
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Kode verifikasi salah.");
@@ -174,6 +181,40 @@ const AuthController = create((set, get) => ({
   },
 
   /**
+   * SETUP PROFILE - PERBAIKAN: Kirim email bersama data, tanpa authentication
+   */
+  setupProfile: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      // PERBAIKAN: Ambil email dari localStorage atau dari parameter
+      const email = data.email || localStorage.getItem('temp_user_email');
+      
+      if (!email) {
+        throw new Error("Email tidak ditemukan. Silakan daftar ulang.");
+      }
+
+      const res = await api.post("/auth/setup-profile", {
+        email: email, // KIRIM EMAIL UNTUK IDENTIFIKASI
+        name: data.name,
+        password: data.password,
+        password_confirmation: data.password_confirmation || data.password,
+      });
+
+      // PERBAIKAN: Jangan set login state, hanya return success
+      set({ loading: false });
+      return {
+        success: true,
+        message: res.data.message || "Profil berhasil dilengkapi! Silakan login.",
+        user: res.data.user
+      };
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal setup profil.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
+
+  /**
    * LOGIN WITH GOOGLE ACCESS TOKEN (for mobile/JS SDK)
    */
   loginWithGoogle: async (accessToken) => {
@@ -213,34 +254,6 @@ const AuthController = create((set, get) => ({
       error: null,
     });
     return { success: true, user: userData };
-  },
-
-  /**
-   * SETUP PROFILE
-   */
-  setupProfile: async (data) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await api.post("/auth/setup-profile", {
-        name: data.name,
-        password: data.password,
-        password_confirmation: data.password_confirmation || data.password,
-      });
-
-      // Update user data
-      const updatedUser = res.data.user;
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      set({
-        user: updatedUser,
-        isLoggedIn: true,
-        loading: false,
-      });
-      return res.data;
-    } catch (err) {
-      const errorMsg = extractErrorMessage(err, "Gagal setup profil.");
-      set({ error: errorMsg, loading: false });
-      throw new Error(errorMsg);
-    }
   },
 
   /**

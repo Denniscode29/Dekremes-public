@@ -11,32 +11,33 @@ export default function SetupProfile() {
     password_confirmation: ""
   });
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { setupProfile, loginSuccess } = AuthController();
+  const { setupProfile } = AuthController();
 
-  // Ambil token dari URL lalu simpan ke localStorage
+  // PERBAIKAN: Ambil email dari state atau localStorage, tanpa pengecekan token
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get("token");
+    const locationEmail = location.state?.email;
+    const tempEmail = localStorage.getItem('temp_user_email');
     
-    if (token) {
-      localStorage.setItem("authToken", token);
-      window.history.replaceState({}, document.title, "/setup-profile");
-      
-      loginSuccess(token).catch((err) => {
-        console.error("Error loading user data:", err);
-      });
-    } else if (!localStorage.getItem("authToken")) {
+    if (locationEmail) {
+      setEmail(locationEmail);
+      localStorage.setItem('temp_user_email', locationEmail);
+    } else if (tempEmail) {
+      setEmail(tempEmail);
+    } else {
+      // Jika tidak ada email, redirect ke register
       Swal.fire({
         icon: "error",
-        title: "Akses Ditolak",
-        text: "Silakan login atau registrasi terlebih dahulu.",
+        title: "Data Tidak Lengkap",
+        text: "Silakan daftar terlebih dahulu.",
+      }).then(() => {
+        navigate("/register");
       });
-      navigate("/register");
     }
-  }, [location, navigate, loginSuccess]);
+  }, [location, navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -82,32 +83,56 @@ export default function SetupProfile() {
       return;
     }
 
+    if (!email) {
+      Swal.fire({
+        icon: "error",
+        title: "Email Tidak Ditemukan",
+        text: "Silakan daftar ulang.",
+      });
+      navigate("/register");
+      return;
+    }
+
     setLoading(true);
     try {
+      // PERBAIKAN: Kirim email bersama data form ke backend
       const result = await setupProfile({
         name: form.name.trim(),
-        password: form.password.trim()
+        password: form.password.trim(),
+        email: email // Kirim email untuk identifikasi di backend
       });
 
       if (result.success) {
-        Swal.fire({
+        // PERBAIKAN: Hapus data temporary dan redirect ke login
+        localStorage.removeItem('temp_user_email');
+        
+        await Swal.fire({
           icon: "success",
           title: "Profil Berhasil Disimpan",
-          text: result.message || "Profil berhasil dilengkapi!",
-          timer: 2000,
+          text: "Profil berhasil dilengkapi! Silakan login dengan email dan password Anda.",
+          timer: 3000,
           showConfirmButton: false,
         });
 
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        navigate("/login");
       }
     } catch (err) {
       console.error("Setup profile error:", err);
+      
+      // Handle error spesifik
+      let errorMessage = err.message || "Terjadi kesalahan. Silakan coba lagi.";
+      
+      if (err.response?.status === 401) {
+        errorMessage = "Sesi pendaftaran telah berakhir. Silakan daftar ulang.";
+        localStorage.removeItem('temp_user_email');
+        navigate("/register");
+        return;
+      }
+      
       Swal.fire({
         icon: "error",
         title: "Gagal Menyimpan Profil",
-        text: err.message || "Terjadi kesalahan. Silakan coba lagi.",
+        text: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -117,7 +142,10 @@ export default function SetupProfile() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFF5CC] p-4 relative">
       <button
-        onClick={() => navigate("/")}
+        onClick={() => {
+          localStorage.removeItem('temp_user_email');
+          navigate("/register");
+        }}
         className="absolute top-6 left-6 flex items-center gap-2 text-black hover:text-red-600 font-bold transition-colors duration-200"
       >
         <ArrowLeft size={20} /> KEMBALI
@@ -135,8 +163,17 @@ export default function SetupProfile() {
             LENGKAPI PROFIL ANDA
           </h2>
           <p className="text-black font-medium">
-            Isi informasi dasar untuk memulai
+            Isi informasi dasar untuk menyelesaikan pendaftaran
           </p>
+          
+          {/* Tampilkan email */}
+          {email && (
+            <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-black">
+                <strong>Email terdaftar:</strong> {email}
+              </p>
+            </div>
+          )}
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -238,7 +275,7 @@ export default function SetupProfile() {
         {/* Info Footer */}
         <div className="mt-6 pt-6 border-t-2 border-black text-center">
           <p className="text-sm text-black font-bold">
-            📝 Pastikan data yang Anda isi benar dan mudah diingat
+            📝 Setelah menyimpan, Anda akan diarahkan ke halaman login
           </p>
         </div>
       </div>

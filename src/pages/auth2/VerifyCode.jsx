@@ -43,15 +43,21 @@ export default function VerifyCode() {
       const result = await verifyCode(email, code);
       
       if (result.success) {
-        Swal.fire({ 
+        await Swal.fire({ 
           icon: "success", 
           title: "Email Terverifikasi", 
-          text: result.message,
+          text: "Email berhasil diverifikasi! Silakan lengkapi profil Anda.",
           timer: 2000,
           showConfirmButton: false
         });
         
-        navigate("/setup-profile");
+        // PERBAIKAN: Redirect ke setup-profile tanpa token
+        navigate("/setup-profile", { 
+          state: { 
+            email: email,
+            fromVerify: true 
+          } 
+        });
       }
     } catch (err) {
       Swal.fire({ 
