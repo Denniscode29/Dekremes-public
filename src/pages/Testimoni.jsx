@@ -34,12 +34,12 @@ export default function TestimoniPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await api.get("/testimonials");
+      const response = await api.get("/testimonials/approved");
       if (response.data && response.data.testimonials) {
         setTestimonials(response.data.testimonials);
         
         if (response.data.testimonials.length > 0) {
-          const totalRating = response.data.testimonials.reduce((sum, t) => sum + parseInt(t.rating), 0);
+          const totalRating = response.data.testimonials.reduce((sum, t) => sum + parseFloat(t.rating), 0);
           const avg = totalRating / response.data.testimonials.length;
           setAverageRating(avg);
         } else {
@@ -126,11 +126,19 @@ export default function TestimoniPage() {
 
       let response;
       if (isEditing && editingTestimonialId) {
-        // Update testimoni yang sudah ada
-        response = await api.put(`/testimonials/${editingTestimonialId}`, formData);
+        // Update testimoni yang sudah ada - HAPUS admin_feedback dari data yang dikirim
+        response = await api.put(`/testimonials/${editingTestimonialId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       } else {
         // Buat testimoni baru
-        response = await api.post("/testimonials", formData);
+        response = await api.post("/testimonials", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       }
 
       // Tampilkan pesan sukses
@@ -156,10 +164,13 @@ export default function TestimoniPage() {
       checkUserTestimonialStatus();
     } catch (error) {
       console.error("Error submitting testimonial:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          "Terjadi kesalahan saat mengirim testimoni.";
       Swal.fire({
         icon: "error",
         title: "Gagal",
-        text: error.response?.data?.message || "Terjadi kesalahan saat mengirim testimoni.",
+        text: errorMessage,
       });
     } finally {
       setIsSubmitting(false);
@@ -167,63 +178,63 @@ export default function TestimoniPage() {
   };
 
   const handleEditTestimonial = async () => {
-  if (userTestimonialStatus?.testimonial) {
-    const testimonial = userTestimonialStatus.testimonial;
-    setKomentar(testimonial.content);
-    setRating(testimonial.rating);
-    setGambar(null);
-    
-    // Set gambar preview jika ada
-    if (testimonial.product_photo_url) {
-      setGambarPreview(testimonial.product_photo_url);
+    if (userTestimonialStatus?.testimonial) {
+      const testimonial = userTestimonialStatus.testimonial;
+      setKomentar(testimonial.content);
+      setRating(testimonial.rating);
+      setGambar(null);
+      
+      // Set gambar preview jika ada
+      if (testimonial.product_photo_url) {
+        setGambarPreview(testimonial.product_photo_url);
+      }
+      
+      setIsEditing(true);
+      setEditingTestimonialId(testimonial.id);
+      setShowForm(true);
     }
-    
-    setIsEditing(true);
-    setEditingTestimonialId(testimonial.id);
-    setShowForm(true);
-  }
-};
+  };
 
-const handleDeleteTestimonial = async () => {
-  const result = await Swal.fire({
-    title: 'Apakah Anda yakin?',
-    text: "Testimoni yang dihapus tidak dapat dikembalikan!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#B80002',
-    cancelButtonColor: '#6B7280',
-    confirmButtonText: 'Ya, hapus!',
-    cancelButtonText: 'Batal'
-  });
+  const handleDeleteTestimonial = async () => {
+    const result = await Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Testimoni yang dihapus tidak dapat dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#B80002',
+      cancelButtonColor: '#6B7280',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
 
-  if (result.isConfirmed) {
-    try {
-      await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
-      
-      Swal.fire({
-        icon: "success",
-        title: "Terhapus",
-        text: "Testimoni berhasil dihapus.",
-      });
-      
-      // Refresh data dan status
-      setRefreshData(prev => prev + 1);
-      await checkUserTestimonialStatus();
-      
-      // Reset form state
-      setShowForm(false);
-      setIsEditing(false);
-      setEditingTestimonialId(null);
-    } catch (error) {
-      console.error("Error deleting testimonial:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
-      });
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
+        
+        Swal.fire({
+          icon: "success",
+          title: "Terhapus",
+          text: "Testimoni berhasil dihapus.",
+        });
+        
+        // Refresh data dan status
+        setRefreshData(prev => prev + 1);
+        await checkUserTestimonialStatus();
+        
+        // Reset form state
+        setShowForm(false);
+        setIsEditing(false);
+        setEditingTestimonialId(null);
+      } catch (error) {
+        console.error("Error deleting testimonial:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal",
+          text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
+        });
+      }
     }
-  }
-};
+  };
 
   const renderTestimonialStatus = () => {
     if (!userTestimonialStatus?.hasSubmitted) return null;
@@ -233,19 +244,23 @@ const handleDeleteTestimonial = async () => {
     let statusIcon, statusText, statusColor;
     
     switch(testimonial?.status) {
+      case 'Menunggu':
       case 'menunggu':
         statusIcon = <Clock className="w-5 h-5 text-yellow-500" />;
         statusText = "Testimoni Anda sedang dalam proses verifikasi";
         statusColor = "text-yellow-600 bg-yellow-100";
         break;
+      case 'Disetujui':
       case 'disetujui':
         statusIcon = <CheckCircle className="w-5 h-5 text-green-500" />;
         statusText = "Testimoni Anda telah disetujui dan dipublikasikan";
         statusColor = "text-green-600 bg-green-100";
         break;
+      case 'Ditolak':
       case 'ditolak':
         statusIcon = <XCircle className="w-5 h-5 text-red-500" />;
-        statusText = `Testimoni Anda ditolak: ${testimonial.admin_feedback || 'Tidak ada feedback'}`;
+        // HAPUS admin_feedback karena kolom tidak ada di database
+        statusText = "Testimoni Anda ditolak. Silakan periksa dan kirim ulang testimoni yang sesuai dengan ketentuan.";
         statusColor = "text-red-600 bg-red-100";
         break;
       default:
@@ -257,9 +272,13 @@ const handleDeleteTestimonial = async () => {
         {statusIcon}
         <div>
           <p className="font-medium">{statusText}</p>
-          {testimonial?.status === 'ditolak' && (
+          {testimonial?.status === 'Ditolak' && (
             <button 
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setIsEditing(false);
+                setEditingTestimonialId(null);
+                setShowForm(true);
+              }}
               className="mt-2 text-sm underline"
             >
               Kirim testimoni baru
@@ -379,9 +398,22 @@ const handleDeleteTestimonial = async () => {
                 className="bg-gradient-to-r from-red-700 to-red-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto"
               >
                 <MessageSquare className="w-5 h-5" />
-                Tulis/perbarui Testimoni Anda
+                Tulis Testimoni Anda
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Tombol Edit untuk testimoni yang sudah ada */}
+        {isLoggedIn && userTestimonialStatus?.hasSubmitted && !showForm && (
+          <div className="max-w-2xl mx-auto mb-6 text-center">
+            <button 
+              onClick={handleEditTestimonial}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto"
+            >
+              <Edit className="w-5 h-5" />
+              Edit Testimoni Anda
+            </button>
           </div>
         )}
 
@@ -421,8 +453,12 @@ const handleDeleteTestimonial = async () => {
                     rows="4"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B80002] text-gray-900"
                     placeholder="Bagikan pengalaman Anda..."
+                    maxLength={150}
                     style={{ color: '#000' }}
                   ></textarea>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {komentar.length}/150 karakter
+                  </p>
                 </div>
 
                 <div className="mb-4">
@@ -470,6 +506,8 @@ const handleDeleteTestimonial = async () => {
                     type="button"
                     onClick={() => {
                       setShowForm(false);
+                      setKomentar("");
+                      setRating(0);
                       setGambar(null);
                       setGambarPreview(null);
                       setIsEditing(false);
@@ -506,7 +544,8 @@ const handleDeleteTestimonial = async () => {
         )}
 
         {/* Testimoni User yang Sudah Disetujui - Tampil di atas */}
-        {isLoggedIn && userTestimonialStatus?.hasSubmitted && userTestimonialStatus?.testimonial?.status === 'disetujui' && (
+        {isLoggedIn && userTestimonialStatus?.hasSubmitted && 
+         (userTestimonialStatus?.testimonial?.status === 'Disetujui' || userTestimonialStatus?.testimonial?.status === 'disetujui') && (
           <div className="max-w-2xl mx-auto mb-10">
             <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl">
               <div className="bg-white rounded-2xl p-6">

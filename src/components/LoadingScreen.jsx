@@ -53,7 +53,7 @@ function LoadingScreen({ onLoadingComplete }) {
       ${isExiting ? 'opacity-0 scale-110' : 'opacity-100 scale-100'}
     `}
     style={{
-      background: "linear-gradient(135deg, #FFF5CC 0%, #FFE87C 100%)",
+      background: "linear-gradient(135deg, #FFF5CC 0%, #FFFFFF 100%)",
     }}>
       {/* Logo Container */}
       <div className="relative mb-8">

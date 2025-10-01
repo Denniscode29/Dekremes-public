@@ -87,22 +87,30 @@ function Navbar({ title }) {
           
           if (statusChanged) {
             Swal.fire({
-              icon: getNotificationIconType(data.testimonialStatus),
-              title: getNotificationTitle(data.testimonialStatus),
-              html: getNotificationHTML(data),
-              timer: 7000,
-              showConfirmButton: true,
-              confirmButtonText: 'Lihat Testimoni',
-              showCancelButton: true,
-              cancelButtonText: 'Tutup',
+              title: '<div class="flex flex-col items-center">' +
+                     '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">' +
+                     '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                     '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>' +
+                     '</svg>' +
+                     '</div>' +
+                     '<h3 class="text-xl font-bold text-gray-800 mb-2">Status Testimoni Diperbarui</h3>' +
+                     '</div>',
+              html: '<div class="text-center">' +
+                    '<p class="text-gray-600">' + data.notificationMessage + '</p>' +
+                    '</div>',
+              confirmButtonText: "Lihat Testimoni",
+              cancelButtonText: "Tutup",
+              confirmButtonColor: "#3b82f6",
+              cancelButtonColor: "#6b7280",
+              background: "#fff",
+              color: "#1f2937",
               customClass: {
-                popup: 'rounded-2xl shadow-2xl border-2',
-                confirmButton: 'bg-[#B80002] hover:bg-[#A00002] px-4 py-2 rounded-lg font-semibold text-white',
-                cancelButton: 'bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg font-semibold'
+                popup: 'rounded-2xl shadow-2xl border border-gray-200',
+                confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200',
+                cancelButton: 'py-3 px-6 rounded-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-200'
               },
-              // Tambahan styling untuk ikon berdasarkan status
-              iconColor: data.testimonialStatus === 'Disetujui' ? '#10B981' : 
-                        data.testimonialStatus === 'Ditolak' ? '#EF4444' : '#F59E0B'
+              showCancelButton: true,
+              showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
                 handleNavigation('/testimoni');
@@ -119,60 +127,6 @@ function Navbar({ title }) {
       }
     } catch (error) {
       console.error("Error checking testimonial status:", error);
-    }
-  };
-
-  // Helper functions untuk notifikasi testimoni
-  const getNotificationIconType = (status) => {
-    switch (status) {
-      case 'Disetujui': return 'success';
-      case 'Ditolak': return 'error';
-      case 'Menunggu': return 'info';
-      default: return 'info';
-    }
-  };
-
-  const getNotificationTitle = (status) => {
-    switch (status) {
-      case 'Disetujui': return 'Testimoni Disetujui! 🎉';
-      case 'Ditolak': return 'Testimoni Ditolak';
-      case 'Menunggu': return 'Testimoni Dikirim';
-      default: return 'Status Testimoni';
-    }
-  };
-
-  const getNotificationHTML = (data) => {
-    const baseMessage = data.notificationMessage || `Testimoni Anda telah ${data.testimonialStatus?.toLowerCase()}`;
-    
-    if (data.testimonialStatus === 'Disetujui') {
-      return `
-        <div class="text-center">
-          <div class="mb-3">
-            <CheckCircle class="w-12 h-12 text-green-500 mx-auto mb-2" />
-          </div>
-          <p class="text-gray-700 mb-2">${baseMessage}</p>
-          <p class="text-sm text-green-600 font-semibold">Testimoni Anda sekarang dapat dilihat oleh pengunjung lain!</p>
-        </div>
-      `;
-    } else if (data.testimonialStatus === 'Ditolak') {
-      return `
-        <div class="text-center">
-          <div class="mb-3">
-            <XCircle class="w-12 h-12 text-red-500 mx-auto mb-2" />
-          </div>
-          <p class="text-gray-700 mb-2">${baseMessage}</p>
-          <p class="text-sm text-red-600 font-semibold">Silakan periksa kembali testimoni Anda.</p>
-        </div>
-      `;
-    } else {
-      return `
-        <div class="text-center">
-          <div class="mb-3">
-            <Clock class="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-          </div>
-          <p class="text-gray-700">${baseMessage}</p>
-        </div>
-      `;
     }
   };
 
@@ -220,17 +174,30 @@ function Navbar({ title }) {
   // Konfirmasi mark all as read dengan SweetAlert
   const confirmMarkAllAsRead = () => {
     Swal.fire({
-      title: 'Tandai Semua Sudah Dibaca?',
-      text: 'Semua notifikasi akan ditandai sebagai sudah dibaca',
-      icon: 'question',
+      title: '<div class="flex flex-col items-center">' +
+             '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">' +
+             '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>' +
+             '</svg>' +
+             '</div>' +
+             '<h3 class="text-xl font-bold text-gray-800 mb-2">Tandai Semua Dibaca?</h3>' +
+             '</div>',
+      html: '<div class="text-center">' +
+            '<p class="text-gray-600">Semua notifikasi akan ditandai sebagai sudah dibaca</p>' +
+            '</div>',
       showCancelButton: true,
-      confirmButtonColor: '#B80002',
-      cancelButtonColor: '#6B7280',
-      confirmButtonText: 'Ya, Tandai Dibaca',
-      cancelButtonText: 'Batal',
+      confirmButtonText: "Ya, Tandai Dibaca",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#3b82f6",
+      cancelButtonColor: "#6b7280",
+      background: "#fff",
+      color: "#1f2937",
       customClass: {
-        popup: 'rounded-2xl'
-      }
+        popup: 'rounded-2xl shadow-2xl border border-gray-200',
+        confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200',
+        cancelButton: 'py-3 px-6 rounded-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-200'
+      },
+      showCloseButton: true
     }).then((result) => {
       if (result.isConfirmed) {
         markAllAsRead();
@@ -333,17 +300,30 @@ function Navbar({ title }) {
   // Logout function untuk mobile
   const handleMobileLogout = () => {
     Swal.fire({
-      title: "Logout?",
-      text: "Anda yakin ingin keluar dari akun?",
-      icon: "warning",
+      title: '<div class="flex flex-col items-center">' +
+             '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">' +
+             '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"></path>' +
+             '</svg>' +
+             '</div>' +
+             '<h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Logout</h3>' +
+             '</div>',
+      html: '<div class="text-center">' +
+            '<p class="text-gray-600">Anda yakin ingin keluar dari akun?</p>' +
+            '</div>',
       showCancelButton: true,
-      confirmButtonColor: "#B80002",
-      cancelButtonColor: "#6B7280",
       confirmButtonText: "Ya, Logout",
       cancelButtonText: "Batal",
+      confirmButtonColor: "#f59e0b",
+      cancelButtonColor: "#6b7280",
+      background: "#fff",
+      color: "#1f2937",
       customClass: {
-        popup: 'rounded-2xl'
-      }
+        popup: 'rounded-2xl shadow-2xl border border-gray-200',
+        confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200',
+        cancelButton: 'py-3 px-6 rounded-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-200'
+      },
+      showCloseButton: true
     }).then((result) => {
       if (result.isConfirmed) {
         handleLogout();
@@ -355,9 +335,24 @@ function Navbar({ title }) {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     Swal.fire({
-      title: "Logging out...",
+      title: '<div class="flex flex-col items-center">' +
+             '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">' +
+             '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>' +
+             '</svg>' +
+             '</div>' +
+             '<h3 class="text-xl font-bold text-gray-800 mb-2">Logging out...</h3>' +
+             '</div>',
+      html: '<div class="text-center">' +
+            '<p class="text-gray-600">Sedang memproses logout...</p>' +
+            '</div>',
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
+      background: "#fff",
+      color: "#1f2937",
+      customClass: {
+        popup: 'rounded-2xl shadow-2xl border border-gray-200'
+      }
     });
 
     try {
@@ -367,13 +362,57 @@ function Navbar({ title }) {
       setShowNotifications(false);
       setMobileMenuOpen(false);
       Swal.close();
+      
+      // Tampilkan alert sukses logout
+      await Swal.fire({
+        title: '<div class="flex flex-col items-center">' +
+               '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">' +
+               '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+               '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>' +
+               '</svg>' +
+               '</div>' +
+               '<h3 class="text-xl font-bold text-gray-800 mb-2">Logout Berhasil</h3>' +
+               '</div>',
+        html: '<div class="text-center">' +
+              '<p class="text-gray-600">Anda berhasil logout dari akun.</p>' +
+              '</div>',
+        confirmButtonText: "Lanjutkan",
+        confirmButtonColor: "#10b981",
+        background: "#fff",
+        color: "#1f2937",
+        customClass: {
+          popup: 'rounded-2xl shadow-2xl border border-gray-200',
+          confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200'
+        },
+        timer: 2000,
+        timerProgressBar: true,
+        showCloseButton: true
+      });
+      
       navigate("/");
     } catch (err) {
       console.error("Logout error:", err);
       Swal.fire({
-        icon: "error",
-        title: "Logout Failed",
-        text: "Terjadi kesalahan saat logout. Silakan coba lagi.",
+        title: '<div class="flex flex-col items-center">' +
+               '<div class="w-16 h-16 mb-4 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">' +
+               '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+               '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>' +
+               '</svg>' +
+               '</div>' +
+               '<h3 class="text-xl font-bold text-gray-800 mb-2">Logout Gagal</h3>' +
+               '</div>',
+        html: '<div class="text-center">' +
+              '<p class="text-gray-600">Terjadi kesalahan saat logout. Silakan coba lagi.</p>' +
+              '</div>',
+        confirmButtonText: "Coba Lagi",
+        confirmButtonColor: "#ef4444",
+        background: "#fff",
+        color: "#1f2937",
+        customClass: {
+          popup: 'rounded-2xl shadow-2xl border border-gray-200',
+          confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200'
+        },
+        showCloseButton: true
       });
     } finally {
       setIsLoggingOut(false);
@@ -437,28 +476,30 @@ function Navbar({ title }) {
           }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-4 sm:px-6 lg:px-8">
-          {/* Logo - DIUBAH: Efek hover yang lebih smooth */}
-          <Link
-            to="/"
-            className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-all duration-500 ease-in-out hover:scale-105 transform relative group ${
-              navbarBackground || solidBgRoutes.includes(location.pathname)
-                ? "text-gray-800"
-                : "text-white drop-shadow-lg"
-            }`}
-          >
-            {title}
-            {/* Garis bawah animasi */}
-            <span 
-              className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#B80002] transition-all duration-500 ease-out group-hover:w-full ${
+          {/* Logo - DIUBAH: Menggunakan flex-1 dan text-center untuk spacing yang lebih baik */}
+          <div className="flex-1 flex justify-center lg:justify-start">
+            <Link
+              to="/"
+              className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-all duration-500 ease-in-out hover:scale-105 transform relative group ${
                 navbarBackground || solidBgRoutes.includes(location.pathname)
-                  ? "bg-[#B80002]"
-                  : "bg-[#FFD700]"
+                  ? "text-gray-800"
+                  : "text-white drop-shadow-lg"
               }`}
-            ></span>
-          </Link>
+            >
+              {title}
+              {/* Garis bawah animasi */}
+              <span 
+                className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#B80002] transition-all duration-500 ease-out group-hover:w-full ${
+                  navbarBackground || solidBgRoutes.includes(location.pathname)
+                    ? "bg-[#B80002]"
+                    : "bg-[#FFD700]"
+                }`}
+              ></span>
+            </Link>
+          </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          {/* Desktop Menu - DIUBAH: Menggunakan flex-1 dan justify-center untuk center positioning */}
+          <div className="hidden lg:flex flex-1 justify-center items-center space-x-8">
             {menuItems.map((item) => (
               <Link
                 key={item.name}
@@ -484,8 +525,8 @@ function Navbar({ title }) {
             ))}
           </div>
 
-          {/* Auth Section - Desktop */}
-          <div className="hidden lg:flex items-center space-x-4 relative" ref={menuRef}>
+          {/* Auth Section - Desktop - DIUBAH: Menggunakan flex-1 dan justify-end */}
+          <div className="hidden lg:flex flex-1 justify-end items-center space-x-4 relative" ref={menuRef}>
             {!isLoggedIn ? (
               <div className="flex items-center space-x-3">
                 <Link
@@ -670,7 +711,7 @@ function Navbar({ title }) {
                           className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 mb-2 hover:translate-x-1"
                         >
                           <User className="w-5 h-5 text-gray-500" />
-                          <span>Edit Profil</span>
+                          <span>Lihat Profil</span>
                         </button>
                         
                         <button
@@ -703,7 +744,7 @@ function Navbar({ title }) {
                         <div className="border-t border-gray-200 my-3"></div>
 
                         <button
-                          onClick={handleLogout}
+                          onClick={handleMobileLogout}
                           disabled={isLoggingOut}
                           className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 font-semibold rounded-xl hover:bg-red-50 transition-all duration-200 disabled:opacity-50 hover:translate-x-1"
                         >
@@ -718,8 +759,8 @@ function Navbar({ title }) {
             )}
           </div>
 
-          {/* Mobile Section - Auth + Hamburger */}
-          <div className="flex lg:hidden items-center space-x-3">
+          {/* Mobile Section - Auth + Hamburger - DIUBAH: Menggunakan flex-1 dan justify-end */}
+          <div className="flex lg:hidden flex-1 justify-end items-center space-x-3">
             {/* Mobile Notifications - hanya jika logged in */}
             {isLoggedIn && (
               <div className="relative" ref={notificationsRef}>
@@ -869,15 +910,15 @@ function Navbar({ title }) {
         onClick={() => setMobileMenuOpen(false)}
       />
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - DIUBAH: Perbaikan tinggi dan spacing untuk mobile */}
       <div
         ref={mobileMenuRef}
-        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFF5CC] shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
+        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFF5CC] shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Mobile Menu Header */}
-        <div className="bg-gradient-to-r from-[#B80002] to-[#a00002] p-6 text-white">
+        <div className="bg-gradient-to-r from-[#B80002] to-[#a00002] p-6 text-white flex-shrink-0">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold">{title}</h3>
             <button
@@ -889,11 +930,11 @@ function Navbar({ title }) {
           </div>
         </div>
 
-        {/* Mobile Menu Content */}
-        <div className="flex flex-col h-full">
+        {/* Mobile Menu Content - DIUBAH: Menggunakan flex-1 dan overflow untuk konten yang scrollable */}
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* User Info - jika logged in */}
           {isLoggedIn && (
-            <div className="p-4 border-b border-gray-200 bg-white/50">
+            <div className="p-4 border-b border-gray-200 bg-white/50 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <img
                   src={user?.avatar_url || defaultProfile}
@@ -931,7 +972,7 @@ function Navbar({ title }) {
             </div>
           )}
 
-          {/* Navigation Menu */}
+          {/* Navigation Menu - DIUBAH: Menggunakan overflow-auto untuk konten yang bisa di-scroll */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="p-4 space-y-2">
               {menuItems.map((item) => (
@@ -962,7 +1003,7 @@ function Navbar({ title }) {
                     className="w-full flex items-center space-x-3 px-4 py-4 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200"
                   >
                     <User className="w-5 h-5 text-gray-500" />
-                    <span>Edit Profil</span>
+                    <span>Lihat Profil</span>
                   </button>
                   
                   <button
@@ -992,11 +1033,11 @@ function Navbar({ title }) {
                     </button>
                   )}
 
-                  {/* Mobile Logout Button - sudah ada di header, tapi tambahkan lagi di sini untuk akses mudah */}
+                  {/* Mobile Logout Button - DIUBAH: Ditambahkan margin top untuk spacing yang lebih baik */}
                   <button
                     onClick={handleMobileLogout}
                     disabled={isLoggingOut}
-                    className="w-full flex items-center space-x-3 px-4 py-4 text-red-600 font-semibold rounded-xl hover:bg-red-50 transition-all duration-200 disabled:opacity-50 mt-4 border border-red-200"
+                    className="w-full flex items-center space-x-3 px-4 py-4 text-red-600 font-semibold rounded-xl hover:bg-red-50 transition-all duration-200 disabled:opacity-50 mt-6 border border-red-200"
                   >
                     <LogOut className="w-5 h-5" />
                     <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
@@ -1006,21 +1047,21 @@ function Navbar({ title }) {
             </div>
           </div>
 
-          {/* Mobile Menu Footer - untuk yang belum login */}
+          {/* Mobile Menu Footer - untuk yang belum login - DIUBAH: Ditambahkan padding bottom yang lebih besar */}
           {!isLoggedIn && (
-            <div className="p-4 border-t border-gray-200 bg-white/50">
-              <div className="space-y-3">
+            <div className="p-6 border-t border-gray-200 bg-white/50 flex-shrink-0">
+              <div className="space-y-4">
                 <Link
                   to="/login"
                   onClick={() => handleNavigation("/login")}
-                  className="block w-full px-4 py-3 rounded-xl bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002] transition-all duration-200 hover:scale-105"
+                  className="block w-full px-4 py-4 rounded-xl bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002] transition-all duration-200 hover:scale-105"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => handleNavigation("/register")}
-                  className="block w-full px-4 py-3 rounded-xl border-2 border-[#B80002] text-[#B80002] text-center font-semibold hover:bg-[#B80002] hover:text-white transition-all duration-200 hover:scale-105"
+                  className="block w-full px-4 py-4 rounded-xl border-2 border-[#B80002] text-[#B80002] text-center font-semibold hover:bg-[#B80002] hover:text-white transition-all duration-200 hover:scale-105"
                 >
                   Daftar
                 </Link>
@@ -1041,7 +1082,7 @@ function Navbar({ title }) {
       )}
 
       {/* Tambahkan style untuk custom scrollbar */}
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
