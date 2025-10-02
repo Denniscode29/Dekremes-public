@@ -1,20 +1,49 @@
+import { useState, useEffect } from "react";
+
 function Tentang() {
+  const [navbarHeight, setNavbarHeight] = useState(0);
+
+  useEffect(() => {
+    setNavbarHeight(70);
+  }, []);
+
   return (
     <>
-      {/* Header Section - Tetap sama seperti awal */}
-      <div className="relative h-96 flex items-center justify-center overflow-hidden">
-        <img
-          src="src/assets/chicken1.jpg"
-          alt="DeKremes Header"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 text-center px-6">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4 animate-fade-in-down">
-            Tentang Kami
-          </h1>
-          <p className="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto animate-fade-in-up">
-            DeKremes & Crispy - Menyajikan kenikmatan crispy terbaik untuk setiap acara spesial Anda
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full"></div>
+
+      {/* Luxury Hero Section - Sama persis dengan Kontak.jsx */}
+      <div 
+        className="relative flex items-center justify-center overflow-hidden bg-gray-900"
+        style={{ 
+          height: `calc(70vh - ${navbarHeight}px)`,
+          minHeight: `calc(600px - ${navbarHeight}px)`
+        }}
+      >
+        <div className="absolute inset-0">
+          <img
+            src="src/assets/chicken1.jpg"
+            alt="DeKremes Header"
+            className="w-full h-full object-cover transform scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+        </div>
+        
+        {/* Animated Decorative Elements - Sama seperti Kontak.jsx */}
+        <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
+        
+        <div className="relative z-10 text-center px-6 max-w-4xl">
+          <div className="mb-8">
+            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-red-600 mx-auto mb-6 animate-pulse"></div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-in-down">
+              Tentang <span className="text-amber-400">Kami</span>
+            </h1>
+            <div className="w-32 h-1 bg-gradient-to-r from-red-600 to-amber-400 mx-auto mt-6 animate-pulse"></div>
+          </div>
+          
+          <p className="text-xl md:text-2xl text-gray-200 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
+            Menyajikan <span className="text-amber-400 font-semibold">kenikmatan crispy</span>terbaik untuk setiap acara spesial Anda
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaEnvelope, FaClock, FaStar, FaChevronDown } from "react-icons/fa";
 
 function Kontak() {
@@ -11,6 +11,14 @@ function Kontak() {
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Add margin top to account for fixed navbar
+  const [navbarHeight, setNavbarHeight] = useState(0);
+
+  useEffect(() => {
+    // Estimate navbar height - adjust this value based on your actual navbar height
+    setNavbarHeight(70); // Typical navbar height in pixels
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -54,8 +62,17 @@ function Kontak() {
 
   return (
     <>
-      {/* Luxury Hero Section */}
-      <div className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Fixed spacer to prevent navbar overlap */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full"></div>
+
+      {/* Luxury Hero Section - Adjusted for navbar */}
+      <div 
+        className="relative flex items-center justify-center overflow-hidden bg-gray-900"
+        style={{ 
+          height: `calc(70vh - ${navbarHeight}px)`,
+          minHeight: `calc(600px - ${navbarHeight}px)`
+        }}
+      >
         <div className="absolute inset-0">
           <img
             src="src/assets/chicken1.jpg"
@@ -72,7 +89,7 @@ function Kontak() {
         <div className="relative z-10 text-center px-6 max-w-4xl">
           <div className="mb-8">
             <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-red-600 mx-auto mb-6 animate-pulse"></div>
-            <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight animate-fade-in-down">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-in-down">
               Hubungi <span className="text-amber-400">Kami</span>
             </h1>
             <div className="w-32 h-1 bg-gradient-to-r from-red-600 to-amber-400 mx-auto mt-6 animate-pulse"></div>
@@ -103,7 +120,7 @@ function Kontak() {
                   <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
                 </div>
                 
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-amber-500">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
                   Mari Berkolaborasi <span className="text-amber-500">Bersama</span>
                 </h2>
                 
@@ -199,7 +216,7 @@ function Kontak() {
               <div className="absolute -inset-2 bg-gradient-to-r from-amber-400 to-red-500 rounded-3xl blur-lg opacity-20 animate-glow"></div>
               <div className="relative bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-amber-100 h-full flex flex-col">
                 <div className="text-center mb-6">
-                  <h2 className="text-3xl font-bold text-amber-500 mb-3">
+                  <h2 className="text-3xl font-bold text-gray-800 mb-3">
                     Konsultasi <span className="text-amber-500">Eksklusif</span>
                   </h2>
                   <p className="text-gray-600">Isi formulir untuk konsultasi menu dan penawaran spesial</p>
@@ -341,7 +358,7 @@ function Kontak() {
                 </span>
                 <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-amber-500">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
                 Lokasi <span className="text-amber-500">Eksklusif</span> Kami
               </h2>
             </div>
