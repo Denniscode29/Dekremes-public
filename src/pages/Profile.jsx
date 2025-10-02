@@ -335,16 +335,8 @@ function Profile() {
       )}
 
       <div className="max-w-4xl mx-auto pb-8">
-        {/* Header yang lebih baik dengan tombol kembali yang tidak tertutup navbar */}
+        {/* Header yang lebih baik */}
         <div className="text-center mb-8 relative">
-          <button
-            onClick={() => navigate("/")}
-            className="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-800 rounded-2xl shadow-lg hover:bg-white hover:shadow-xl transition-all duration-300 mb-6 border border-white/20 hover:scale-105 group"
-          >
-            <FaHome className="w-4 h-4 mr-3 text-[#B80002] group-hover:scale-110 transition-transform" />
-            <span className="font-semibold">Kembali ke Beranda</span>
-          </button>
-          
           <div className="bg-gradient-to-r from-[#B80002] to-[#D90003] bg-clip-text text-transparent">
             <h1 className="text-4xl font-bold mb-3">Profil Saya</h1>
           </div>
@@ -353,120 +345,8 @@ function Profile() {
           </p>
         </div>
 
-        {/* Status Testimoni Section yang lebih menarik */}
-        {testimonialStatus && (
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 mb-8 border border-white/50 relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#B80002]/5 to-transparent rounded-bl-3xl"></div>
-            
-            <div className="relative z-10">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 md:mb-0">
-                  <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                    <FaStar className="text-white text-xl" />
-                  </div>
-                  Status Testimoni Anda
-                </h2>
-                <span className={`px-4 py-2 rounded-2xl text-sm font-semibold ${getStatusColor(testimonialStatus)} border-2 flex items-center shadow-lg`}>
-                  {getStatusIcon(testimonialStatus)}
-                  <span className="ml-2">{testimonialStatus}</span>
-                </span>
-              </div>
-
-              {testimonialData && (
-                <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-6 border border-gray-100 shadow-sm">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-3">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <FaStar 
-                              key={i}
-                              className={`text-xl ${
-                                i < testimonialData.rating 
-                                  ? 'text-yellow-400 fill-current' 
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="ml-3 font-semibold text-gray-900">{testimonialData.rating}/5</span>
-                      </div>
-                      <p className="text-gray-700 leading-relaxed">{testimonialData.content}</p>
-                    </div>
-                    {testimonialData.product_photo_url && (
-                      <div className="mt-4 md:mt-0 md:ml-6 relative">
-                        <img 
-                          src={testimonialData.product_photo_url} 
-                          alt="Product" 
-                          className="w-20 h-20 rounded-xl object-cover shadow-lg cursor-pointer hover:scale-105 transition-transform duration-200"
-                          onClick={() => openImageModal(testimonialData.product_photo_url)}
-                        />
-                        <div className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 hover:opacity-100 transition-opacity">
-                          <FaExpand className="w-3 h-3" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-500 mt-4 flex items-center">
-                    <FaClock className="w-3 h-3 mr-2" />
-                    Dikirim pada: {new Date(testimonialData.created_at).toLocaleDateString('id-ID', { 
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-              )}
-
-              {testimonialMessage && (
-                <div className={`p-5 rounded-2xl mb-6 border-l-4 ${
-                  testimonialStatus === 'Disetujui' ? 'bg-green-50 border-green-400' :
-                  testimonialStatus === 'Ditolak' ? 'bg-red-50 border-red-400' :
-                  'bg-yellow-50 border-yellow-400'
-                }`}>
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 mt-1">
-                      {getStatusIcon(testimonialStatus)}
-                    </div>
-                    <div className="ml-4 flex-1">
-                      <p className={`text-sm font-semibold ${
-                        testimonialStatus === 'Disetujui' ? 'text-green-800' :
-                        testimonialStatus === 'Ditolak' ? 'text-red-800' :
-                        'text-yellow-800'
-                      }`}>
-                        {testimonialMessage}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => navigate("/testimoni")}
-                  className="flex-1 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white py-4 px-6 rounded-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 font-semibold text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-                >
-                  <FaStar className="w-5 h-5 mr-3" />
-                  Lihat Halaman Testimoni
-                </button>
-                {hasNewNotification && (
-                  <button
-                    onClick={handleMarkAsRead}
-                    className="px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-                  >
-                    <FaCheckCircle className="w-5 h-5 mr-3" />
-                    Tandai Dibaca
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Profile Card yang lebih modern */}
-        <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl overflow-hidden border border-white/50">
+        <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl overflow-hidden border border-white/50 mb-8">
           {message.text && (
             <div className={`m-6 p-4 rounded-2xl ${
               message.type === "success" 
@@ -538,7 +418,14 @@ function Profile() {
                 </p>
 
                 {/* Action Buttons dengan desain lebih baik */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-md mx-auto">
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                  <button
+                    onClick={() => navigate("/")}
+                    className="group py-4 px-6 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center"
+                  >
+                    <FaHome className="w-5 h-5 mr-3 text-[#B80002] group-hover:scale-110 transition-transform" />
+                    Kembali ke Beranda
+                  </button>
                   <button
                     onClick={() => setIsEditing(true)}
                     className="group py-4 px-6 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white rounded-2xl shadow-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center"
@@ -758,6 +645,118 @@ function Profile() {
             </form>
           )}
         </div>
+
+        {/* Status Testimoni Section yang lebih menarik - DIPINDAHKAN ke bawah card profile */}
+        {testimonialStatus && (
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 border border-white/50 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#B80002]/5 to-transparent rounded-bl-3xl"></div>
+            
+            <div className="relative z-10">
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 md:mb-0">
+                  <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                    <FaStar className="text-white text-xl" />
+                  </div>
+                  Status Testimoni Anda
+                </h2>
+                <span className={`px-4 py-2 rounded-2xl text-sm font-semibold ${getStatusColor(testimonialStatus)} border-2 flex items-center shadow-lg`}>
+                  {getStatusIcon(testimonialStatus)}
+                  <span className="ml-2">{testimonialStatus}</span>
+                </span>
+              </div>
+
+              {testimonialData && (
+                <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-6 border border-gray-100 shadow-sm">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center mb-3">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <FaStar 
+                              key={i}
+                              className={`text-xl ${
+                                i < testimonialData.rating 
+                                  ? 'text-yellow-400 fill-current' 
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="ml-3 font-semibold text-gray-900">{testimonialData.rating}/5</span>
+                      </div>
+                      <p className="text-gray-700 leading-relaxed">{testimonialData.content}</p>
+                    </div>
+                    {testimonialData.product_photo_url && (
+                      <div className="mt-4 md:mt-0 md:ml-6 relative">
+                        <img 
+                          src={testimonialData.product_photo_url} 
+                          alt="Product" 
+                          className="w-20 h-20 rounded-xl object-cover shadow-lg cursor-pointer hover:scale-105 transition-transform duration-200"
+                          onClick={() => openImageModal(testimonialData.product_photo_url)}
+                        />
+                        <div className="absolute top-1 right-1 bg-black/50 text-white p-1 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                          <FaExpand className="w-3 h-3" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-4 flex items-center">
+                    <FaClock className="w-3 h-3 mr-2" />
+                    Dikirim pada: {new Date(testimonialData.created_at).toLocaleDateString('id-ID', { 
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              )}
+
+              {testimonialMessage && (
+                <div className={`p-5 rounded-2xl mb-6 border-l-4 ${
+                  testimonialStatus === 'Disetujui' ? 'bg-green-50 border-green-400' :
+                  testimonialStatus === 'Ditolak' ? 'bg-red-50 border-red-400' :
+                  'bg-yellow-50 border-yellow-400'
+                }`}>
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mt-1">
+                      {getStatusIcon(testimonialStatus)}
+                    </div>
+                    <div className="ml-4 flex-1">
+                      <p className={`text-sm font-semibold ${
+                        testimonialStatus === 'Disetujui' ? 'text-green-800' :
+                        testimonialStatus === 'Ditolak' ? 'text-red-800' :
+                        'text-yellow-800'
+                      }`}>
+                        {testimonialMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => navigate("/testimoni")}
+                  className="flex-1 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white py-4 px-6 rounded-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 font-semibold text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                >
+                  <FaStar className="w-5 h-5 mr-3" />
+                  Lihat Halaman Testimoni
+                </button>
+                {hasNewNotification && (
+                  <button
+                    onClick={handleMarkAsRead}
+                    className="px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                  >
+                    <FaCheckCircle className="w-5 h-5 mr-3" />
+                    Tandai Dibaca
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Custom CSS untuk animasi */}

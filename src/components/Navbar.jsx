@@ -538,7 +538,7 @@ function Navbar({ title }) {
                       : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 border-white/30"
                   }`}
                 >
-                  Login
+                  Masuk
                 </Link>
                 <Link
                   to="/register"
@@ -1056,7 +1056,7 @@ function Navbar({ title }) {
                   onClick={() => handleNavigation("/login")}
                   className="block w-full px-4 py-4 rounded-xl bg-[#B80002] text-white text-center font-semibold hover:bg-[#a00002] transition-all duration-200 hover:scale-105"
                 >
-                  Login
+                  Masuk
                 </Link>
                 <Link
                   to="/register"

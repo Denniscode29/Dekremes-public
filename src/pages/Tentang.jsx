@@ -43,7 +43,7 @@ function Tentang() {
           </div>
           
           <p className="text-xl md:text-2xl text-gray-200 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-            Menyajikan <span className="text-amber-400 font-semibold">kenikmatan crispy</span>terbaik untuk setiap acara spesial Anda
+            Menyajikan <span className="text-amber-400 font-semibold">kenikmatan crispy </span>terbaik untuk setiap acara spesial Anda
           </p>
         </div>
       </div>
