@@ -62,8 +62,11 @@ function Kontak() {
 
   return (
     <>
-      {/* Fixed spacer to prevent navbar overlap */}
-      <div style={{ height: `${navbarHeight}px` }} className="w-full"></div>
+      {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
+      <div 
+        style={{ height: `${navbarHeight}px` }} 
+        className="w-full bg-white" // DIUBAH: menambahkan bg-white untuk mengubah warna gelap menjadi putih
+      ></div>
 
       {/* Luxury Hero Section - Adjusted for navbar */}
       <div 

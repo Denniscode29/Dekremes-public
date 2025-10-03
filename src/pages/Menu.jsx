@@ -113,8 +113,11 @@ function Menu() {
 
   return (
     <>
-      {/* Fixed spacer untuk navbar */}
-      <div style={{ height: `${navbarHeight}px` }} className="w-full"></div>
+      {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
+      <div 
+        style={{ height: `${navbarHeight}px` }} 
+        className="w-full bg-white" // DIUBAH: menambahkan bg-white untuk mengubah warna gelap menjadi putih
+      ></div>
 
       {/* Luxury Hero Section - Sama persis dengan Kontak.jsx */}
       <div 

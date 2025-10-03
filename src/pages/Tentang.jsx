@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Tentang() {
   const [navbarHeight, setNavbarHeight] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setNavbarHeight(70);
@@ -9,8 +11,11 @@ function Tentang() {
 
   return (
     <>
-      {/* Fixed spacer untuk navbar */}
-      <div style={{ height: `${navbarHeight}px` }} className="w-full"></div>
+      {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
+      <div 
+        style={{ height: `${navbarHeight}px` }} 
+        className="w-full bg-white" // DIUBAH: menambahkan bg-white untuk mengubah warna gelap menjadi putih
+      ></div>
 
       {/* Luxury Hero Section - Sama persis dengan Kontak.jsx */}
       <div 
@@ -263,9 +268,12 @@ function Tentang() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
-                <button className="bg-amber-400 text-red-900 font-bold px-8 py-3 md:px-12 md:py-4 rounded-xl md:rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 text-base md:text-lg hover:bg-amber-300 animate-bounce-gentle w-full sm:w-auto">
-                  Hubungi Kami
-                </button>
+                <button
+      onClick={() => navigate("/kontak")}
+      className="bg-amber-400 text-red-900 font-bold px-8 py-3 md:px-12 md:py-4 rounded-xl md:rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 text-base md:text-lg hover:bg-amber-300 animate-bounce-gentle w-full sm:w-auto"
+    >
+      Hubungi Kami
+    </button>
               </div>
             </div>
           </div>
