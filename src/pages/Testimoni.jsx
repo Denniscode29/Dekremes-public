@@ -450,7 +450,7 @@ export default function TestimoniPage() {
                   className="bg-gradient-to-r from-red-700 to-red-800 text-white px-8 py-4 rounded-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 mx-auto text-lg font-semibold"
                 >
                   <MessageSquare className="w-6 h-6" />
-                  Tulis Testimoni Anda
+                  Tulis/Perbarui Testimoni Anda
                 </button>
               </div>
             </div>
