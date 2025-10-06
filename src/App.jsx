@@ -1,43 +1,43 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function App() {
-  // Data untuk menu favorit - tanpa badge premium/favorite/new
+  // Data untuk menu favorit - menggunakan menu dari American Original Taste
   const favoriteMenus = [
     {
-      name: "Big Mac®",
-      description: "Dua patty daging sapi spesial dengan saus Big Mac, selada, keju, acar, bawang.",
-      image: "src/assets/chicken.png",
-      price: "Rp 35.000",
+      name: "Ayam Crispy Original Dada",
+      description: "AYAM DADA NASI + SAUS SAMBAL - Kerenyahan sempurna dengan daging dada ayam pilihan",
+      image: "src/assets/menu/original - dada ayam.png",
+      price: "Rp 15.000",
     },
     {
-      name: "Pallas 1",
-      description: "Ayam krispi terbaik dengan saus spesial dan sayuran segar dalam roti premium.",
-      image: "src/assets/chicken.png",
-      price: "Rp 32.000",
+      name: "Ayam Crispy Original Paha Atas",
+      description: "AYAM PAHA ATAS NASI + SAUS SAMBAL - Potongan paha atas yang juicy dan gurih",
+      image: "src/assets/menu/original - paha atas.png",
+      price: "Rp 15.000",
     },
     {
-      name: "Pallas Special",
-      description: "Kreasi istimewa dengan daging ayam pilihan, saus rahasia, dan sayuran segar.",
-      image: "src/assets/chicken.png",
-      price: "Rp 38.000",
+      name: "Ayam Crispy Original Paha Bawah",
+      description: "AYAM PAHA BAWAH NASI + SAUS SAMBAL - Tekstur lembut dengan cita rasa original",
+      image: "src/assets/menu/original - paha bawah.png",
+      price: "Rp 13.000",
     },
     {
-      name: "McChicken",
-      description: "Potongan ayam gurih dilapisi tepung krispi, dengan mayones dan selada segar.",
-      image: "src/assets/chicken.png",
-      price: "Rp 30.000",
+      name: "Ayam Crispy Original Sayap",
+      description: "AYAM SAYAP NASI + SAUS SAMBAL - Sayap ayam crispy dengan bumbu spesial",
+      image: "src/assets/menu/original - sayap ayam.png",
+      price: "Rp 13.000",
     },
     {
-      name: "McNuggets®",
-      description: "Potongan ayam tanpa tulang yang digoreng hingga garing, cocok dengan saus.",
-      image: "src/assets/chicken.png",
-      price: "Rp 28.000",
+      name: "Ayam Crispy Cheese Dada",
+      description: "AYAM DADA KEJU NASI + SAUS SAMBAL - Kombinasi crispy dan keju yang lumer",
+      image: "src/assets/menu/cheese - dada ayam.png",
+      price: "Rp 17.000",
     },
     {
-      name: "Crispy Deluxe",
-      description: "Ayam crispy dengan saus spesial dan sayuran segar dalam roti premium.",
-      image: "src/assets/chicken.png",
-      price: "Rp 36.000",
+      name: "Burger Special",
+      description: "BURGER DENGAN AYAM CRISPY SPECIAL - Burger premium dengan ayam crispy terbaik",
+      image: "src/assets/menu/burger.png",
+      price: "Rp 18.000",
     }
   ];
 
@@ -52,57 +52,38 @@ function App() {
     "src/assets/kegiatan/IMG20250619072923.jpg"
   ];
 
-  // Data FAQ
+  // Data FAQ - hanya 5 yang dipilih
   const faqData = [
     {
       question: "Apa saja menu andalan DeKremes & Crispy?",
-      answer: "Kami memiliki beberapa menu andalan seperti Ayam Crispy Original, Ayam Kremes Spesial, Big Mac®, Pallas Special, dan berbagai varian burger premium. Semua menu menggunakan bahan-bahan segar dan berkualitas tinggi."
+      answer: "Kami memiliki beberapa menu andalan seperti Ayam Crispy Original, Ayam Kremes Spesial, Cheese Series, Blackpepper Series, dan berbagai varian burger premium. Semua menu menggunakan bahan-bahan segar dan berkualitas tinggi."
     },
     {
       question: "Apakah DeKremes & Crispy menyediakan layanan pesan antar?",
       answer: "Ya, kami menyediakan layanan pesan antar melalui berbagai platform seperti GoFood, GrabFood, dan juga pesanan langsung via WhatsApp. Minimal pesan Rp 50.000 untuk area tertentu."
     },
     {
-      question: "Bagaimana sistem pembayaran yang tersedia?",
-      answer: "Kami menerima pembayaran tunai, transfer bank (BCA, BRI, Mandiri), e-wallet (GoPay, OVO, Dana), dan QRIS. Untuk pesanan online, pembayaran dapat dilakukan melalui aplikasi mitra kami."
+      question: "Bagaimana cara menghubungi DeKremes & Crispy?",
+      answer: "Anda dapat menghubungi kami melalui WhatsApp di nomor 0877-8814-8113(dengan catatan ada kepentingan seperti pemesanan, acara sekolah dan yang berhubungan dengan kami, selain itu kami tidak akan merespon) atau follow Instagram kami @dekremescrispychicken untuk informasi terbaru dan promo menarik."
     },
     {
       question: "Apakah ada promo atau diskon khusus?",
       answer: "Ya, kami selalu memiliki promo menarik setiap bulannya. Untuk info promo terkini, follow Instagram kami @dekremes_crispy atau cek website secara rutin. Member kartu setia juga dapat penawaran spesial!"
     },
     {
-      question: "Berapa lama waktu pengiriman pesanan?",
-      answer: "Waktu pengiriman bervariasi tergantung lokasi dan volume pesanan. Rata-rata 30-45 menit untuk area dalam kota, dan maksimal 60 menit untuk area pinggiran. Pesanan siap pickup dalam 15-20 menit."
-    },
-    {
       question: "Apakah DeKremes & Crispy halal?",
       answer: "Sangat halal! Kami memiliki sertifikat halal resmi dari MUI dan semua bahan yang digunakan dipastikan kehalalannya. Daging ayam kami berasal dari supplier terpercaya dengan sistem penyembelihan sesuai syariat Islam."
-    },
-    {
-      question: "Apakah bisa pesan untuk acara catering?",
-      answer: "Tentu bisa! Kami melayani pesanan catering untuk berbagai acara seperti ulang tahun, meeting kantor, arisan, dan acara keluarga. Minimal pesan 50 porsi dengan pemesanan H-3. Hubungi kami untuk penawaran khusus."
-    },
-    {
-      question: "Bagaimana cara menjadi member setia?",
-      answer: "Daftar member gratis di outlet kami dan dapatkan kartu member. Setiap pembelian terkumpul poin yang bisa ditukar dengan menu gratis atau diskon spesial. Member juga dapat info promo eksklusif!"
     }
   ];
 
   // State untuk menu favorit
-  const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [animationClass, setAnimationClass] = useState("");
-  const menuCarouselRef = useRef(null);
-  const [menuItemWidth, setMenuItemWidth] = useState(0);
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const heroRef = useRef(null);
   const modalRef = useRef(null);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
-  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
 
   // Fungsi toggle FAQ
   const toggleFaq = (index) => {
@@ -137,106 +118,6 @@ function App() {
       }
     };
   }, []);
-
-  // Auto slide untuk menu carousel dengan pause saat hover
-  useEffect(() => {
-    if (!isAutoScrolling || isDragging) return;
-
-    const interval = setInterval(() => {
-      setCurrentMenuIndex((prev) => {
-        const visibleItems = getVisibleItemsCount();
-        return (prev + 1) % (favoriteMenus.length - Math.floor(visibleItems) + 1);
-      });
-    }, 3000);
-    
-    return () => clearInterval(interval);
-  }, [favoriteMenus.length, isAutoScrolling, isDragging]);
-
-  // Fungsi untuk mengatur lebar item menu carousel
-  const updateMenuItemWidth = useCallback(() => {
-    const containerWidth = window.innerWidth;
-    const visibleItems = getVisibleItemsCount();
-    const gap = 16;
-    const padding = containerWidth < 768 ? 16 : 32;
-    
-    const calculatedWidth = (containerWidth - (padding * 2) - (gap * (visibleItems - 1))) / visibleItems;
-    setMenuItemWidth(calculatedWidth);
-  }, []);
-
-  // Efek untuk mengatur ulang carousel menu saat ukuran layar berubah
-  useEffect(() => {
-    updateMenuItemWidth();
-    window.addEventListener('resize', updateMenuItemWidth);
-    return () => window.removeEventListener('resize', updateMenuItemWidth);
-  }, [updateMenuItemWidth]);
-
-  // Menghitung jumlah item yang ditampilkan berdasarkan lebar layar
-  const getVisibleItemsCount = () => {
-    if (window.innerWidth < 640) return 1;
-    if (window.innerWidth < 768) return 1.5;
-    if (window.innerWidth < 1024) return 2.5;
-    return 3.5;
-  };
-
-  // Navigasi menu carousel
-  const nextMenu = () => {
-    const visibleItems = Math.floor(getVisibleItemsCount());
-    if (currentMenuIndex < favoriteMenus.length - visibleItems) {
-      setCurrentMenuIndex(currentMenuIndex + 1);
-    }
-  };
-
-  const prevMenu = () => {
-    if (currentMenuIndex > 0) {
-      setCurrentMenuIndex(currentMenuIndex - 1);
-    }
-  };
-
-  // Menghitung translateX untuk carousel
-  const calculateTranslateX = () => {
-    const gap = 16;
-    return -currentMenuIndex * (menuItemWidth + gap);
-  };
-
-  // Fungsi untuk handle drag start
-  const handleDragStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - menuCarouselRef.current.offsetLeft);
-    setScrollLeft(calculateTranslateX());
-    setIsAutoScrolling(false);
-  };
-
-  // Fungsi untuk handle dragging
-  const handleDragging = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - menuCarouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // multiplier untuk sensitivity
-    menuCarouselRef.current.style.transform = `translateX(${scrollLeft + walk}px)`;
-  };
-
-  // Fungsi untuk handle drag end
-  const handleDragEnd = (e) => {
-    if (!isDragging) return;
-    
-    const x = e.pageX - menuCarouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    const visibleItems = Math.floor(getVisibleItemsCount());
-
-    // Determine direction and calculate new index
-    if (Math.abs(walk) > 50) { // Minimum drag distance
-      if (walk > 0 && currentMenuIndex > 0) {
-        // Drag to right - go to previous
-        setCurrentMenuIndex(currentMenuIndex - 1);
-      } else if (walk < 0 && currentMenuIndex < favoriteMenus.length - visibleItems) {
-        // Drag to left - go to next
-        setCurrentMenuIndex(currentMenuIndex + 1);
-      }
-    }
-    
-    setIsDragging(false);
-    setTimeout(() => setIsAutoScrolling(true), 1000);
-  };
 
   // Fungsi untuk menangani klik menu
   const handleMenuClick = (menu) => {
@@ -286,17 +167,6 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  // Fungsi untuk handle mouse enter/leave carousel
-  const handleCarouselMouseEnter = () => {
-    setIsAutoScrolling(false);
-  };
-
-  const handleCarouselMouseLeave = () => {
-    if (!isDragging) {
-      setIsAutoScrolling(true);
-    }
-  };
 
   return (
     <>
@@ -371,8 +241,8 @@ function App() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        {/* Scroll Indicator - HIDUPKAN DI DESKTOP, HILANGKAN DI MOBILE */}
+        <div className="hidden md:flex absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <div className="flex flex-col items-center">
             <span className="text-amber-400 text-sm mb-2">Scroll</span>
             <div className="w-6 h-10 border-2 border-amber-400 rounded-full flex justify-center">
@@ -382,8 +252,8 @@ function App() {
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION DENGAN DRAG SUPPORT */}
-      <div className="relative py-12 md:py-20 bg-white overflow-hidden">
+      {/* MENU FAVORIT SECTION DENGAN INFINITE LOOP - DIUBAH: Hanya gambar, nama, dan tombol */}
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-48 md:w-72 h-48 md:h-72 bg-amber-400/10 rounded-full blur-3xl"></div>
@@ -420,134 +290,67 @@ function App() {
             </p>
           </div>
 
-          {/* Carousel Container dengan Drag Support */}
-          <div 
-            className="relative"
-            onMouseEnter={handleCarouselMouseEnter}
-            onMouseLeave={handleCarouselMouseLeave}
-          >
-            {/* Navigation Arrows */}
-            <button 
-              onClick={prevMenu}
-              disabled={currentMenuIndex === 0}
-              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-amber-400 text-white rounded-full shadow-2xl hover:bg-amber-500 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
-            >
-              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            
-            <button 
-              onClick={nextMenu}
-              disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - Math.floor(getVisibleItemsCount()))}
-              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-amber-400 text-white rounded-full shadow-2xl hover:bg-amber-500 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
-            >
-              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Carousel Items dengan Drag Support */}
-            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
-              <div 
-                ref={menuCarouselRef}
-                className="flex transition-transform duration-300 ease-out gap-4 py-4 cursor-grab active:cursor-grabbing"
-                style={{ 
-                  transform: `translateX(${calculateTranslateX()}px)`,
-                  userSelect: 'none'
-                }}
-                onMouseDown={handleDragStart}
-                onMouseMove={handleDragging}
-                onMouseUp={handleDragEnd}
-                onMouseLeave={handleDragEnd}
-                onTouchStart={(e) => handleDragStart(e.touches[0])}
-                onTouchMove={(e) => handleDragging(e.touches[0])}
-                onTouchEnd={handleDragEnd}
-              >
-                {favoriteMenus.map((menu, index) => (
-                  <div 
-                    key={index}
-                    onClick={() => handleMenuClick(menu)}
-                    className="group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95 flex-shrink-0"
-                    style={{ 
-                      width: `${menuItemWidth}px`,
-                      minWidth: `${menuItemWidth}px`
-                    }}
-                  >
-                    {/* Card */}
-                    <div className="relative bg-white rounded-xl md:rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-amber-400 group-hover:shadow-3xl transition-all duration-300 h-full flex flex-col">
+          {/* Infinite Loop Carousel - DIUBAH: Hanya gambar, nama, dan tombol */}
+          <div className="overflow-hidden relative">
+            <div className="flex animate-scroll-slow">
+              {favoriteMenus.concat(favoriteMenus).map((menu, index) => (
+                <div 
+                  key={index}
+                  onClick={() => handleMenuClick(menu)}
+                  className="group cursor-pointer transform transition-all duration-300 hover:scale-105 mx-2 flex-shrink-0"
+                  style={{ width: '280px' }}
+                >
+                  {/* Enhanced Card Design */}
+                  <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-amber-400 group-hover:shadow-3xl transition-all duration-300 h-full flex flex-col">
+                    {/* Glow Effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-red-500 to-amber-400 rounded-2xl blur-lg opacity-40 group-hover:opacity-80 transition duration-700"></div>
+                    
+                    <div className="relative bg-white rounded-2xl overflow-hidden h-full flex flex-col z-10">
                       {/* Image Container */}
-                      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden bg-gray-100">
-                        <img 
-                          src={menu.image} 
-                          alt={menu.name} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                        />
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                      <div className="relative aspect-square w-full bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center p-2">
+                          <img 
+                            src={menu.image} 
+                            alt={menu.name} 
+                            className="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out"
+                            onError={(e) => {
+                              e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23fbbf24'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='12' fill='white'%3EImage%3C/text%3E%3C/svg%3E";
+                            }}
+                          />
+                        </div>
+                        {/* Enhanced overlay gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition duration-500"></div>
                         
-                        {/* Quick View Button */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </div>
+                        {/* Quick View Badge */}
+                        <div className="absolute top-3 left-3 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                          FAVORIT
                         </div>
                       </div>
-
-                      {/* Content */}
-                      <div className="p-4 md:p-6 flex-1 flex flex-col">
-                        <div className="flex justify-between items-start mb-3 md:mb-4">
-                          <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-red-500 transition-colors duration-300 leading-tight">
-                            {menu.name}
-                          </h3>
-                          <div className="w-2 h-2 bg-amber-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2"></div>
-                        </div>
-                        
-                        <p className="text-gray-600 text-sm md:text-base mb-4 md:mb-6 line-clamp-2 leading-relaxed flex-1">
-                          {menu.description}
-                        </p>
-                        
-                        <div className="flex justify-between items-center mt-auto">
-                          <span className="text-xl md:text-2xl lg:text-3xl font-black text-red-500">{menu.price}</span>
-                          <button className="bg-gradient-to-r from-amber-400 to-amber-400 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:from-amber-500 hover:to-amber-500 transition-all duration-300 transform hover:scale-105 shadow-lg group-hover:shadow-xl text-sm md:text-base flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
-                            </svg>
-                            Pesan
+                      
+                      {/* Simplified Content - Hanya nama dan tombol */}
+                      <div className="p-6 flex flex-col flex-1">
+                        <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-amber-600 transition-colors duration-300 line-clamp-2 leading-tight text-center">
+                          {menu.name}
+                        </h3>
+                        <div className="mt-auto pt-4 border-t border-amber-100">
+                          <button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-3 rounded-xl font-bold hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300 text-sm cursor-pointer shadow-lg hover:from-amber-600 hover:to-amber-700 text-center">
+                            Pesan Sekarang
                           </button>
                         </div>
                       </div>
-
-                      {/* Hover Effect */}
-                      <div className="absolute inset-0 border-2 md:border-4 border-amber-400 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Dots Indicator */}
-            <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
-              {Array.from({ length: Math.max(1, favoriteMenus.length - Math.floor(getVisibleItemsCount()) + 1) }).map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-300 ${
-                    currentMenuIndex === index 
-                      ? 'bg-amber-400 scale-125 shadow-lg' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  onClick={() => setCurrentMenuIndex(index)}
-                />
+                </div>
               ))}
             </div>
           </div>
 
           {/* CTA Button */}
           <div className="text-center mt-8 md:mt-12">
-            <button className="relative bg-gradient-to-r from-red-500 to-red-500 text-white px-8 py-4 md:px-12 md:py-5 rounded-full font-bold text-lg md:text-xl hover:from-red-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden">
+            <button 
+              onClick={() => window.location.href = '/menu'}
+              className="relative bg-gradient-to-r from-red-500 to-red-500 text-white px-8 py-4 md:px-12 md:py-5 rounded-full font-bold text-lg md:text-xl hover:from-red-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden"
+            >
               <span className="relative z-10 flex items-center justify-center gap-3">
                 <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
@@ -560,19 +363,19 @@ function App() {
         </div>
       </div>
 
-      {/* MODAL DETAIL MENU */}
+      {/* MODAL DETAIL MENU - DIUBAH: Hanya satu tombol "Lihat di Menu" */}
       {showModal && selectedMenu && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div 
             ref={modalRef}
-            className={`relative bg-white rounded-2xl md:rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
+            className={`relative bg-white rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
           >
             {/* Close Button */}
             <button 
               onClick={closeModal}
-              className="absolute top-3 right-3 md:top-4 md:right-4 z-20 w-8 h-8 md:w-10 md:h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
+              className="absolute top-4 right-4 z-20 w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
             >
-              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -580,38 +383,35 @@ function App() {
             {/* Modal Content */}
             <div className="relative">
               {/* Image Section */}
-              <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden">
+              <div className="relative aspect-video w-full bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
                 <img 
                   src={selectedMenu.image} 
-                  alt={selectedMenu.name}
-                  className="w-full h-full object-cover" 
+                  alt={selectedMenu.name} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23fbbf24'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='white'%3EImage Not Found%3C/text%3E%3C/svg%3E";
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute top-4 left-4 bg-amber-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                  FAVORIT
+                </div>
               </div>
-
-              {/* Content Section */}
-              <div className="p-4 md:p-6 lg:p-8">
-                <div className="text-center mb-4 md:mb-6">
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-800 mb-2">
-                    {selectedMenu.name}
-                  </h3>
-                  <div className="w-16 md:w-20 h-1 bg-amber-400 rounded-full mx-auto"></div>
+              
+              <div className="p-8">
+                <h3 className="text-3xl font-bold text-gray-800 mb-4">{selectedMenu.name}</h3>
+                <p className="text-gray-600 mb-6 text-lg leading-relaxed">{selectedMenu.description}</p>
+                <div className="flex justify-between items-center mb-8">
+                  <span className="text-3xl font-bold text-red-600">{selectedMenu.price}</span>
                 </div>
-
-                <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4 md:mb-6 text-center">
-                  {selectedMenu.description}
-                </p>
-
-                <div className="text-center mb-6 md:mb-8">
-                  <span className="text-2xl md:text-3xl lg:text-4xl font-black text-red-500">{selectedMenu.price}</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                  <button className="bg-gray-100 text-gray-700 px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 text-sm md:text-base">
-                    Tambah Ke Keranjang
-                  </button>
-                  <button className="bg-gradient-to-r from-amber-400 to-amber-400 text-white px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:from-amber-500 hover:to-amber-500 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
-                    Pesan Sekarang
+                <div className="flex gap-4">
+                  <button 
+                    onClick={() => {
+                      window.location.href = '/menu';
+                      closeModal();
+                    }}
+                    className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-center py-4 rounded-xl font-bold hover:shadow-xl hover:from-amber-600 hover:to-amber-700 transition-all duration-300 text-lg shadow-lg"
+                  >
+                    Lihat di Menu
                   </button>
                 </div>
               </div>
@@ -833,7 +633,7 @@ function App() {
               <div className="relative bg-gradient-to-br from-white via-gray-50 to-white p-3 md:p-4 rounded-xl md:rounded-2xl shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-3xl border-2 md:border-4 border-amber-400">
                 <div className="relative overflow-hidden rounded-lg md:rounded-xl">
                   <img
-                    src="src/assets/Halal_sertifikat.png"
+                    src="src/assets/halal.jpg"
                     alt="Sertifikat Halal MUI"
                     className="w-64 md:w-80 lg:w-96 rounded-lg md:rounded-xl transition-transform duration-700 group-hover:scale-105"
                   />
@@ -924,7 +724,7 @@ function App() {
         </div>
       </div>
 
-      {/* FAQ SECTION - TIDAK DIUBAH */}
+      {/* FAQ SECTION - DIUBAH: Hanya 5 FAQ dan tombol mengarah ke Kontak.jsx */}
       <div className="relative py-12 md:py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-red-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -945,7 +745,7 @@ function App() {
             </p>
           </div>
 
-          {/* FAQ Items */}
+          {/* FAQ Items - Hanya 5 */}
           <div className="space-y-3 md:space-y-4">
             {faqData.map((faq, index) => (
               <div 
@@ -986,7 +786,7 @@ function App() {
             ))}
           </div>
 
-          {/* CTA Section */}
+          {/* CTA Section - DIUBAH: Hanya satu tombol yang mengarah ke Kontak.jsx */}
           <div className="text-center mt-8 md:mt-12">
             <div className="bg-gradient-to-r from-red-500 to-red-500 rounded-xl md:rounded-2xl p-6 md:p-8 shadow-2xl">
               <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 md:mb-4">
@@ -995,12 +795,12 @@ function App() {
               <p className="text-red-100 mb-4 md:mb-6 text-base md:text-lg">
                 Hubungi customer service kami yang siap membantu 24/7
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
-                <button className="bg-white text-red-500 px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => window.location.href = '/kontak'}
+                  className="bg-white text-red-500 px-8 py-3 md:px-12 md:py-4 rounded-lg font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 text-lg md:text-xl shadow-lg hover:shadow-xl"
+                >
                   📞 Hubungi Kami
-                </button>
-                <button className="border-2 border-white text-white px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-red-500 transition-all duration-300 text-sm md:text-base">
-                  💬 Chat WhatsApp
                 </button>
               </div>
             </div>
@@ -1032,6 +832,11 @@ function App() {
         }
         
         @keyframes scroll {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+
+        @keyframes scroll-slow {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
@@ -1085,6 +890,12 @@ function App() {
         
         .animate-scroll {
           animation: scroll 30s linear infinite;
+          display: flex;
+          width: max-content;
+        }
+
+        .animate-scroll-slow {
+          animation: scroll-slow 60s linear infinite;
           display: flex;
           width: max-content;
         }

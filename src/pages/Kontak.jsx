@@ -55,8 +55,8 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
     // Encode pesan untuk URL
     const encodedMessage = encodeURIComponent(whatsappMessage);
     
-    // Nomor WhatsApp tujuan (ganti dengan nomor Anda)
-    const phoneNumber = "6287788148113"; // 085198674763
+    // Nomor WhatsApp tujuan (sudah diganti)
+    const phoneNumber = "6287788148113";
     
     // Buat link WhatsApp
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -175,10 +175,10 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-1">WhatsApp Priority</h3>
-                        <p className="text-green-600 font-semibold text-lg mb-1">+62 851-9867-4763</p>
+                        <p className="text-green-600 font-semibold text-lg mb-1">+62 877-8814-8113</p>
                         <p className="text-gray-500 text-sm">Respon instan - 24/7</p>
                         <a 
-                          href="https://wa.me/6285198674763" 
+                          href="https://wa.me/6287788148113" 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="inline-block mt-2 text-green-600 font-semibold text-sm hover:underline"
@@ -202,10 +202,10 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-1">Telepon Eksklusif</h3>
-                        <p className="text-red-600 font-semibold text-lg mb-1">+62 851-9867-4763</p>
+                        <p className="text-red-600 font-semibold text-lg mb-1">+62 877-8814-8113</p>
                         <p className="text-gray-500 text-sm">08:00 - 20:00 WIB</p>
                         <a 
-                          href="tel:+6285198674763" 
+                          href="tel:+6287788148113" 
                           className="inline-block mt-2 text-red-600 font-semibold text-sm hover:underline"
                         >
                           Panggil Sekarang →
@@ -227,10 +227,10 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-1">Email Premium</h3>
-                        <p className="text-amber-600 font-semibold text-lg mb-1">DeKremes&Crispy@gmail.com</p>
+                        <p className="text-amber-600 font-semibold text-lg mb-1">dekremescrispychicken@gmail.com</p>
                         <p className="text-gray-500 text-sm">Balasan dalam 1x24 jam</p>
                         <a 
-                          href="mailto:DeKremes&Crispy@gmail.com" 
+                          href="mailto:dekremescrispychicken@gmail.com" 
                           className="inline-block mt-2 text-amber-600 font-semibold text-sm hover:underline"
                         >
                           Kirim Email →
