@@ -11,13 +11,10 @@ function Kontak() {
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Add margin top to account for fixed navbar
   const [navbarHeight, setNavbarHeight] = useState(0);
 
   useEffect(() => {
-    // Estimate navbar height - adjust this value based on your actual navbar height
-    setNavbarHeight(70); // Typical navbar height in pixels
+    setNavbarHeight(70);
   }, []);
 
   const handleChange = (e) => {
@@ -37,8 +34,40 @@ function Kontak() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Format pesan untuk WhatsApp
+    const selectedCategory = categories.find(cat => cat.value === formData.category);
+    const whatsappMessage = `
+Halo, saya ${formData.name}!
+
+Saya ingin konsultasi mengenai: ${selectedCategory?.label || formData.category}
+
+Detail Kontak:
+📞 Telepon: ${formData.phone}
+📧 Email: ${formData.email}
+
+Pesan:
+${formData.message}
+
+Saya mengharapkan balasan secepatnya. Terima kasih!
+    `.trim();
+
+    // Encode pesan untuk URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    
+    // Nomor WhatsApp tujuan (ganti dengan nomor Anda)
+    const phoneNumber = "6287788148113"; // 085198674763
+    
+    // Buat link WhatsApp
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    // Buka WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
     console.log("Form submitted:", formData);
-    alert("Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.");
+    alert("Pesan Anda sedang dibuka di WhatsApp. Silakan kirim pesan tersebut.");
+    
+    // Reset form
     setFormData({
       name: "",
       phone: "",
@@ -62,13 +91,13 @@ function Kontak() {
 
   return (
     <>
-      {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
+      {/* Fixed spacer untuk navbar */}
       <div 
         style={{ height: `${navbarHeight}px` }} 
-        className="w-full bg-white" // DIUBAH: menambahkan bg-white untuk mengubah warna gelap menjadi putih
+        className="w-full bg-white"
       ></div>
 
-      {/* Luxury Hero Section - Adjusted for navbar */}
+      {/* Luxury Hero Section */}
       <div 
         className="relative flex items-center justify-center overflow-hidden bg-gray-900"
         style={{ 
@@ -85,7 +114,6 @@ function Kontak() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
         </div>
         
-        {/* Animated Decorative Elements */}
         <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
         
@@ -147,10 +175,10 @@ function Kontak() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-1">WhatsApp Priority</h3>
-                        <p className="text-green-600 font-semibold text-lg mb-1">+62 858-4698-6524</p>
+                        <p className="text-green-600 font-semibold text-lg mb-1">+62 851-9867-4763</p>
                         <p className="text-gray-500 text-sm">Respon instan - 24/7</p>
                         <a 
-                          href="https://wa.me/+6285846986524" 
+                          href="https://wa.me/6285198674763" 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="inline-block mt-2 text-green-600 font-semibold text-sm hover:underline"
@@ -174,10 +202,10 @@ function Kontak() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900 mb-1">Telepon Eksklusif</h3>
-                        <p className="text-red-600 font-semibold text-lg mb-1">+62 858-4698-6524</p>
+                        <p className="text-red-600 font-semibold text-lg mb-1">+62 851-9867-4763</p>
                         <p className="text-gray-500 text-sm">08:00 - 20:00 WIB</p>
                         <a 
-                          href="tel:+6285846986524" 
+                          href="tel:+6285198674763" 
                           className="inline-block mt-2 text-red-600 font-semibold text-sm hover:underline"
                         >
                           Panggil Sekarang →
@@ -272,7 +300,6 @@ function Kontak() {
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori Pesan</label>
                     <div className="relative">
-                      {/* Dropdown Trigger */}
                       <button
                         type="button"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -295,7 +322,6 @@ function Kontak() {
                         />
                       </button>
 
-                      {/* Dropdown Menu */}
                       {isDropdownOpen && (
                         <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden animate-dropdown-fade">
                           <div className="max-h-60 overflow-y-auto">
@@ -343,7 +369,7 @@ function Kontak() {
                       type="submit"
                       className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:from-amber-600 hover:to-amber-700"
                     >
-                      KIRIM PERMOHONAN KONSULTASI
+                      KIRIM VIA WHATSAPP
                     </button>
                   </div>
                 </form>
@@ -368,7 +394,6 @@ function Kontak() {
 
             <div className="relative rounded-3xl overflow-hidden shadow-3xl group hover:shadow-4xl transition-all duration-500">
               <div className="grid grid-cols-1 lg:grid-cols-3">
-                {/* Map */}
                 <div className="lg:col-span-2">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3632.0439235500066!2d106.92210466620436!3d-6.941067647751864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6849358a89774b%3A0x3b578822ab27e72a!2sDekremes%20%26%20Crispy!5e0!3m2!1sid!2sid!4v1757916530969!5m2!1sid!2sid"
@@ -383,7 +408,6 @@ function Kontak() {
                   ></iframe>
                 </div>
                 
-                {/* Address Info */}
                 <div className="bg-gradient-to-br from-gray-900 to-red-900 text-white p-6 md:p-8 flex flex-col justify-center">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center">
@@ -530,7 +554,6 @@ function Kontak() {
             animation: dropdownFade 0.2s ease-out;
           }
 
-          /* Custom scrollbar for dropdown */
           .overflow-y-auto::-webkit-scrollbar {
             width: 6px;
           }
