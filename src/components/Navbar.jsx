@@ -913,7 +913,7 @@ function Navbar({ title }) {
       {/* Mobile Menu - DIUBAH: Perbaikan tinggi dan spacing untuk mobile */}
       <div
         ref={mobileMenuRef}
-        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFF5CC] shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFFFFF] shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

@@ -1,5 +1,5 @@
 // pages/Testimoni.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthController from "../controllers/AuthController";
@@ -23,27 +23,19 @@ export default function TestimoniPage() {
   const [editingTestimonialId, setEditingTestimonialId] = useState(null);
   const [navbarHeight, setNavbarHeight] = useState(0);
 
-  // auth state
-  const { isLoggedIn, user } = AuthController();
-
-  useEffect(() => {
-    setNavbarHeight(70);
-    fetchTestimonials();
-    if (isLoggedIn) {
-      checkUserTestimonialStatus();
-    }
-  }, [isLoggedIn, refreshData]);
+  // auth state - DITAMBAH: refreshUserStatus untuk update data user terbaru
+  const { isLoggedIn, user, refreshUserStatus } = AuthController();
 
   // Fungsi untuk mengurutkan testimoni dari yang terbaru ke terlama
-  const sortTestimonialsByDate = (testimonials) => {
+  const sortTestimonialsByDate = useCallback((testimonials) => {
     return testimonials.sort((a, b) => {
       const dateA = new Date(a.updated_at || a.created_at);
       const dateB = new Date(b.updated_at || b.created_at);
       return dateB - dateA; // Descending (terbaru di atas)
     });
-  };
+  }, []);
 
-  const fetchTestimonials = async () => {
+  const fetchTestimonials = useCallback(async () => {
     try {
       const response = await api.get("/testimonials/approved");
       if (response.data && response.data.testimonials) {
@@ -71,9 +63,9 @@ export default function TestimoniPage() {
         text: "Gagal memuat testimoni.",
       });
     }
-  };
+  }, [sortTestimonialsByDate]);
 
-  const checkUserTestimonialStatus = async () => {
+  const checkUserTestimonialStatus = useCallback(async () => {
     try {
       const response = await api.get("/testimonials/check");
       setUserTestimonialStatus(response.data);
@@ -86,7 +78,26 @@ export default function TestimoniPage() {
       console.error("Error checking user testimonial status:", error);
       setUserTestimonialStatus({ hasSubmitted: false, testimonial: null });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    setNavbarHeight(70);
+    fetchTestimonials();
+    if (isLoggedIn) {
+      checkUserTestimonialStatus();
+      // DITAMBAH: Refresh data user untuk mendapatkan avatar terbaru
+      refreshUserStatus();
+    }
+  }, [isLoggedIn, refreshData, fetchTestimonials, checkUserTestimonialStatus, refreshUserStatus]);
+
+  // DITAMBAH: Effect untuk refresh data ketika user berubah
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      // Refresh testimonials untuk update avatar
+      fetchTestimonials();
+      checkUserTestimonialStatus();
+    }
+  }, [user, isLoggedIn, fetchTestimonials, checkUserTestimonialStatus]);
 
   const handleGambarChange = (e) => {
     const file = e.target.files[0];
@@ -137,17 +148,16 @@ export default function TestimoniPage() {
         formData.append('product_photo', gambar);
       }
 
-      let response;
       if (isEditing && editingTestimonialId) {
-        // Update testimoni yang sudah ada - HAPUS admin_feedback dari data yang dikirim
-        response = await api.put(`/testimonials/${editingTestimonialId}`, formData, {
+        // Update testimoni yang sudah ada
+        await api.put(`/testimonials/${editingTestimonialId}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
       } else {
         // Buat testimoni baru
-        response = await api.post("/testimonials", formData, {
+        await api.post("/testimonials", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -172,9 +182,10 @@ export default function TestimoniPage() {
       setIsEditing(false);
       setEditingTestimonialId(null);
       
-      // Refresh data
+      // Refresh data - DITAMBAH: refresh user status juga
       setRefreshData(prev => prev + 1);
       checkUserTestimonialStatus();
+      refreshUserStatus(); // DITAMBAH: Refresh user data
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       const errorMessage = error.response?.data?.message || 
@@ -233,6 +244,7 @@ export default function TestimoniPage() {
         // Refresh data dan status
         setRefreshData(prev => prev + 1);
         await checkUserTestimonialStatus();
+        refreshUserStatus(); // DITAMBAH: Refresh user data
         
         // Reset form state
         setShowForm(false);
@@ -321,15 +333,25 @@ export default function TestimoniPage() {
     }
   };
 
+  // DITAMBAH: Fungsi untuk mendapatkan avatar URL yang tepat
+  const getAvatarUrl = (testimonialUser) => {
+    // Jika testimoni ini milik user yang sedang login, gunakan avatar terbaru dari state user
+    if (user && testimonialUser && user.id === testimonialUser.id) {
+      return user.avatar_url || "/default-avatar.png";
+    }
+    // Jika bukan, gunakan avatar dari data testimoni
+    return testimonialUser?.avatar_url || "/default-avatar.png";
+  };
+
   return (
     <>
       {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
       <div 
         style={{ height: `${navbarHeight}px` }} 
-        className="w-full bg-white" // DIUBAH: menambahkan bg-white untuk mengubah warna gelap menjadi putih
+        className="w-full bg-white"
       ></div>
 
-      {/* Luxury Hero Section - Sama persis dengan Kontak.jsx */}
+      {/* Luxury Hero Section */}
       <div 
         className="relative flex items-center justify-center overflow-hidden bg-gray-900"
         style={{ 
@@ -346,7 +368,7 @@ export default function TestimoniPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
         </div>
         
-        {/* Animated Decorative Elements - Sama seperti Kontak.jsx */}
+        {/* Animated Decorative Elements */}
         <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
         
@@ -612,6 +634,7 @@ export default function TestimoniPage() {
                   
                   <div className="bg-white p-6 rounded-xl border border-green-200">
                     <div className="flex items-center space-x-4 mb-4">
+                      {/* DIUBAH: Selalu gunakan avatar terbaru dari user state */}
                       <img
                         src={user?.avatar_url || "/default-avatar.png"}
                         alt={user?.name}
@@ -701,8 +724,9 @@ export default function TestimoniPage() {
                   <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
                   <div className="relative bg-white rounded-2xl p-6 shadow-xl border border-amber-100 group-hover:scale-[1.02] transition-all duration-500 h-full flex flex-col">
                     <div className="flex items-center space-x-4 mb-4">
+                      {/* DIUBAH: Gunakan fungsi getAvatarUrl untuk menentukan avatar */}
                       <img
-                        src={t.user?.avatar_url || "/default-avatar.png"}
+                        src={getAvatarUrl(t.user)}
                         alt={t.user?.name}
                         className="w-12 h-12 rounded-full border-2 border-amber-200"
                       />
