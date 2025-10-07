@@ -130,30 +130,30 @@ function Menu() {
   const indonesianTaste = [
     // Kremes Series
     {
-      name: "Ayam Kremes Dada",
-      description: "AYAM KREMES DADA NASI + SAMBAL COBEK",
+      name: "Ayam Kremes Dada/Paha Atas Cobek",
+      description: "AYAM KREMES PAHA ATAS/DADA NASI + SAMBAL COBEK",
       price: "Rp 23.000",
       image: "src/assets/menu/kremes - dada ayam.png",
       category: "Kremes"
     },
     {
-      name: "Ayam Kremes Paha Atas",
-      description: "AYAM KREMES PAHA ATAS NASI + SAMBAL COBEK",
-      price: "Rp 23.000",
+      name: "Ayam Kremes Sayap/Paha Bawah Cobek",
+      description: "AYAM KREMES SAYAP/PAHA BAWAH NASI + SAMBAL COBEK",
+      price: "Rp -",
       image: "src/assets/menu/kremes - paha atas.png",
       category: "Kremes"
     },
     {
-      name: "Ayam Kremes Paha Bawah",
-      description: "AYAM KREMES PAHA BAWAH NASI + SAMBAL COBEK",
+      name: "Ayam Kremes Dada/Paha Atas Geprek",
+      description: "AYAM KREMES PAHA ATAS/DADA NASI + SAMBAL GEPREK",
       price: "Rp 22.000",
       image: "src/assets/menu/kremes - paha bawah.png",
       category: "Kremes"
     },
     {
-      name: "Ayam Kremes Sayap",
-      description: "AYAM KREMES SAYAP NASI + SAMBAL COBEK",
-      price: "Rp 22.000",
+      name: "Ayam Kremes Sayap/Paha Bawah Geprek",
+      description: "AYAM KREMES SAYAP/PAHA BAWAH NASI + SAMBAL GEPREK",
+      price: "Rp -",
       image: "src/assets/menu/kremes - sayap ayam.png",
       category: "Kremes"
     },
@@ -201,7 +201,7 @@ function Menu() {
     {
       name: "Air Mineral",
       description: "AIR MINERAL BOTOL",
-      price: "Rp 5.000",
+      price: "Rp 7.000",
       image: "src/assets/menu/air.png",
       category: "Minuman"
     },
