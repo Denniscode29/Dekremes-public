@@ -9,6 +9,9 @@ import Kontak from "../pages/Kontak";
 import Testimoni from "../pages/Testimoni";
 import Profile from "../pages/Profile";
 import MainLayout from "../layouts/MainLayout.jsx";
+import Syarat from "../pages/Syarat.jsx";
+import Kebijakan from "../pages/Kebijakan.jsx";
+import CaraMembeli from "../pages/CaraMembeli.jsx";
 
 // auth
 import Register from "../pages/auth2/Register.jsx";
@@ -35,6 +38,9 @@ function AppRoute() {
       <Route path="/login-success" element={<LoginSuccess />} />
       <Route path="/verify-code" element={<VerifyCode />} />
       <Route path="/setup-Profile" element={<SetupProfile />} />
+      <Route path="/syarat" element={<Syarat />} />
+      <Route path="/kebijakan" element={<Kebijakan />} />
+      <Route path="/CaraMembeli" element={<CaraMembeli />} />
     </Routes>
   );
 }

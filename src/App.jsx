@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import AuthController from "./controllers/AuthController.js";
-
 
 function App() {
   // Data untuk menu favorit
@@ -9,37 +7,43 @@ function App() {
       name: "Big Mac®",
       description: "Dua patty daging sapi spesial dengan saus Big Mac, selada, keju, acar, bawang.",
       image: "src/assets/chicken.png",
-      price: "Rp 35.000"
+      price: "Rp 35.000",
+      badge: "BEST SELLER"
     },
     {
       name: "Pallas 1",
       description: "Ayam krispi terbaik dengan saus spesial dan sayuran segar dalam roti premium.",
       image: "src/assets/chicken.png",
-      price: "Rp 32.000"
+      price: "Rp 32.000",
+      badge: "NEW"
     },
     {
       name: "Pallas Special",
       description: "Kreasi istimewa dengan daging ayam pilihan, saus rahasia, dan sayuran segar.",
       image: "src/assets/chicken.png",
-      price: "Rp 38.000"
+      price: "Rp 38.000",
+      badge: "PREMIUM"
     },
     {
       name: "McChicken",
       description: "Potongan ayam gurih dilapisi tepung krispi, dengan mayones dan selada segar.",
       image: "src/assets/chicken.png",
-      price: "Rp 30.000"
+      price: "Rp 30.000",
+      badge: "FAVORITE"
     },
     {
       name: "McNuggets®",
       description: "Potongan ayam tanpa tulang yang digoreng hingga garing, cocok dengan saus.",
       image: "src/assets/chicken.png",
-      price: "Rp 28.000"
+      price: "Rp 28.000",
+      badge: "POPULAR"
     },
     {
       name: "Crispy Deluxe",
       description: "Ayam crispy dengan saus spesial dan sayuran segar dalam roti premium.",
       image: "src/assets/chicken.png",
-      price: "Rp 36.000"
+      price: "Rp 36.000",
+      badge: "SPECIAL"
     }
   ];
 
@@ -54,14 +58,87 @@ function App() {
     "src/assets/kegiatan/IMG20250619072923.jpg"
   ];
 
-  // State untuk carousel menu favorit
+  // Data FAQ
+  const faqData = [
+    {
+      question: "Apa saja menu andalan DeKremes & Crispy?",
+      answer: "Kami memiliki beberapa menu andalan seperti Ayam Crispy Original, Ayam Kremes Spesial, Big Mac®, Pallas Special, dan berbagai varian burger premium. Semua menu menggunakan bahan-bahan segar dan berkualitas tinggi."
+    },
+    {
+      question: "Apakah DeKremes & Crispy menyediakan layanan pesan antar?",
+      answer: "Ya, kami menyediakan layanan pesan antar melalui berbagai platform seperti GoFood, GrabFood, dan juga pesanan langsung via WhatsApp. Minimal pesan Rp 50.000 untuk area tertentu."
+    },
+    {
+      question: "Bagaimana sistem pembayaran yang tersedia?",
+      answer: "Kami menerima pembayaran tunai, transfer bank (BCA, BRI, Mandiri), e-wallet (GoPay, OVO, Dana), dan QRIS. Untuk pesanan online, pembayaran dapat dilakukan melalui aplikasi mitra kami."
+    },
+    {
+      question: "Apakah ada promo atau diskon khusus?",
+      answer: "Ya, kami selalu memiliki promo menarik setiap bulannya. Untuk info promo terkini, follow Instagram kami @dekremes_crispy atau cek website secara rutin. Member kartu setia juga dapat penawaran spesial!"
+    },
+    {
+      question: "Berapa lama waktu pengiriman pesanan?",
+      answer: "Waktu pengiriman bervariasi tergantung lokasi dan volume pesanan. Rata-rata 30-45 menit untuk area dalam kota, dan maksimal 60 menit untuk area pinggiran. Pesanan siap pickup dalam 15-20 menit."
+    },
+    {
+      question: "Apakah DeKremes & Crispy halal?",
+      answer: "Sangat halal! Kami memiliki sertifikat halal resmi dari MUI dan semua bahan yang digunakan dipastikan kehalalannya. Daging ayam kami berasal dari supplier terpercaya dengan sistem penyembelihan sesuai syariat Islam."
+    },
+    {
+      question: "Apakah bisa pesan untuk acara catering?",
+      answer: "Tentu bisa! Kami melayani pesanan catering untuk berbagai acara seperti ulang tahun, meeting kantor, arisan, dan acara keluarga. Minimal pesan 50 porsi dengan pemesanan H-3. Hubungi kami untuk penawaran khusus."
+    },
+    {
+      question: "Bagaimana cara menjadi member setia?",
+      answer: "Daftar member gratis di outlet kami dan dapatkan kartu member. Setiap pembelian terkumpul poin yang bisa ditukar dengan menu gratis atau diskon spesial. Member juga dapat info promo eksklusif!"
+    }
+  ];
+
+  // State untuk menu favorit
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [animationClass, setAnimationClass] = useState("");
   const menuCarouselRef = useRef(null);
   const [menuItemWidth, setMenuItemWidth] = useState(0);
+  const [isHeroVisible, setIsHeroVisible] = useState(false);
+  const heroRef = useRef(null);
+  const modalRef = useRef(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
-  // State untuk banner carousel
-  
-  
+  // Fungsi toggle FAQ
+  const toggleFaq = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
+
+  // Intersection Observer untuk hero section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsHeroVisible(true);
+          } else {
+            setIsHeroVisible(false);
+          }
+        });
+      },
+      { 
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px'
+      }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => {
+      if (heroRef.current) {
+        observer.unobserve(heroRef.current);
+      }
+    };
+  }, []);
 
   // Auto slide untuk menu carousel
   useEffect(() => {
@@ -70,22 +147,19 @@ function App() {
         const visibleItems = getVisibleItemsCount();
         return (prev + 1) % (favoriteMenus.length - visibleItems + 1);
       });
-    }, 3000);
+    }, 4000);
     
     return () => clearInterval(interval);
   }, [favoriteMenus.length]);
-
-
 
   // Fungsi untuk mengatur lebar item menu carousel
   const updateMenuItemWidth = useCallback(() => {
     const containerWidth = window.innerWidth;
     const visibleItems = getVisibleItemsCount();
-    const gap = 16; // gap between items
-    const padding = 32; // total horizontal padding
+    const gap = 16;
+    const padding = containerWidth < 768 ? 16 : 32;
     
-    // Calculate item width based on container width, gaps and padding
-    const calculatedWidth = (containerWidth - padding - (gap * (visibleItems - 1))) / visibleItems;
+    const calculatedWidth = (containerWidth - (padding * 2) - (gap * (visibleItems - 1))) / visibleItems;
     setMenuItemWidth(calculatedWidth);
   }, []);
 
@@ -99,14 +173,14 @@ function App() {
   // Menghitung jumlah item yang ditampilkan berdasarkan lebar layar
   const getVisibleItemsCount = () => {
     if (window.innerWidth < 640) return 1;
-    if (window.innerWidth < 768) return 2;
-    if (window.innerWidth < 1024) return 3;
-    return 4;
+    if (window.innerWidth < 768) return 1.5;
+    if (window.innerWidth < 1024) return 2.5;
+    return 3.5;
   };
 
   // Navigasi menu carousel
   const nextMenu = () => {
-    const visibleItems = getVisibleItemsCount();
+    const visibleItems = Math.floor(getVisibleItemsCount());
     if (currentMenuIndex < favoriteMenus.length - visibleItems) {
       setCurrentMenuIndex(currentMenuIndex + 1);
     }
@@ -124,139 +198,402 @@ function App() {
     return -currentMenuIndex * (menuItemWidth + gap);
   };
 
+  // Fungsi untuk menangani klik menu
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+    setAnimationClass("animate-pop-in");
+    setShowModal(true);
+    
+    // Reset animation setelah selesai
+    setTimeout(() => {
+      setAnimationClass("animate-float");
+    }, 500);
+  };
+
+  // Tutup modal
+  const closeModal = () => {
+    setAnimationClass("animate-pop-out");
+    setTimeout(() => {
+      setShowModal(false);
+      setSelectedMenu(null);
+    }, 300);
+  };
+
+  // Effect untuk close modal ketika klik outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
+  // Reset hero animation ketika component mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsHeroVisible(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
-      {/* HERO SECTION */}
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background full layer */}
-        <img
-          src="src/assets/chicken1.jpg"
-          alt="DeKremes Background"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+      {/* HERO SECTION - JUDUL MERAH SOLID */}
+      <div 
+        ref={heroRef}
+        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700"
+      >
+        {/* Background dengan efek parallax */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: 'url("src/assets/chicken1.jpg")',
+            transform: 'translateZ(-1px) scale(1.2)'
+          }}
+        ></div>
 
-        {/* Overlay biar teks lebih jelas */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+        
+        {/* Animated Background Elements - KEMBALI KE AWAL */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-red-800 rounded-full opacity-30 animate-float"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${Math.random() * 4 + 3}s`
+              }}
+            />
+          ))}
+        </div>
 
-        {/* Konten Hero */}
-        <div className="relative z-10 text-center px-6">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
-            DeKremes
-            <span className="block text-red-500">& Crispy</span>
-          </h1>
+        {/* Main Content - JUDUL MERAH SOLID */}
+        <div className={`relative z-10 text-center px-6 transition-all duration-1000 transform ${
+          isHeroVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
+          {/* Logo/Title dengan efek mewah - MERAH SOLID */}
+          <div className="mb-8">
+            <h1 className="text-5xl md:text-8xl font-black text-white leading-tight mb-4 drop-shadow-2xl">
+              DeKremes
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-800 via-red-700 to-red-500 text-4xl md:text-7xl">
+                & Crispy
+              </span>
+            </h1>
+            <div className="w-32 h-1 bg-gradient-to-r from-red-400 to-red-500 mx-auto rounded-full mb-6"></div>
+          </div>
 
-          
-
-          <p className="text-gray-200 text-base md:text-lg mb-6 max-w-2xl mx-auto">
-            Nikmati promo spesial kami dan rasakan kenikmatan ayam crispy terbaik di kota!
+          {/* Tagline - MERAH */}
+          <p className="text-gray-200 text-lg md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+            Nikmati <span className="text-red-500 font-semibold">promo spesial</span> kami dan rasakan 
+            kenikmatan ayam crispy <span className="text-red-500 font-semibold">terbaik</span> di kota!
           </p>
 
-          <div className="flex justify-center">
+          {/* CTA Buttons - MERAH */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
             <button
-            onClick={() => window.location.href = '/menu'} 
-            className="bg-[#B80000] text-white px-6 py-3 rounded-lg shadow-xl hover:bg-red-700 transition-transform transform hover:scale-105 text-sm md:text-base">
-              PESAN SEKARANG
+              onClick={() => window.location.href = '/menu'} 
+              className="group relative bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 md:px-10 md:py-5 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 font-bold text-base md:text-xl overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+                <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                </svg>
+                PESAN SEKARANG
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+            
+            <button className="group relative border-2 md:border-3 border-red-400 text-red-400 px-6 py-4 md:px-10 md:py-5 rounded-full hover:bg-red-700 hover:text-white transition-all duration-300 font-bold text-base md:text-xl overflow-hidden">
+              <span className="relative z-10">LIHAT MENU LENGKAP</span>
+              <div className="absolute inset-0 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+            </button>
+          </div>
+        </div>
+
+        {/* Scroll Indicator - MERAH */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="flex flex-col items-center">
+            <span className="text-red-300 text-sm mb-2">Scroll</span>
+            <div className="w-6 h-10 border-2 border-red-400 rounded-full flex justify-center">
+              <div className="w-1 h-3 bg-red-400 rounded-full mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MENU FAVORIT SECTION - DESIGN MEWAH YANG DIPERBAIKI */}
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-[#FFFFFF] via-[#FFFFFF] to-[#FFFFFF] overflow-hidden">
+        {/* Background Elements Mewah */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-48 md:w-72 h-48 md:h-72 bg-red-400/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/4 w-32 md:w-64 h-32 md:h-64 bg-yellow-400/5 rounded-full blur-3xl"></div>
+        </div>
+
+        {/* Floating Food Icons */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-6 h-6 bg-red-400/20 rounded-full animate-float-slow"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${Math.random() * 8 + 6}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
+          {/* Section Header Mewah */}
+          <div className="text-center mb-10 md:mb-16">
+            <div className="inline-block relative">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-red-600 mb-4 relative z-10">
+                MENU FAVORIT
+              </h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 md:w-48 h-1 md:h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-24 md:w-40 h-0.5 md:h-1 bg-red-400 rounded-full"></div>
+            </div>
+            <p className="text-gray-700 text-base md:text-lg lg:text-xl max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
+              Temukan <span className="text-red-600 font-semibold">menu-menu spesial</span> yang selalu dinantikan oleh pelanggan setia kami
+            </p>
+          </div>
+
+          {/* Carousel Container Mewah - DESIGN BARU */}
+          <div className="relative">
+            {/* Navigation Arrows - IMPROVED */}
+            <button 
+              onClick={prevMenu}
+              disabled={currentMenuIndex === 0}
+              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              onClick={nextMenu}
+              disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - Math.floor(getVisibleItemsCount()))}
+              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-red-600 text-white rounded-full shadow-2xl hover:bg-red-700 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center group backdrop-blur-sm border border-white/20"
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Carousel Items - IMPROVED DESIGN */}
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
+              <div 
+                ref={menuCarouselRef}
+                className="flex transition-transform duration-700 ease-out gap-4 py-4"
+                style={{ 
+                  transform: `translateX(${calculateTranslateX()}px)`,
+                  userSelect: 'none'
+                }}
+              >
+                {favoriteMenus.map((menu, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => handleMenuClick(menu)}
+                    className="group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95 flex-shrink-0"
+                    style={{ 
+                      width: `${menuItemWidth}px`,
+                      minWidth: `${menuItemWidth}px`
+                    }}
+                  >
+                    {/* Card Mewah - IMPROVED DESIGN */}
+                    <div className="relative bg-white rounded-xl md:rounded-2xl shadow-2xl overflow-hidden border-2 border-transparent group-hover:border-red-400 group-hover:shadow-3xl transition-all duration-300 h-full flex flex-col">
+                      {/* Badge - IMPROVED */}
+                      <div className="absolute top-3 md:top-4 left-3 md:left-4 z-10">
+                        <span className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold text-white shadow-lg ${
+                          menu.badge === "BEST SELLER" ? "bg-red-600" :
+                          menu.badge === "NEW" ? "bg-green-500" :
+                          menu.badge === "PREMIUM" ? "bg-purple-500" :
+                          menu.badge === "FAVORITE" ? "bg-pink-500" :
+                          menu.badge === "POPULAR" ? "bg-blue-500" : "bg-orange-500"
+                        }`}>
+                          {menu.badge}
+                        </span>
+                      </div>
+
+                      {/* Image Container - IMPROVED */}
+                      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden bg-gray-100">
+                        <img 
+                          src={menu.image} 
+                          alt={menu.name} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                        />
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                        
+                        {/* Quick View Button */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content - IMPROVED */}
+                      <div className="p-4 md:p-6 flex-1 flex flex-col">
+                        <div className="flex justify-between items-start mb-3 md:mb-4">
+                          <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-red-600 transition-colors duration-300 leading-tight">
+                            {menu.name}
+                          </h3>
+                          <div className="w-2 h-2 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2"></div>
+                        </div>
+                        
+                        <p className="text-gray-600 text-sm md:text-base mb-4 md:mb-6 line-clamp-2 leading-relaxed flex-1">
+                          {menu.description}
+                        </p>
+                        
+                        <div className="flex justify-between items-center mt-auto">
+                          <span className="text-xl md:text-2xl lg:text-3xl font-black text-red-600">{menu.price}</span>
+                          <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg group-hover:shadow-xl text-sm md:text-base flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                            </svg>
+                            Pesan
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Hover Effect */}
+                      <div className="absolute inset-0 border-2 md:border-4 border-red-400 rounded-xl md:rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dots Indicator - IMPROVED */}
+            <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
+              {Array.from({ length: Math.max(1, favoriteMenus.length - Math.floor(getVisibleItemsCount()) + 1) }).map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-300 ${
+                    currentMenuIndex === index 
+                      ? 'bg-red-600 scale-125 shadow-lg' 
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  onClick={() => setCurrentMenuIndex(index)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Button - IMPROVED */}
+          <div className="text-center mt-8 md:mt-12">
+            <button className="relative bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 md:px-12 md:py-5 rounded-full font-bold text-lg md:text-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl group overflow-hidden">
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z"/>
+                </svg>
+                LIHAT SEMUA MENU
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
         </div>
       </div>
 
-      {/* MENU FAVORIT SECTION - Background diubah menjadi #FFF5CC */}
-      <div className="text-black w-full py-12 flex flex-col items-center justify-center" style={{backgroundColor: '#FFF5CC'}}>
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Menu Favorit</h2>
-        <p className="max-w-2xl text-center mb-8 text-base md:text-lg mx-auto px-4">
-          Temukan menu-menu favorit pelanggan kami yang selalu dinantikan kehadirannya.
-        </p>
-
-        {/* Carousel Container - Full width dengan padding */}
-        <div className="relative w-full overflow-hidden px-4">
-          {/* Carousel Track */}
+      {/* MODAL DETAIL MENU MEWAH */}
+      {showModal && selectedMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div 
-            ref={menuCarouselRef}
-            className="flex transition-transform duration-500 ease-out gap-4"
-            style={{ 
-              transform: `translateX(${calculateTranslateX()}px)`,
-              userSelect: 'none'
-            }}
+            ref={modalRef}
+            className={`relative bg-white rounded-2xl md:rounded-3xl shadow-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${animationClass}`}
           >
-            {favoriteMenus.map((menu, index) => (
-              <div 
-                key={index}
-                className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 flex-shrink-0"
-                style={{ 
-                  width: `${menuItemWidth}px`,
-                  minWidth: `${menuItemWidth}px`
-                }}
-              >
-                <div className="h-48 overflow-hidden">
-                  <img 
-                    src={menu.image} 
-                    alt={menu.name} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-bold text-red-600 mb-2">{menu.name}</h3>
-                  <p className="text-gray-700 text-sm mb-4 h-12 overflow-hidden">
-                    {menu.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-red-600">{menu.price}</span>
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition">
-                      Pesan
-                    </button>
-                  </div>
+            {/* Close Button */}
+            <button 
+              onClick={closeModal}
+              className="absolute top-3 right-3 md:top-4 md:right-4 z-20 w-8 h-8 md:w-10 md:h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300 transform hover:rotate-90 shadow-lg flex items-center justify-center"
+            >
+              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Modal Content */}
+            <div className="relative">
+              {/* Image Section */}
+              <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden">
+                <img 
+                  src={selectedMenu.image} 
+                  alt={selectedMenu.name}
+                  className="w-full h-full object-cover" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                
+                {/* Badge */}
+                <div className="absolute top-3 md:top-4 left-3 md:left-4">
+                  <span className={`px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold text-white shadow-2xl ${
+                    selectedMenu.badge === "BEST SELLER" ? "bg-red-600" :
+                    selectedMenu.badge === "NEW" ? "bg-green-500" :
+                    selectedMenu.badge === "PREMIUM" ? "bg-purple-500" :
+                    selectedMenu.badge === "FAVORITE" ? "bg-pink-500" :
+                    selectedMenu.badge === "POPULAR" ? "bg-blue-500" : "bg-orange-500"
+                  }`}>
+                    {selectedMenu.badge}
+                  </span>
                 </div>
               </div>
-            ))}
+
+              {/* Content Section */}
+              <div className="p-4 md:p-6 lg:p-8">
+                <div className="text-center mb-4 md:mb-6">
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-800 mb-2">
+                    {selectedMenu.name}
+                  </h3>
+                  <div className="w-16 md:w-20 h-1 bg-red-500 rounded-full mx-auto"></div>
+                </div>
+
+                <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4 md:mb-6 text-center">
+                  {selectedMenu.description}
+                </p>
+
+                <div className="text-center mb-6 md:mb-8">
+                  <span className="text-2xl md:text-3xl lg:text-4xl font-black text-red-600">{selectedMenu.price}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <button className="bg-gray-100 text-gray-700 px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 text-sm md:text-base">
+                    Tambah Ke Keranjang
+                  </button>
+                  <button className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-3 md:px-6 md:py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
+                    Pesan Sekarang
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      )}
 
-        {/* Navigation buttons untuk menu carousel */}
-        <div className="flex justify-center mt-6 space-x-3 items-center">
-          <button 
-            onClick={prevMenu}
-            disabled={currentMenuIndex === 0}
-            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &#10094;
-          </button>
-          
-          {/* Navigation Dots */}
-          <div className="flex space-x-2">
-            {Array.from({ length: Math.max(1, favoriteMenus.length - getVisibleItemsCount() + 1) }).map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all ${currentMenuIndex === index ? 'bg-red-600 scale-125' : 'bg-gray-300'}`}
-                onClick={() => setCurrentMenuIndex(index)}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-          
-          <button 
-            onClick={nextMenu}
-            disabled={currentMenuIndex >= Math.max(0, favoriteMenus.length - getVisibleItemsCount())}
-            className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            &#10095;
-          </button>
-        </div>
-
-        {/* View All Menu Button */}
-        <div className="mt-8">
-          <button 
-            onClick={() => window.location.href = '/menu'}
-            className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-red-700 transition transform hover:scale-105"
-          >
-            Lihat Semua Menu
-          </button>
-        </div>
-      </div>
-
-      {/* GALLERY SECTION - Tambahan section baru untuk gambar kegiatan */}
-      <div className="py-12 bg-red-600">
-        <h2 className="text-3xl font-bold text-center mb-8 text-white">Galeri Kegiatan Dekremes</h2>
+      {/* GALLERY SECTION */}
+      <div className="py-8 md:py-12 bg-red-600">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-white">Galeri Kegiatan Dekremes</h2>
         <div className="overflow-hidden relative">
           <div className="flex animate-scroll">
             {kegiatanImages.concat(kegiatanImages).map((img, index) => (
@@ -264,132 +601,382 @@ function App() {
                 key={index} 
                 src={img} 
                 alt="Kegiatan Dekremes" 
-                className="h-48 md:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
+                className="h-32 md:h-48 lg:h-64 w-auto object-cover mx-2 rounded-lg shadow-md" 
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* CHICKEN POTATO SAUCE */}
-      <div className="bg-[#FFF5CC] py-16 flex items-center relative overflow-hidden">
-        {/* Tomat Dekorasi di background */}
-        <img
-          src="src/assets/tomatokiri.png"
-          alt="Tomat"
-          className="absolute top-10 left-10 w-24 opacity-90"
-        />
-        <img
-          src="src/assets/tomato.png"
-          alt="Tomat"
-          className="absolute top-16 right-8 w-28 opacity-90"
-        />
-        <img
-          src="src/assets/tomato.png"
-          alt="Tomat"
-          className="absolute bottom-12 left-16 w-20 opacity-90"
-        />
-        <img
-          src="src/assets/tomato.png"
-          alt="Tomat"
-          className="absolute bottom-8 right-12 w-24 opacity-90"
-        />
-
-        {/* Isi Konten */}
-          <div className="min-h-screen bg-[#FFF5CC] flex items-center">
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full items-center px-12 md:px-20 gap-4">
+      {/* AYAM CRISPY & KENTANG SECTION - RESPONSIVE FIX */}
+      <div className="min-h-screen bg-gradient-to-br from-[#FFFFFF] via-[#FFFFFF] to-[#FFFFFF] flex items-center relative overflow-hidden py-12 md:py-0">
+        {/* Background Elements */}
+        <div className="absolute top-0 left-0 w-48 md:w-80 h-48 md:h-80 bg-red-400/20 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-400/15 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
         
-        {/* Kiri - Card Gambar */}
-        <div className="flex md:justify-end justify-center">
-          <div className="bg-black p-3 rounded-xl shadow-lg hover:scale-105 transition">
-            <img
-              src="src/assets/produk/ciken.jpeg"
-              alt="Ayam Geprek"
-              className="w-72 md:w-96 lg:w-[420px] rounded-lg object-contain"
-            />
+        {/* Logo Bulat Ayam - Responsive Positioning */}
+        <div className="absolute top-6 left-6 md:top-20 md:left-20 animate-bounce z-10">
+          <div className="w-12 h-12 md:w-20 md:h-20 bg-red-500/30 rounded-full flex items-center justify-center shadow-2xl border-2 md:border-4 border-red-400/50">
+            <svg className="w-6 h-6 md:w-10 md:h-10 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              </svg>
           </div>
         </div>
 
-        {/* Kanan - Teks */}
-        <div className="text-center md:text-left md:pl-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
-            Ayam Crispy & Kentang
-          </h2>
-          <p className="text-gray-700 mb-4 text-base md:text-lg">
-            Ayam Crispy kami dibuat dari ayam pilihan yang digoreng hingga renyah,
-            kemudian diulek bersama sambal spesial dan menggugah selera.
-            Disajikan dengan nasi hangat dan lalapan segar, ayam crispy ini adalah
-            pilihan sempurna untuk Anda yang menyukai cita rasa nikmat dan gurih
-            dalam satu hidangan.
-          </p>
-          <button className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-transform transform hover:scale-105 text-sm">
-            ORDER NOW
-          </button>
+        {/* Logo Bulat Kentang - Responsive Positioning */}
+        <div className="absolute bottom-8 right-8 md:bottom-32 md:right-32 animate-bounce delay-1000 z-10">
+          <div className="w-10 h-10 md:w-16 md:h-16 bg-yellow-500/40 rounded-full flex items-center justify-center shadow-2xl border-2 md:border-4 border-yellow-400/50">
+            <svg className="w-5 h-5 md:w-8 md:h-8 text-yellow-700" fill="currentColor" viewBox="0 0 20 20">
+            </svg>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 w-full items-center px-4 md:px-8 lg:px-20 gap-8 md:gap-12 max-w-7xl mx-auto">
+          {/* Image Card dengan Logo Ayam */}
+          <div className="flex justify-center lg:justify-end relative order-2 lg:order-1">
+            <div className="relative group">
+              <div className="relative bg-white p-3 md:p-4 rounded-xl md:rounded-2xl shadow-xl transition-transform duration-500 group-hover:scale-105">
+                <div className="relative overflow-hidden rounded-lg md:rounded-xl">
+                  <img
+                    src="src/assets/produk/ciken.jpeg"
+                    alt="Ayam Crispy & Kentang"
+                    className="w-64 md:w-80 lg:w-96 xl:w-[450px] rounded-lg md:rounded-xl border-2 border-gray-100 transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                
+                {/* Badge Merah */}
+                <div className="absolute -top-2 -right-2 bg-red-600 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-bold shadow-lg">
+                  BEST SELLER
+                </div>
+
+                {/* Logo Ayam Kecil */}
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 md:w-12 md:h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="text-center lg:text-left lg:pl-4 md:lg:pl-8 order-1 lg:order-2">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-red-600 mb-3 md:mb-4 leading-tight">
+                Ayam Crispy 
+                <span className="block text-red-500 text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                  & Kentang Spesial
+                </span>
+              </h2>
+              <div className="w-16 md:w-24 h-1 bg-red-500 rounded-full mb-4 md:mb-6 mx-auto lg:mx-0"></div>
+            </div>
+
+            <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Ayam pilihan berkualitas premium</p>
+              </div>
+              
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Kentang goreng renyah dan gurih</p>
+              </div>
+              
+              <div className="flex items-center justify-center lg:justify-start gap-2 md:gap-3">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-sm md:text-lg font-medium">Sambal spesial racikan tradisional</p>
+              </div>
+            </div>
+
+            <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-6 md:mb-8 leading-relaxed">
+              Ayam Crispy kami dibuat dari <span className="text-red-600 font-semibold">ayam pilihan terbaik</span> yang digoreng 
+              dengan teknik khusus hingga mencapai tingkat kerenyahan sempurna. Disajikan bersama 
+              <span className="text-red-500 font-semibold"> kentang goreng premium</span> dan sambal spesial yang menggugah selera.
+            </p>
+
+            {/* Single CTA Button Merah */}
+            <div className="flex justify-center lg:justify-start">
+              <button className="bg-red-600 text-white px-6 py-3 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-red-700 transition-transform transform hover:scale-105 text-base md:text-lg shadow-lg">
+                ORDER SEKARANG
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-          </div>
 
-
-      <div className="relative bg-[#F60000] py-16 px-8 overflow-hidden">
-          {/* Konten */}
-          <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
-            {/* Gambar Sertifikat */}
-            <div className="flex justify-center md:justify-start">
-              <img
-                src="src/assets/Halal_sertifikat.png"
-                alt="Sertifikat Halal MUI"
-                className="w-72 md:w-[320px] rounded-lg shadow-lg border-2 border-white"
-              />
-            </div>
-
-            {/* Text */}
-            <div className="text-white text-center md:text-left -ml-4">
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">
-                BerSertifikasi halal
-              </h2>
-              <p className="mb-2 text-lg md:text-xl leading-relaxed">
-                Kami berkomitmen untuk selalu menjaga kualitas dan kepercayaan pelanggan.
-              </p>
-              <p className="text-lg md:text-xl leading-relaxed">
-                Seluruh produk kami telah tersedia dengan Sertifikat Halal resmi dari
-                Majelis Ulama Indonesia (MUI), sehingga Anda tidak perlu khawatir dalam
-                menikmati setiap menu yang kami sajikan.
-              </p>
-            </div>
-          </div>
-
-          {/* Logo Halal di kanan bawah */}
-          <div className="absolute bottom-6 right-6 opacity-90">
-            <img
-              src="src/assets/Logo_Halal.png"
-              alt="Logo Halal MUI"
-              className="w-24 h-24"
-            />
+      {/* HALAL CERTIFICATION SECTION */}
+      <div className="relative bg-gradient-to-br from-red-800 via-red-700 to-red-600 py-12 md:py-20 px-4 md:px-8 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-black/20"></div>
+        
+        {/* Logo Bulat Dekorasi */}
+        <div className="absolute top-6 left-6 md:top-10 md:left-10 w-12 h-12 md:w-20 md:h-20 bg-red-400/20 rounded-full animate-pulse border-2 md:border-4 border-red-300/30">
+          <div className="w-full h-full flex items-center justify-center">
+            <svg className="w-5 h-5 md:w-8 md:h-8 text-red-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
           </div>
         </div>
 
-      {/* CSS untuk animasi scroll otomatis */}
-      <style>
-        {`
-          @keyframes scroll {
-            0% {
-              transform: translateX(0%);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-          .animate-scroll {
-            animation: scroll 30s linear infinite;
-            display: flex;
-            width: max-content;
-          }
-          .animate-scroll:hover {
-            animation-play-state: paused;
-          }
-        `}
-      </style>
+        <div className="absolute bottom-6 right-6 md:bottom-10 md:right-10 w-10 h-10 md:w-16 md:h-16 bg-white/10 rounded-full animate-bounce">
+          <div className="w-full h-full flex items-center justify-center">
+            <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div className="absolute top-1/2 left-1/4 w-8 h-8 md:w-12 md:h-12 bg-red-300/20 rounded-full animate-ping"></div>
+
+        {/* Main Content */}
+        <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
+          {/* Certificate dengan Frame Mewah */}
+          <div className="flex justify-center lg:justify-start order-2 lg:order-1">
+            <div className="relative group">
+              {/* Glow Effect */}
+              <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-r from-red-400 to-red-600 rounded-2xl md:rounded-3xl opacity-40 blur-xl md:blur-2xl animate-pulse"></div>
+              
+              {/* Gold Frame */}
+              <div className="relative bg-gradient-to-br from-red-300 via-red-400 to-red-500 p-3 md:p-4 rounded-xl md:rounded-2xl shadow-2xl">
+                <div className="relative overflow-hidden rounded-lg border-2 md:border-4 border-white">
+                  <img
+                    src="src/assets/Halal_sertifikat.png"
+                    alt="Sertifikat Halal MUI"
+                    className="w-64 md:w-80 lg:w-96 rounded-lg transition-transform duration-700 group-hover:scale-105"
+                  />
+                  
+                  {/* Shine Effect on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                </div>
+              </div>
+
+              {/* Seal Badge */}
+              <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-8 h-8 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl animate-bounce border-2 border-white">
+                <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Text Content Mewah */}
+          <div className="text-white text-center lg:text-left order-1 lg:order-2">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+                <span className="text-red-200">
+                  BerSertifikasi Halal
+                </span>
+              </h2>
+              <div className="w-12 md:w-20 h-1 bg-red-400 rounded-full mb-4 md:mb-6 mx-auto lg:mx-0"></div>
+            </div>
+
+            <div className="space-y-4 md:space-y-6 text-base md:text-lg lg:text-xl">
+              <div className="flex items-center justify-center lg:justify-start gap-3 md:gap-4 p-3 md:p-4 bg-white/10 rounded-xl md:rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="flex-shrink-0 w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-white/90 leading-relaxed text-sm md:text-base">
+                  Kami berkomitmen untuk selalu menjaga <span className="text-red-300 font-semibold">kualitas dan kepercayaan</span> pelanggan.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center lg:justify-start gap-3 md:gap-4 p-3 md:p-4 bg-white/10 rounded-xl md:rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="flex-shrink-0 w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-white/90 leading-relaxed text-sm md:text-base">
+                  Seluruh produk kami telah tersedia dengan <span className="text-red-300 font-semibold">Sertifikat Halal resmi</span> dari
+                  Majelis Ulama Indonesia (MUI).
+                </p>
+              </div>
+            </div>
+
+            {/* Trust Badges Mewah */}
+            <div className="flex flex-wrap gap-2 md:gap-4 mt-6 md:mt-8 justify-center lg:justify-start">
+              {['MUI Certified', '100% Halal', 'Quality Guarantee'].map((badge, index) => (
+                <span key={index} className="bg-red-500/30 text-red-200 px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold border border-red-400/50 backdrop-blur-sm">
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Animated Halal Logo */}
+        <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-red-400 rounded-full animate-ping opacity-30"></div>
+            <div className="relative bg-gradient-to-br from-red-300 to-red-500 p-2 md:p-3 rounded-full shadow-2xl border-2 border-white">
+              <img
+                src="src/assets/Logo_Halal.png"
+                alt="Logo Halal MUI"
+                className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 drop-shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ SECTION - BARU DITAMBAHKAN */}
+      <div className="relative py-12 md:py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-red-400/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-48 md:w-80 h-48 md:h-80 bg-red-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+          {/* Section Header */}
+          <div className="text-center mb-10 md:mb-16">
+            <div className="inline-block relative">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-red-600 mb-3 md:mb-4 relative z-10">
+                FAQ
+              </h2>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 md:w-32 h-1 md:h-2 bg-red-500 rounded-full"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-16 md:w-28 h-0.5 md:h-1 bg-red-400 rounded-full"></div>
+            </div>
+            <p className="text-gray-700 text-base md:text-lg lg:text-xl max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
+              Pertanyaan yang sering diajukan tentang <span className="text-red-600 font-semibold">DeKremes & Crispy</span>
+            </p>
+          </div>
+
+          {/* FAQ Items */}
+          <div className="space-y-3 md:space-y-4">
+            {faqData.map((faq, index) => (
+              <div 
+                key={index}
+                className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl"
+              >
+                <button
+                  onClick={() => toggleFaq(index)}
+                  className="w-full px-4 py-4 md:px-6 md:py-6 text-left flex justify-between items-center focus:outline-none"
+                >
+                  <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 pr-3 md:pr-4 text-left">
+                    {faq.question}
+                  </h3>
+                  <svg 
+                    className={`w-5 h-5 md:w-6 md:h-6 text-red-600 transition-transform duration-300 flex-shrink-0 ${
+                      openFaqIndex === index ? 'transform rotate-180' : ''
+                    }`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                <div 
+                  className={`px-4 md:px-6 overflow-hidden transition-all duration-300 ${
+                    openFaqIndex === index ? 'max-h-96 pb-4 md:pb-6' : 'max-h-0'
+                  }`}
+                >
+                  <div className="border-t border-gray-200 pt-3 md:pt-4">
+                    <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center mt-8 md:mt-12">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl md:rounded-2xl p-6 md:p-8 shadow-2xl">
+              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 md:mb-4">
+                Masih ada pertanyaan?
+              </h3>
+              <p className="text-red-100 mb-4 md:mb-6 text-base md:text-lg">
+                Hubungi customer service kami yang siap membantu 24/7
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
+                <button className="bg-white text-red-600 px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 text-sm md:text-base">
+                  📞 Hubungi Kami
+                </button>
+                <button className="border-2 border-white text-white px-6 py-2 md:px-8 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-all duration-300 text-sm md:text-base">
+                  💬 Chat WhatsApp
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Custom Styles */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pop-in {
+          0% { transform: scale(0.5); opacity: 0; }
+          70% { transform: scale(1.05); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes pop-out {
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(0.5); opacity: 0; }
+        }
+        
+        @keyframes scroll {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        
+        .animate-pop-in {
+          animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .animate-pop-out {
+          animation: pop-out 0.3s ease-in;
+        }
+        
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+          display: flex;
+          width: max-content;
+        }
+        
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
+        
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </>
   );
 }

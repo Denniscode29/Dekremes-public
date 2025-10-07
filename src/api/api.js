@@ -8,10 +8,8 @@ const api = axios.create({
   },
 });
 
-
 api.interceptors.request.use(
   (config) => {
-    // PERBAIKAN: Gunakan authToken yang sama dengan AuthController
     const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -25,10 +23,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // PERBAIKAN: Hapus authToken yang sama dengan AuthController
       localStorage.removeItem("authToken");
-      // Optional: redirect to login
-      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -43,5 +38,12 @@ export function setAuthToken(token) {
     localStorage.removeItem("authToken");
   }
 }
+
+// Ekspor produkAPI dengan benar
+export const produkAPI = {
+  getAll: () => api.get('/produk'),
+  getById: (id) => api.get(`/produk/${id}`),
+  getByKategori: (kategori) => api.get(`/produk/kategori/${kategori}`),
+};
 
 export default api;

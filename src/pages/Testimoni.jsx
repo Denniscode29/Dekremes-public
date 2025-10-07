@@ -1,3 +1,4 @@
+// pages/Testimoni.jsx
 import { useState, useEffect } from "react";
 import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -18,6 +19,8 @@ export default function TestimoniPage() {
   const [userTestimonialStatus, setUserTestimonialStatus] = useState(null);
   const [refreshData, setRefreshData] = useState(0);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTestimonialId, setEditingTestimonialId] = useState(null);
 
   // auth state
   const { isLoggedIn, user } = AuthController();
@@ -121,21 +124,36 @@ export default function TestimoniPage() {
         formData.append('product_photo', gambar);
       }
 
-      await api.post("/testimonials", formData);
+      let response;
+      if (isEditing && editingTestimonialId) {
+        // Update testimoni yang sudah ada
+        response = await api.put(`/testimonials/${editingTestimonialId}`, formData);
+      } else {
+        // Buat testimoni baru
+        response = await api.post("/testimonials", formData);
+      }
 
-      // Tampilkan pesan terima kasih dan reset form
-      setShowThankYou(true);
+      // Tampilkan pesan sukses
+      Swal.fire({
+        icon: "success",
+        title: isEditing ? "Berhasil Diperbarui!" : "Terima Kasih!",
+        text: isEditing 
+          ? "Testimoni Anda berhasil diperbarui dan menunggu verifikasi admin." 
+          : "Testimoni Anda telah dikirim dan menunggu verifikasi admin.",
+      });
+      
+      // Reset form
       setKomentar("");
       setRating(0);
       setGambar(null);
       setGambarPreview(null);
       setShowForm(false);
+      setIsEditing(false);
+      setEditingTestimonialId(null);
       
-      // Refresh data setelah 2 detik
-      setTimeout(() => {
-        setRefreshData(prev => prev + 1);
-        checkUserTestimonialStatus();
-      }, 2000);
+      // Refresh data
+      setRefreshData(prev => prev + 1);
+      checkUserTestimonialStatus();
     } catch (error) {
       console.error("Error submitting testimonial:", error);
       Swal.fire({
@@ -148,41 +166,64 @@ export default function TestimoniPage() {
     }
   };
 
-  const handleDeleteTestimonial = async () => {
-    const result = await Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: "Testimoni yang dihapus tidak dapat dikembalikan!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#B80002',
-      cancelButtonColor: '#6B7280',
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal'
-    });
-
-    if (result.isConfirmed) {
-      try {
-        // Hapus testimoni
-        await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
-        
-        Swal.fire({
-          icon: "success",
-          title: "Terhapus",
-          text: "Testimoni berhasil dihapus.",
-        });
-        
-        setRefreshData(prev => prev + 1);
-        checkUserTestimonialStatus();
-      } catch (error) {
-        console.error("Error deleting testimonial:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Gagal",
-          text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
-        });
-      }
+  const handleEditTestimonial = async () => {
+  if (userTestimonialStatus?.testimonial) {
+    const testimonial = userTestimonialStatus.testimonial;
+    setKomentar(testimonial.content);
+    setRating(testimonial.rating);
+    setGambar(null);
+    
+    // Set gambar preview jika ada
+    if (testimonial.product_photo_url) {
+      setGambarPreview(testimonial.product_photo_url);
     }
-  };
+    
+    setIsEditing(true);
+    setEditingTestimonialId(testimonial.id);
+    setShowForm(true);
+  }
+};
+
+const handleDeleteTestimonial = async () => {
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: "Testimoni yang dihapus tidak dapat dikembalikan!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#B80002',
+    cancelButtonColor: '#6B7280',
+    confirmButtonText: 'Ya, hapus!',
+    cancelButtonText: 'Batal'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await api.delete(`/testimonials/${userTestimonialStatus.testimonial.id}`);
+      
+      Swal.fire({
+        icon: "success",
+        title: "Terhapus",
+        text: "Testimoni berhasil dihapus.",
+      });
+      
+      // Refresh data dan status
+      setRefreshData(prev => prev + 1);
+      await checkUserTestimonialStatus();
+      
+      // Reset form state
+      setShowForm(false);
+      setIsEditing(false);
+      setEditingTestimonialId(null);
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.response?.data?.message || "Terjadi kesalahan saat menghapus testimoni.",
+      });
+    }
+  }
+};
 
   const renderTestimonialStatus = () => {
     if (!userTestimonialStatus?.hasSubmitted) return null;
@@ -269,7 +310,7 @@ export default function TestimoniPage() {
         </div>
       </div>
 
-      <div className="min-h-screen bg-[#FFF5CC] py-12 px-6 md:px-20">
+      <div className="min-h-screen bg-[#FFFFFF] py-12 px-6 md:px-20">
         {/* Summary Rating */}
         <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl max-w-2xl mx-auto mb-10">
           <div className="bg-white rounded-2xl p-6 text-center">
@@ -330,7 +371,11 @@ export default function TestimoniPage() {
           <div className="max-w-2xl mx-auto mb-10">
             <div className="text-center">
               <button 
-                onClick={() => setShowForm(true)}
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditingTestimonialId(null);
+                  setShowForm(true);
+                }}
                 className="bg-gradient-to-r from-red-700 to-red-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto"
               >
                 <MessageSquare className="w-5 h-5" />
@@ -345,7 +390,9 @@ export default function TestimoniPage() {
           <div className="max-w-2xl mx-auto bg-gradient-to-r from-yellow-400 via-red-500 to-red-700 p-[2px] rounded-2xl shadow-xl mb-10">
             <div className="bg-white rounded-2xl p-6">
               <form onSubmit={handleSubmitTestimonial}>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">Tulis Testimoni</h3>
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">
+                  {isEditing ? 'Edit Testimoni' : 'Tulis Testimoni'}
+                </h3>
                 
                 <div className="mb-4">
                   <label className="block text-gray-900 mb-2 font-medium">Rating</label>
@@ -425,6 +472,8 @@ export default function TestimoniPage() {
                       setShowForm(false);
                       setGambar(null);
                       setGambarPreview(null);
+                      setIsEditing(false);
+                      setEditingTestimonialId(null);
                     }}
                     className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                   >
@@ -441,12 +490,12 @@ export default function TestimoniPage() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Mengirim...
+                        {isEditing ? 'Memperbarui...' : 'Mengirim...'}
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4 mr-1" />
-                        Kirim Testimoni
+                        {isEditing ? 'Perbarui Testimoni' : 'Kirim Testimoni'}
                       </>
                     )}
                   </button>
@@ -481,7 +530,10 @@ export default function TestimoniPage() {
                     <div>
                       <h3 className="font-semibold text-gray-800">{user?.name}</h3>
                       <p className="text-gray-500 text-sm">
-                        {formatDate(userTestimonialStatus.testimonial.created_at)}
+                        {userTestimonialStatus.testimonial.updated_at ? 
+                          `Diperbarui: ${formatDate(userTestimonialStatus.testimonial.updated_at)}` : 
+                          `Dibuat: ${formatDate(userTestimonialStatus.testimonial.created_at)}`
+                        }
                       </p>
                     </div>
                   </div>
@@ -511,7 +563,7 @@ export default function TestimoniPage() {
 
                   <div className="flex justify-end space-x-2 mt-4">
                     <button
-                      onClick={() => setShowForm(true)}
+                      onClick={handleEditTestimonial}
                       className="flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                     >
                       <Edit className="w-4 h-4 mr-1" />
@@ -548,7 +600,10 @@ export default function TestimoniPage() {
                   <div>
                     <h3 className="font-semibold text-gray-800">{t.user?.name}</h3>
                     <p className="text-gray-500 text-sm">
-                      {formatDate(t.created_at)}
+                      {t.updated_at ? 
+                        `Diperbarui: ${formatDate(t.updated_at)}` : 
+                        `Dibuat: ${formatDate(t.created_at)}`
+                      }
                     </p>
                   </div>
                 </div>

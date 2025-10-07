@@ -1,92 +1,63 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import AuthController from "../controllers/AuthController.js";
+// src/pages/auth/LoginSuccess.jsx
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import api from "../api/api.js";
 import Swal from "sweetalert2";
 
 export default function LoginSuccess() {
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { loginSuccess } = AuthController();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   useEffect(() => {
-    const handleCallback = async () => {
-      const params = new URLSearchParams(location.search);
-      const token = params.get("token");
-      const error = params.get("error");
-
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Login Gagal",
-          text: "Terjadi kesalahan saat login dengan Google. Silakan coba lagi.",
-        });
-        navigate("/login");
-        return;
-      }
-
-      if (!token) {
-        Swal.fire({
-          icon: "error",
-          title: "Token Tidak Ditemukan",
-          text: "Token tidak valid. Silakan login kembali.",
-        });
-        navigate("/login");
-        return;
-      }
-
+    async function handleLoginSuccess() {
       try {
-        const result = await loginSuccess(token);
-        
-        if (result.success) {
-          // Cek apakah perlu setup profile
-          if (result.requires_profile_setup) {
-            Swal.fire({
-              icon: "info",
-              title: "Lengkapi Profil",
-              text: "Silakan lengkapi profil Anda untuk melanjutkan.",
-              timer: 2000,
-              showConfirmButton: false
-            });
-            navigate("/setup-profile");
-          } else {
-            Swal.fire({
-              icon: "success",
-              title: "Login Berhasil",
-              text: "Selamat datang kembali!",
-              timer: 2000,
-              showConfirmButton: false
-            });
-            navigate("/");
-          }
+        if (!token) {
+          throw new Error("Token tidak ditemukan");
         }
+
+        // Simpan token ke localStorage
+        localStorage.setItem("token", token);
+        
+        // Set header Authorization untuk API calls selanjutnya
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        // Ambil data user
+        const res = await api.get("/auth/profile");
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        
+        Swal.fire({
+          icon: "success",
+          title: "Login Berhasil",
+          text: "Selamat datang kembali!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
+        navigate("/"); // redirect ke home
+
       } catch (err) {
-        console.error("Login success error:", err);
+        console.error("Login failed", err);
+        
         Swal.fire({
           icon: "error",
           title: "Login Gagal",
-          text: "Terjadi kesalahan. Silakan coba login kembali.",
+          text: "Terjadi kesalahan saat proses login",
         });
+        
         navigate("/login");
-      } finally {
-        setLoading(false);
       }
-    };
+    }
 
-    handleCallback();
-  }, [location, navigate, loginSuccess]);
+    handleLoginSuccess();
+  }, [navigate, token]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFF5CC]">
-        <div className="bg-white shadow-2xl rounded-2xl p-8 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Memproses Login...</h2>
-          <p className="text-gray-600">Mohon tunggu sebentar</p>
-        </div>
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-lg font-semibold">Memproses login...</p>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }

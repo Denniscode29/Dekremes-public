@@ -23,8 +23,6 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("authToken");
-      // Bisa redirect ke login kalau mau
-      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -46,6 +44,23 @@ const AuthController = create((set, get) => ({
   loading: false,
 
   /**
+   * CHECK REGISTRATION STATUS
+   */
+  checkRegistrationStatus: async (email) => {
+    try {
+      const res = await api.post("/auth/check-registration-status", { email });
+      return res.data;
+    } catch (err) {
+      console.error("Check registration status error:", err);
+      return {
+        exists: false,
+        verified: false,
+        profile_completed: false
+      };
+    }
+  },
+
+  /**
    * REGISTER - Hanya email
    */
   register: async ({ email }) => {
@@ -57,7 +72,7 @@ const AuthController = create((set, get) => ({
     } catch (err) {
       const errorMsg = extractErrorMessage(err, "Gagal melakukan registrasi.");
       set({ error: errorMsg, loading: false });
-      throw new Error(errorMsg);
+      throw err;
     }
   },
 
@@ -199,22 +214,21 @@ const AuthController = create((set, get) => ({
    * UPDATE PROFILE
    */
   updateProfile: async (formData) => {
-  set({ loading: true, error: null });
-  try {
-    const res = await api.post("/auth/update-profile", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    set({ user: res.data.user, loading: false });
-    return res.data;
-  } catch (err) {
-    const errorMsg = extractErrorMessage(err, "Gagal update profil.");
-    set({ error: errorMsg, loading: false });
-    throw new Error(errorMsg);
-  }
-},
-
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post("/auth/update-profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      set({ user: res.data.user, loading: false });
+      return res.data;
+    } catch (err) {
+      const errorMsg = extractErrorMessage(err, "Gagal update profil.");
+      set({ error: errorMsg, loading: false });
+      throw new Error(errorMsg);
+    }
+  },
 
   /**
    * UPLOAD AVATAR
@@ -297,10 +311,10 @@ const AuthController = create((set, get) => ({
       const userData = res.data?.user || res.data;
       set({ user: userData, isLoggedIn: true, error: null });
     } catch (err) {
-        console.error("An error occurred:", err);
-        localStorage.removeItem("authToken");
-        set({ user: null, isLoggedIn: false });
-      }
+      console.error("An error occurred:", err);
+      localStorage.removeItem("authToken");
+      set({ user: null, isLoggedIn: false });
+    }
   },
 
   /**
