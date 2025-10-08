@@ -97,12 +97,12 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
         className="w-full bg-white"
       ></div>
 
-      {/* Luxury Hero Section */}
+      {/* Luxury Hero Section - Responsive */}
       <div 
         className="relative flex items-center justify-center overflow-hidden bg-gray-900"
         style={{ 
-          height: `calc(70vh - ${navbarHeight}px)`,
-          minHeight: `calc(600px - ${navbarHeight}px)`
+          height: `calc(60vh - ${navbarHeight}px)`,
+          minHeight: `calc(500px - ${navbarHeight}px)`
         }}
       >
         <div className="absolute inset-0">
@@ -114,74 +114,74 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
         </div>
         
-        <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-10 md:left-10 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
+        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-10 md:right-10 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
         
-        <div className="relative z-10 text-center px-6 max-w-4xl">
-          <div className="mb-8">
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-red-600 mx-auto mb-6 animate-pulse"></div>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-in-down">
+        <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl">
+          <div className="mb-6 sm:mb-8">
+            <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-amber-400 to-red-600 mx-auto mb-4 sm:mb-6 animate-pulse"></div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 tracking-tight animate-fade-in-down">
               Hubungi <span className="text-amber-400">Kami</span>
             </h1>
-            <div className="w-32 h-1 bg-gradient-to-r from-red-600 to-amber-400 mx-auto mt-6 animate-pulse"></div>
+            <div className="w-20 sm:w-24 md:w-32 h-1 bg-gradient-to-r from-red-600 to-amber-400 mx-auto mt-4 sm:mt-6 animate-pulse"></div>
           </div>
           
-          <p className="text-xl md:text-2xl text-gray-200 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 font-light max-w-3xl mx-auto leading-relaxed animate-fade-in-up px-2">
             Sambut <span className="text-amber-400 font-semibold">kenikmatan crispy</span> dalam setiap acara spesial Anda
           </p>
         </div>
       </div>
 
-      {/* Luxury Main Content */}
-      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
+      {/* Luxury Main Content - Responsive */}
+      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8 sm:py-12 md:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
           
-          {/* Premium Contact Section */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 mb-20">
+          {/* Premium Contact Section - Responsive Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-14 xl:gap-16 mb-12 sm:mb-16 md:mb-20">
             
             {/* Left Column - Luxury Contact Info */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 md:space-y-6">
               {/* Premium Header */}
               <div className="text-left">
-                <div className="inline-flex items-center space-x-3 mb-4">
-                  <div className="w-8 h-0.5 bg-gradient-to-r from-amber-400 to-red-600"></div>
-                  <span className="text-sm font-semibold text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-full border border-red-200">
+                <div className="inline-flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+                  <div className="w-6 sm:w-8 h-0.5 bg-gradient-to-r from-amber-400 to-red-600"></div>
+                  <span className="text-xs sm:text-sm font-semibold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-red-200">
                     Get In Touch
                   </span>
-                  <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
+                  <div className="w-6 sm:w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
                 </div>
                 
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-5 md:mb-6 text-gray-800">
                   Mari Berkolaborasi <span className="text-amber-500">Bersama</span>
                 </h2>
                 
-                <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed max-w-lg">
                   Tim profesional kami siap membantu mewujudkan acara spesial Anda dengan 
                   sentuhan kuliner yang tak terlupakan. Hubungi kami untuk konsultasi gratis.
                 </p>
               </div>
 
-              {/* Luxury Contact Cards */}
-              <div className="space-y-4">
+              {/* Luxury Contact Cards - Responsive */}
+              <div className="space-y-3 sm:space-y-4">
                 {/* WhatsApp - Premium Card */}
                 <div className="group relative">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
-                  <div className="relative bg-white rounded-2xl p-6 shadow-2xl border border-green-100 group-hover:scale-[1.02] transition-all duration-500">
-                    <div className="flex items-center space-x-4">
+                  <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-green-500 to-green-600 rounded-xl sm:rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
+                  <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-xl sm:shadow-2xl border border-green-100 group-hover:scale-[1.02] transition-all duration-500">
+                    <div className="flex items-center space-x-3 sm:space-x-4">
                       <div className="flex-shrink-0">
-                        <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
-                          <FaWhatsapp className="text-white text-2xl" />
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
+                          <FaWhatsapp className="text-white text-lg sm:text-xl md:text-2xl" />
                         </div>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">WhatsApp Priority</h3>
-                        <p className="text-green-600 font-semibold text-lg mb-1">+62 877-8814-8113</p>
-                        <p className="text-gray-500 text-sm">Respon instan - 24/7</p>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1">WhatsApp Priority</h3>
+                        <p className="text-green-600 font-semibold text-sm sm:text-base md:text-lg mb-1">+62 877-8814-8113</p>
+                        <p className="text-gray-500 text-xs sm:text-sm">Respon instan - 24/7</p>
                         <a 
                           href="https://wa.me/6287788148113" 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="inline-block mt-2 text-green-600 font-semibold text-sm hover:underline"
+                          className="inline-block mt-1 sm:mt-2 text-green-600 font-semibold text-xs sm:text-sm hover:underline"
                         >
                           Mulai Percakapan →
                         </a>
@@ -192,21 +192,21 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
 
                 {/* Phone - Premium Card */}
                 <div className="group relative">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
-                  <div className="relative bg-white rounded-2xl p-6 shadow-2xl border border-red-100 group-hover:scale-[1.02] transition-all duration-500">
-                    <div className="flex items-center space-x-4">
+                  <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-red-500 to-red-600 rounded-xl sm:rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
+                  <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-xl sm:shadow-2xl border border-red-100 group-hover:scale-[1.02] transition-all duration-500">
+                    <div className="flex items-center space-x-3 sm:space-x-4">
                       <div className="flex-shrink-0">
-                        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
-                          <FaPhone className="text-white text-2xl" />
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
+                          <FaPhone className="text-white text-lg sm:text-xl md:text-2xl" />
                         </div>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">Telepon Eksklusif</h3>
-                        <p className="text-red-600 font-semibold text-lg mb-1">+62 877-8814-8113</p>
-                        <p className="text-gray-500 text-sm">08:00 - 20:00 WIB</p>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1">Telepon Eksklusif</h3>
+                        <p className="text-red-600 font-semibold text-sm sm:text-base md:text-lg mb-1">+62 877-8814-8113</p>
+                        <p className="text-gray-500 text-xs sm:text-sm">08:00 - 20:00 WIB</p>
                         <a 
                           href="tel:+6287788148113" 
-                          className="inline-block mt-2 text-red-600 font-semibold text-sm hover:underline"
+                          className="inline-block mt-1 sm:mt-2 text-red-600 font-semibold text-xs sm:text-sm hover:underline"
                         >
                           Panggil Sekarang →
                         </a>
@@ -217,21 +217,21 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
 
                 {/* Email - Premium Card */}
                 <div className="group relative">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
-                  <div className="relative bg-white rounded-2xl p-6 shadow-2xl border border-amber-100 group-hover:scale-[1.02] transition-all duration-500">
-                    <div className="flex items-center space-x-4">
+                  <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl sm:rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
+                  <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-xl sm:shadow-2xl border border-amber-100 group-hover:scale-[1.02] transition-all duration-500">
+                    <div className="flex items-center space-x-3 sm:space-x-4">
                       <div className="flex-shrink-0">
-                        <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
-                          <FaEnvelope className="text-white text-2xl" />
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
+                          <FaEnvelope className="text-white text-lg sm:text-xl md:text-2xl" />
                         </div>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">Email Premium</h3>
-                        <p className="text-amber-600 font-semibold text-lg mb-1">dekremescrispychicken@gmail.com</p>
-                        <p className="text-gray-500 text-sm">Balasan dalam 1x24 jam</p>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1">Email Premium</h3>
+                        <p className="text-amber-600 font-semibold text-sm sm:text-base md:text-lg mb-1">dekremescrispychicken@gmail.com</p>
+                        <p className="text-gray-500 text-xs sm:text-sm">Balasan dalam 1x24 jam</p>
                         <a 
                           href="mailto:dekremescrispychicken@gmail.com" 
-                          className="inline-block mt-2 text-amber-600 font-semibold text-sm hover:underline"
+                          className="inline-block mt-1 sm:mt-2 text-amber-600 font-semibold text-xs sm:text-sm hover:underline"
                         >
                           Kirim Email →
                         </a>
@@ -242,40 +242,40 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
               </div>
             </div>
 
-            {/* Right Column - Luxury Contact Form */}
+            {/* Right Column - Luxury Contact Form - Responsive */}
             <div className="relative">
-              <div className="absolute -inset-2 bg-gradient-to-r from-amber-400 to-red-500 rounded-3xl blur-lg opacity-20 animate-glow"></div>
-              <div className="relative bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-amber-100 h-full flex flex-col">
-                <div className="text-center mb-6">
-                  <h2 className="text-3xl font-bold text-gray-800 mb-3">
+              <div className="absolute -inset-1 sm:-inset-2 bg-gradient-to-r from-amber-400 to-red-500 rounded-xl sm:rounded-2xl md:rounded-3xl blur-lg opacity-20 animate-glow"></div>
+              <div className="relative bg-white rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-5 md:p-6 lg:p-8 shadow-xl sm:shadow-2xl border border-amber-100 h-full flex flex-col">
+                <div className="text-center mb-4 sm:mb-5 md:mb-6">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">
                     Konsultasi <span className="text-amber-500">Eksklusif</span>
                   </h2>
-                  <p className="text-gray-600">Isi formulir untuk konsultasi menu dan penawaran spesial</p>
+                  <p className="text-gray-600 text-sm sm:text-base">Isi formulir untuk konsultasi menu dan penawaran spesial</p>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col">
-                  {/* Name + Phone Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 flex-1 flex flex-col">
+                  {/* Name + Phone Row - Responsive */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     <div className="group">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Nama Lengkap</label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg text-sm sm:text-base"
                         placeholder="Nama Anda"
                         required
                       />
                     </div>
                     <div className="group">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon</label>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Nomor Telepon</label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg text-sm sm:text-base"
                         placeholder="+62 xxx xxxx xxxx"
                         required
                       />
@@ -284,31 +284,31 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
 
                   {/* Email */}
                   <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Alamat Email</label>
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                      className="w-full border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg text-sm sm:text-base"
                       placeholder="email@domain.com"
                       required
                     />
                   </div>
 
-                  {/* Custom Dropdown */}
+                  {/* Custom Dropdown - Responsive */}
                   <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori Pesan</label>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Kategori Pesan</label>
                     <div className="relative">
                       <button
                         type="button"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg bg-white text-left flex items-center justify-between"
+                        className="w-full border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg bg-white text-left flex items-center justify-between text-sm sm:text-base"
                       >
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                           {selectedCategory ? (
                             <>
-                              <span className="text-xl">{selectedCategory.icon}</span>
+                              <span className="text-lg sm:text-xl">{selectedCategory.icon}</span>
                               <span className="font-medium">{selectedCategory.label}</span>
                             </>
                           ) : (
@@ -316,30 +316,30 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                           )}
                         </div>
                         <FaChevronDown 
-                          className={`text-gray-400 transition-transform duration-300 ${
+                          className={`text-gray-400 transition-transform duration-300 text-xs sm:text-sm ${
                             isDropdownOpen ? 'rotate-180' : ''
                           }`} 
                         />
                       </button>
 
                       {isDropdownOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden animate-dropdown-fade">
-                          <div className="max-h-60 overflow-y-auto">
+                        <div className="absolute z-50 w-full mt-1 sm:mt-2 bg-white border border-gray-200 rounded-lg sm:rounded-xl shadow-2xl overflow-hidden animate-dropdown-fade">
+                          <div className="max-h-48 sm:max-h-60 overflow-y-auto">
                             {categories.map((category) => (
                               <button
                                 key={category.value}
                                 type="button"
                                 onClick={() => handleCategorySelect(category.value)}
-                                className={`w-full p-4 text-left hover:bg-gray-50 transition-all duration-200 flex items-center space-x-3 border-b border-gray-100 last:border-b-0 group ${
+                                className={`w-full p-3 sm:p-4 text-left hover:bg-gray-50 transition-all duration-200 flex items-center space-x-2 sm:space-x-3 border-b border-gray-100 last:border-b-0 group text-sm sm:text-base ${
                                   formData.category === category.value ? 'bg-amber-50 border-amber-200' : ''
                                 }`}
                               >
-                                <span className="text-xl">{category.icon}</span>
+                                <span className="text-lg sm:text-xl">{category.icon}</span>
                                 <span className="font-medium text-gray-800 group-hover:text-amber-600 transition-colors">
                                   {category.label}
                                 </span>
                                 {formData.category === category.value && (
-                                  <div className="ml-auto w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                                  <div className="ml-auto w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full animate-pulse"></div>
                                 )}
                               </button>
                             ))}
@@ -351,23 +351,23 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
 
                   {/* Message */}
                   <div className="group flex-1 flex flex-col">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Pesan Spesial</label>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Pesan Spesial</label>
                     <textarea
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
                       rows="4"
-                      className="w-full border border-gray-200 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg resize-none flex-1"
+                      className="w-full border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-300 group-hover:shadow-lg resize-none flex-1 text-sm sm:text-base"
                       placeholder="Ceritakan kebutuhan acara spesial Anda..."
                       required
                     ></textarea>
                   </div>
                   
-                  {/* Submit Button */}
-                  <div className="pt-4">
+                  {/* Submit Button - Responsive */}
+                  <div className="pt-2 sm:pt-3 md:pt-4">
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:from-amber-600 hover:to-amber-700"
+                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base md:text-lg hover:shadow-xl sm:hover:shadow-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:from-amber-600 hover:to-amber-700"
                     >
                       KIRIM VIA WHATSAPP
                     </button>
@@ -377,28 +377,28 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
             </div>
           </div>
 
-          {/* Luxury Location Section */}
-          <div className="mb-20">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center space-x-3 mb-4">
-                <div className="w-8 h-0.5 bg-gradient-to-r from-amber-400 to-red-600"></div>
-                <span className="text-sm font-semibold text-red-600 uppercase tracking-widest bg-red-50 px-4 py-2 rounded-full border border-red-200">
+          {/* Luxury Location Section - Responsive */}
+          <div className="mb-12 sm:mb-16 md:mb-20">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
+              <div className="inline-flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+                <div className="w-6 sm:w-8 h-0.5 bg-gradient-to-r from-amber-400 to-red-600"></div>
+                <span className="text-xs sm:text-sm font-semibold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-red-200">
                   Visit Us
                 </span>
-                <div className="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
+                <div className="w-6 sm:w-8 h-0.5 bg-gradient-to-l from-amber-400 to-red-600"></div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-5 md:mb-6 text-gray-800">
                 Lokasi <span className="text-amber-500">Eksklusif</span> Kami
               </h2>
             </div>
 
-            <div className="relative rounded-3xl overflow-hidden shadow-3xl group hover:shadow-4xl transition-all duration-500">
+            <div className="relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl sm:shadow-3xl group hover:shadow-3xl sm:hover:shadow-4xl transition-all duration-500">
               <div className="grid grid-cols-1 lg:grid-cols-3">
                 <div className="lg:col-span-2">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3632.0439235500066!2d106.92210466620436!3d-6.941067647751864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6849358a89774b%3A0x3b578822ab27e72a!2sDekremes%20%26%20Crispy!5e0!3m2!1sid!2sid!4v1757916530969!5m2!1sid!2sid"
                     width="100%"
-                    height="400"
+                    height="300"
                     style={{ border: 0 }}
                     allowFullScreen=""
                     loading="lazy"
@@ -408,29 +408,29 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                   ></iframe>
                 </div>
                 
-                <div className="bg-gradient-to-br from-gray-900 to-red-900 text-white p-6 md:p-8 flex flex-col justify-center">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center">
-                      <FaMapMarkerAlt className="text-white text-xl" />
+                <div className="bg-gradient-to-br from-gray-900 to-red-900 text-white p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col justify-center">
+                  <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-5 md:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                      <FaMapMarkerAlt className="text-white text-lg sm:text-xl" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">Alamat Kami</h3>
-                      <p className="text-amber-200 text-sm">Kunjungi outlet utama kami</p>
+                      <h3 className="text-lg sm:text-xl font-bold">Alamat Kami</h3>
+                      <p className="text-amber-200 text-xs sm:text-sm">Kunjungi outlet utama kami</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <p className="text-gray-300 text-sm mb-1">Alamat Lengkap</p>
-                      <p className="font-semibold">Jl. Cikujang, Dayeuhluhur, Kec. Warudoyong</p>
-                      <p className="font-semibold">Kota Sukabumi, Jawa Barat 43134</p>
+                      <p className="text-gray-300 text-xs sm:text-sm mb-1">Alamat Lengkap</p>
+                      <p className="font-semibold text-sm sm:text-base">Jl. Cikujang, Dayeuhluhur, Kec. Warudoyong</p>
+                      <p className="font-semibold text-sm sm:text-base">Kota Sukabumi, Jawa Barat 43134</p>
                     </div>
                     
                     <div>
-                      <p className="text-gray-300 text-sm mb-1">Jam Operasional</p>
+                      <p className="text-gray-300 text-xs sm:text-sm mb-1">Jam Operasional</p>
                       <div className="flex items-center space-x-2">
-                        <FaClock className="text-amber-400" />
-                        <p className="font-semibold">Setiap Hari: 08:00 - 20:00 WIB</p>
+                        <FaClock className="text-amber-400 text-sm" />
+                        <p className="font-semibold text-sm sm:text-base">Setiap Hari: 08:00 - 20:00 WIB</p>
                       </div>
                     </div>
                     
@@ -438,7 +438,7 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
                       href="https://www.google.com/maps/place/Dekremes+%26+Crispy/@-6.9410676,106.9221047,17z"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 bg-amber-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-600 transition-all duration-300 transform hover:scale-105 mt-4"
+                      className="inline-flex items-center space-x-2 bg-amber-500 text-white px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-amber-600 transition-all duration-300 transform hover:scale-105 mt-3 sm:mt-4 text-sm sm:text-base"
                     >
                       <FaMapMarkerAlt />
                       <span>Buka di Google Maps</span>
@@ -449,8 +449,8 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
             </div>
           </div>
 
-          {/* Premium Service Highlights */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {/* Premium Service Highlights - Responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
             {[
               {
                 icon: FaStar,
@@ -472,13 +472,13 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
               }
             ].map((item, index) => (
               <div key={index} className="group relative">
-                <div className={`absolute -inset-1 bg-gradient-to-r ${item.gradient} rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500`}></div>
-                <div className="relative bg-white rounded-2xl p-6 text-center shadow-xl border border-gray-100 group-hover:scale-105 transition-all duration-500">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${item.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                    <item.icon className="text-white text-2xl" />
+                <div className={`absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r ${item.gradient} rounded-xl sm:rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500`}></div>
+                <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center shadow-lg sm:shadow-xl border border-gray-100 group-hover:scale-105 transition-all duration-500">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br ${item.gradient} rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                    <item.icon className="text-white text-lg sm:text-xl md:text-2xl" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">{item.title}</h3>
+                  <p className="text-gray-600 text-xs sm:text-sm md:text-base">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -555,21 +555,31 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
           }
 
           .overflow-y-auto::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
           }
 
           .overflow-y-auto::-webkit-scrollbar-track {
             background: #f1f5f9;
-            border-radius: 3px;
+            border-radius: 2px;
           }
 
           .overflow-y-auto::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 3px;
+            border-radius: 2px;
           }
 
           .overflow-y-auto::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
+          }
+
+          /* Responsive adjustments for very small screens */
+          @media (max-width: 360px) {
+            .text-3xl {
+              font-size: 1.75rem;
+            }
+            .text-2xl {
+              font-size: 1.5rem;
+            }
           }
         `}
       </style>
