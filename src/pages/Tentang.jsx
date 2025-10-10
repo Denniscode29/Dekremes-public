@@ -4,10 +4,143 @@ import { useNavigate } from "react-router-dom";
 function Tentang() {
   const [navbarHeight, setNavbarHeight] = useState(0);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true); // State loading baru
 
   useEffect(() => {
     setNavbarHeight(70);
+    
+    // Simulasi loading data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
+
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
+
+      {/* Hero Section Skeleton */}
+      <div className="relative flex items-center justify-center overflow-hidden bg-gray-800" style={{ height: `calc(60vh - ${navbarHeight}px)`, minHeight: `calc(400px - ${navbarHeight}px)` }}>
+        <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
+          <div className="mb-8">
+            <div className="w-24 h-1 bg-gray-600 mx-auto mb-6 rounded"></div>
+            <div className="h-12 bg-gray-600 rounded-lg mb-4 w-3/4 mx-auto animate-pulse"></div>
+            <div className="w-32 h-1 bg-gray-600 mx-auto mt-6 rounded"></div>
+          </div>
+          <div className="h-6 bg-gray-600 rounded w-2/3 mx-auto animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Our Story Section Skeleton */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-4 mb-8">
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+              <div className="w-32 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+            </div>
+            
+            <div className="h-10 bg-gray-300 rounded w-64 mx-auto mb-8 animate-pulse"></div>
+            
+            <div className="w-full">
+              <div className="bg-gray-200 rounded-3xl p-8 animate-pulse">
+                <div className="space-y-4">
+                  <div className="h-4 bg-gray-300 rounded w-full"></div>
+                  <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+                  <div className="h-4 bg-gray-300 rounded w-4/6"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Services Section Skeleton */}
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4 animate-pulse"></div>
+              <div className="h-4 bg-gray-300 rounded w-96 mx-auto animate-pulse"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-gray-300 rounded-2xl p-1">
+                    <div className="bg-white rounded-2xl overflow-hidden h-full">
+                      <div className="h-48 bg-gray-300 rounded-t-2xl"></div>
+                      <div className="p-6">
+                        <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
+                        <div className="space-y-2">
+                          <div className="h-3 bg-gray-300 rounded"></div>
+                          <div className="h-3 bg-gray-300 rounded w-5/6"></div>
+                          <div className="h-3 bg-gray-300 rounded w-4/6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Values Section Skeleton */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start mb-16">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {[...Array(2)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-white rounded-3xl p-6 shadow-lg">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-16 h-16 bg-gray-300 rounded-2xl"></div>
+                      <div className="flex-1">
+                        <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
+                        <div className="space-y-2">
+                          <div className="h-3 bg-gray-300 rounded"></div>
+                          <div className="h-3 bg-gray-300 rounded w-5/6"></div>
+                          <div className="h-3 bg-gray-300 rounded w-4/6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Right Column */}
+            <div className="animate-pulse">
+              <div className="bg-gray-300 rounded-3xl h-96"></div>
+            </div>
+          </div>
+
+          {/* CTA Section Skeleton */}
+          <div className="animate-pulse">
+            <div className="bg-gray-300 rounded-3xl py-12">
+              <div className="text-center">
+                <div className="h-8 bg-gray-400 rounded w-64 mx-auto mb-4"></div>
+                <div className="h-4 bg-gray-400 rounded w-96 mx-auto mb-6"></div>
+                <div className="flex gap-4 justify-center">
+                  <div className="h-12 bg-gray-400 rounded w-32"></div>
+                  <div className="h-12 bg-gray-400 rounded w-32"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tampilkan loading skeleton jika masih loading
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <>

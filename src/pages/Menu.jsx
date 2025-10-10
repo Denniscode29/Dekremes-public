@@ -4,11 +4,155 @@ function Menu() {
   const [navbarHeight, setNavbarHeight] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // State loading baru
 
   useEffect(() => {
     setNavbarHeight(70);
+    
+    // Simulasi loading data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
+
+      {/* Hero Section Skeleton */}
+      <div className="relative flex items-center justify-center overflow-hidden bg-gray-800" style={{ height: `calc(60vh - ${navbarHeight}px)`, minHeight: `calc(500px - ${navbarHeight}px)` }}>
+        <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
+          <div className="mb-8">
+            <div className="w-24 h-1 bg-gray-600 mx-auto mb-6 rounded"></div>
+            <div className="h-12 bg-gray-600 rounded-lg mb-4 w-3/4 mx-auto animate-pulse"></div>
+            <div className="w-32 h-1 bg-gray-600 mx-auto mt-6 rounded"></div>
+          </div>
+          <div className="h-6 bg-gray-600 rounded w-2/3 mx-auto animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* American Taste Section Skeleton */}
+      <div className="py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header Skeleton */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center space-x-4 mb-8">
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+              <div className="w-48 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+            </div>
+            <div className="h-10 bg-gray-300 rounded w-64 mx-auto mb-8 animate-pulse"></div>
+            <div className="h-4 bg-gray-300 rounded w-96 mx-auto animate-pulse"></div>
+          </div>
+
+          {/* Product Grid Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
+                  <div className="aspect-square bg-gray-300 rounded-t-2xl"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
+                    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-5/6 mb-4"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 bg-gray-300 rounded w-20"></div>
+                      <div className="h-10 bg-gray-300 rounded w-24"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Indonesian Taste Section Skeleton */}
+          <div className="bg-gray-700 rounded-3xl p-8 mb-16">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center space-x-4 mb-8">
+                <div className="w-12 h-0.5 bg-gray-400 rounded"></div>
+                <div className="w-48 h-6 bg-gray-400 rounded-full animate-pulse"></div>
+                <div className="w-12 h-0.5 bg-gray-400 rounded"></div>
+              </div>
+              <div className="h-10 bg-gray-400 rounded w-64 mx-auto mb-8 animate-pulse"></div>
+              <div className="h-4 bg-gray-400 rounded w-96 mx-auto animate-pulse"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-gray-600 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div className="aspect-square bg-gray-500 rounded-t-2xl"></div>
+                    <div className="p-6">
+                      <div className="h-6 bg-gray-400 rounded w-3/4 mb-3"></div>
+                      <div className="h-4 bg-gray-400 rounded w-full mb-2"></div>
+                      <div className="h-4 bg-gray-400 rounded w-5/6 mb-4"></div>
+                      <div className="flex justify-between items-center">
+                        <div className="h-6 bg-gray-400 rounded w-20"></div>
+                        <div className="h-10 bg-gray-400 rounded w-24"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Drinks Section Skeleton */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center space-x-4 mb-8">
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+              <div className="w-32 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="w-12 h-0.5 bg-gray-300 rounded"></div>
+            </div>
+            <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4 animate-pulse"></div>
+            <div className="h-4 bg-gray-300 rounded w-64 mx-auto animate-pulse"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
+            {[...Array(2)].map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
+                  <div className="aspect-square bg-gray-300 rounded-t-2xl"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
+                    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-5/6 mb-4"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 bg-gray-300 rounded w-20"></div>
+                      <div className="h-10 bg-gray-300 rounded w-24"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Section Skeleton */}
+          <div className="animate-pulse">
+            <div className="bg-gray-300 rounded-3xl py-16">
+              <div className="text-center">
+                <div className="h-8 bg-gray-400 rounded w-64 mx-auto mb-4"></div>
+                <div className="h-4 bg-gray-400 rounded w-96 mx-auto mb-8"></div>
+                <div className="h-12 bg-gray-400 rounded w-48 mx-auto"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tampilkan loading skeleton jika masih loading
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  // KODE ASLI TANPA PERUBAHAN (hanya return statement yang berubah)
   const openModal = (product) => {
     console.log("Opening modal for:", product.name);
     setSelectedProduct(product);

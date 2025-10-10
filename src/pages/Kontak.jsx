@@ -12,9 +12,17 @@ function Kontak() {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [navbarHeight, setNavbarHeight] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setNavbarHeight(70);
+    
+    // Simulasi loading selama 2 detik
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleChange = (e) => {
@@ -88,6 +96,180 @@ Saya mengharapkan balasan secepatnya. Terima kasih!
   ];
 
   const selectedCategory = categories.find(cat => cat.value === formData.category);
+
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
+
+      {/* Hero Section Skeleton */}
+      <div className="relative flex items-center justify-center overflow-hidden bg-gray-900" style={{ 
+        height: `calc(60vh - ${navbarHeight}px)`,
+        minHeight: `calc(500px - ${navbarHeight}px)`
+      }}>
+        <div className="absolute inset-0 bg-gray-800 animate-pulse"></div>
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
+          <div className="mb-8">
+            <div className="w-24 h-1 bg-gray-600 mx-auto mb-6 rounded"></div>
+            <div className="h-12 bg-gray-700 rounded-lg mb-4 w-3/4 mx-auto animate-pulse"></div>
+            <div className="w-32 h-1 bg-gray-600 mx-auto mt-6 rounded"></div>
+          </div>
+          <div className="h-6 bg-gray-600 rounded w-2/3 mx-auto animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Contact Section Grid Skeleton */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-12">
+            
+            {/* Left Column Skeleton */}
+            <div className="space-y-6">
+              {/* Header Skeleton */}
+              <div className="text-left">
+                <div className="inline-flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+                  <div className="w-32 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                  <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+                </div>
+                
+                <div className="h-10 bg-gray-300 rounded w-3/4 mb-4 animate-pulse"></div>
+                <div className="h-16 bg-gray-300 rounded w-full animate-pulse"></div>
+              </div>
+
+              {/* Contact Cards Skeleton */}
+              <div className="space-y-4">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-16 h-16 bg-gray-300 rounded-2xl"></div>
+                        <div className="flex-1">
+                          <div className="h-5 bg-gray-300 rounded w-32 mb-2"></div>
+                          <div className="h-4 bg-gray-300 rounded w-40 mb-1"></div>
+                          <div className="h-3 bg-gray-300 rounded w-24"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Form Skeleton */}
+            <div className="animate-pulse">
+              <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-200 h-full">
+                <div className="text-center mb-6">
+                  <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-64 mx-auto"></div>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* Name + Phone Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
+                      <div className="h-12 bg-gray-300 rounded-lg"></div>
+                    </div>
+                    <div>
+                      <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
+                      <div className="h-12 bg-gray-300 rounded-lg"></div>
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <div className="h-4 bg-gray-300 rounded w-16 mb-2"></div>
+                    <div className="h-12 bg-gray-300 rounded-lg"></div>
+                  </div>
+
+                  {/* Category Dropdown */}
+                  <div>
+                    <div className="h-4 bg-gray-300 rounded w-24 mb-2"></div>
+                    <div className="h-12 bg-gray-300 rounded-lg"></div>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
+                    <div className="h-32 bg-gray-300 rounded-lg"></div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-4">
+                    <div className="h-12 bg-gray-300 rounded-lg"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Location Section Skeleton */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-3 mb-4">
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+                <div className="w-24 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+              </div>
+              <div className="h-10 bg-gray-300 rounded w-48 mx-auto mb-4 animate-pulse"></div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden shadow-2xl">
+              <div className="grid grid-cols-1 lg:grid-cols-3">
+                <div className="lg:col-span-2 h-64 bg-gray-300 animate-pulse"></div>
+                <div className="bg-gray-800 p-6 flex flex-col justify-center">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gray-600 rounded-2xl"></div>
+                    <div>
+                      <div className="h-5 bg-gray-600 rounded w-24 mb-1"></div>
+                      <div className="h-3 bg-gray-600 rounded w-32"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="h-3 bg-gray-600 rounded w-16 mb-1"></div>
+                      <div className="h-4 bg-gray-600 rounded w-40 mb-1"></div>
+                      <div className="h-4 bg-gray-600 rounded w-32"></div>
+                    </div>
+                    
+                    <div>
+                      <div className="h-3 bg-gray-600 rounded w-20 mb-1"></div>
+                      <div className="h-4 bg-gray-600 rounded w-48"></div>
+                    </div>
+                    
+                    <div className="h-10 bg-gray-600 rounded-lg mt-3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Service Highlights Skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-white rounded-2xl p-6 text-center shadow-lg border border-gray-200">
+                  <div className="w-16 h-16 bg-gray-300 rounded-2xl mx-auto mb-4"></div>
+                  <div className="h-5 bg-gray-300 rounded w-32 mx-auto mb-2"></div>
+                  <div className="h-3 bg-gray-300 rounded w-40 mx-auto"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tampilkan loading skeleton jika masih loading
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <>

@@ -1,6 +1,6 @@
 // pages/Testimoni.jsx
 import { useState, useEffect, useCallback } from "react";
-import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2 } from "lucide-react";
+import { Star, MessageSquare, Send, Clock, CheckCircle, XCircle, ImageIcon, Eye, Edit, Trash2, Expand, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthController from "../controllers/AuthController";
 import api from "../api/api";
@@ -22,9 +22,46 @@ export default function TestimoniPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingTestimonialId, setEditingTestimonialId] = useState(null);
   const [navbarHeight, setNavbarHeight] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // State untuk modal zoom gambar
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [modalImage, setModalImage] = useState("");
 
   // auth state - DITAMBAH: refreshUserStatus untuk update data user terbaru
   const { isLoggedIn, user, refreshUserStatus } = AuthController();
+
+  // Fungsi untuk membuka modal zoom gambar
+  const openImageModal = (imageUrl) => {
+    setModalImage(imageUrl);
+    setShowImageModal(true);
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+  };
+
+  // Fungsi untuk menutup modal
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setModalImage("");
+    document.body.style.overflow = 'auto'; // Restore scroll
+  };
+
+  // Handle klik di luar modal untuk menutup
+  const handleModalClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeImageModal();
+    }
+  };
+
+  // Keyboard event untuk menutup modal dengan ESC
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.keyCode === 27 && showImageModal) {
+        closeImageModal();
+      }
+    };
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [showImageModal]);
 
   // Fungsi untuk mengurutkan testimoni dari yang terbaru ke terlama
   const sortTestimonialsByDate = useCallback((testimonials) => {
@@ -82,12 +119,26 @@ export default function TestimoniPage() {
 
   useEffect(() => {
     setNavbarHeight(70);
-    fetchTestimonials();
-    if (isLoggedIn) {
-      checkUserTestimonialStatus();
-      // DITAMBAH: Refresh data user untuk mendapatkan avatar terbaru
-      refreshUserStatus();
-    }
+    
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        await fetchTestimonials();
+        if (isLoggedIn) {
+          await checkUserTestimonialStatus();
+          refreshUserStatus();
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        // Delay minimal untuk smooth loading animation
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 800);
+      }
+    };
+
+    loadData();
   }, [isLoggedIn, refreshData, fetchTestimonials, checkUserTestimonialStatus, refreshUserStatus]);
 
   // DITAMBAH: Effect untuk refresh data ketika user berubah
@@ -343,8 +394,127 @@ export default function TestimoniPage() {
     return testimonialUser?.avatar_url || "/default-avatar.png";
   };
 
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
+
+      {/* Hero Section Skeleton */}
+      <div className="relative flex items-center justify-center overflow-hidden bg-gray-900" style={{ height: `calc(60vh - ${navbarHeight}px)`, minHeight: `calc(500px - ${navbarHeight}px)` }}>
+        <div className="absolute inset-0 bg-gray-800 animate-pulse"></div>
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
+          <div className="mb-8">
+            <div className="w-24 h-1 bg-gray-600 mx-auto mb-6 rounded"></div>
+            <div className="h-12 bg-gray-700 rounded-lg mb-4 w-3/4 mx-auto animate-pulse"></div>
+            <div className="w-32 h-1 bg-gray-600 mx-auto mt-6 rounded"></div>
+          </div>
+          <div className="h-6 bg-gray-600 rounded w-2/3 mx-auto animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Summary Rating Skeleton */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center space-x-3 mb-4">
+              <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+              <div className="w-32 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+            </div>
+            
+            <div className="bg-gray-300 rounded-2xl shadow-xl max-w-2xl mx-auto p-1">
+              <div className="bg-white rounded-2xl p-8 text-center">
+                <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4 animate-pulse"></div>
+                <div className="flex justify-center space-x-2 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-8 h-8 bg-gray-300 rounded-full animate-pulse"></div>
+                  ))}
+                </div>
+                <div className="h-10 bg-gray-300 rounded w-24 mx-auto mb-2 animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded w-40 mx-auto animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonials Grid Skeleton */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center space-x-3 mb-4">
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+                <div className="w-32 h-6 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="w-8 h-0.5 bg-gray-300 rounded"></div>
+              </div>
+              <div className="h-10 bg-gray-300 rounded w-64 mx-auto mb-4 animate-pulse"></div>
+              <div className="h-4 bg-gray-300 rounded w-96 mx-auto animate-pulse"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 h-full">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                        <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+                      </div>
+                    </div>
+                    <div className="flex space-x-1 mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-5 h-5 bg-gray-300 rounded"></div>
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-3 bg-gray-300 rounded"></div>
+                      <div className="h-3 bg-gray-300 rounded w-5/6"></div>
+                      <div className="h-3 bg-gray-300 rounded w-4/6"></div>
+                    </div>
+                    <div className="mt-4 h-40 bg-gray-300 rounded-lg"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tampilkan loading skeleton jika masih loading
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
   return (
     <>
+      {/* Modal untuk Zoom Foto Testimoni */}
+      {showImageModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fadeIn"
+          onClick={handleModalClick}
+        >
+          <div className="relative max-w-4xl max-h-full w-full">
+            <button
+              onClick={closeImageModal}
+              className="absolute -top-4 -right-4 z-10 bg-red-500 text-white rounded-full p-3 hover:bg-red-600 transition-all duration-200 shadow-2xl transform hover:scale-110"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img
+              src={modalImage}
+              alt="Preview Full"
+              className="w-full h-auto max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-scaleIn"
+            />
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm">
+              Klik di luar gambar untuk menutup
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Fixed spacer untuk navbar - DIUBAH: background menjadi putih */}
       <div 
         style={{ height: `${navbarHeight}px` }} 
@@ -561,12 +731,21 @@ export default function TestimoniPage() {
                         <img
                           src={gambarPreview}
                           alt="Preview"
-                          className="w-full h-40 sm:h-48 object-cover rounded-lg"
+                          className="w-full h-40 sm:h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => openImageModal(gambarPreview)}
                         />
                         <button
                           type="button"
+                          onClick={() => openImageModal(gambarPreview)}
+                          className="absolute top-2 right-12 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition-colors"
+                          title="Zoom gambar"
+                        >
+                          <Expand className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
                           onClick={removeGambar}
-                          className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
                         >
                           <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
@@ -665,12 +844,20 @@ export default function TestimoniPage() {
                     <p className="text-gray-900 text-sm sm:text-base md:text-lg mb-4 sm:mb-5 md:mb-6 leading-relaxed">{userTestimonialStatus.testimonial.content}</p>
                     
                     {userTestimonialStatus.testimonial.product_photo_url && (
-                      <div className="mt-4 sm:mt-5 md:mt-6">
+                      <div className="mt-4 sm:mt-5 md:mt-6 relative">
                         <img
                           src={userTestimonialStatus.testimonial.product_photo_url}
                           alt="Gambar testimoni"
-                          className="w-full max-w-md h-48 sm:h-56 md:h-64 object-cover rounded-lg sm:rounded-xl mx-auto"
+                          className="w-full max-w-md h-48 sm:h-56 md:h-64 object-cover rounded-lg sm:rounded-xl mx-auto cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => openImageModal(userTestimonialStatus.testimonial.product_photo_url)}
                         />
+                        <button
+                          onClick={() => openImageModal(userTestimonialStatus.testimonial.product_photo_url)}
+                          className="absolute top-3 right-3 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                          title="Zoom gambar"
+                        >
+                          <Expand className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
                       </div>
                     )}
 
@@ -755,12 +942,20 @@ export default function TestimoniPage() {
                     <p className="text-gray-900 text-sm sm:text-base mb-3 sm:mb-4 flex-grow leading-relaxed">{t.content}</p>
                     
                     {t.product_photo_url && (
-                      <div className="mt-2 sm:mt-3 md:mt-4">
+                      <div className="mt-2 sm:mt-3 md:mt-4 relative">
                         <img
                           src={t.product_photo_url}
                           alt="Gambar testimoni"
-                          className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-lg"
+                          className="w-full h-36 sm:h-40 md:h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => openImageModal(t.product_photo_url)}
                         />
+                        <button
+                          onClick={() => openImageModal(t.product_photo_url)}
+                          className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition-colors"
+                          title="Zoom gambar"
+                        >
+                          <Expand className="w-4 h-4" />
+                        </button>
                       </div>
                     )}
                   </div>
@@ -809,6 +1004,16 @@ export default function TestimoniPage() {
             }
           }
 
+          @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+          }
+
           .animate-fade-in-down {
             animation: fadeInDown 1s ease-out;
           }
@@ -819,6 +1024,14 @@ export default function TestimoniPage() {
 
           .animate-fade-in {
             animation: fadeIn 1.5s ease-out;
+          }
+
+          .animate-fadeIn {
+            animation: fadeInModal 0.3s ease-out;
+          }
+          
+          .animate-scaleIn {
+            animation: scaleIn 0.3s ease-out;
           }
 
           /* Responsive adjustments for very small screens */
