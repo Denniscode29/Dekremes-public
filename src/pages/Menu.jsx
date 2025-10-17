@@ -4,12 +4,11 @@ function Menu() {
   const [navbarHeight, setNavbarHeight] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // State loading baru
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setNavbarHeight(70);
     
-    // Simulasi loading data
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -20,7 +19,6 @@ function Menu() {
   // Loading Skeleton Component
   const LoadingSkeleton = () => (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
-      {/* Fixed spacer untuk navbar */}
       <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
 
       {/* Hero Section Skeleton */}
@@ -51,18 +49,18 @@ function Menu() {
           </div>
 
           {/* Product Grid Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-16">
             {[...Array(8)].map((_, index) => (
               <div key={index} className="animate-pulse">
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
-                  <div className="aspect-square bg-gray-300 rounded-t-2xl"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded w-5/6 mb-4"></div>
-                    <div className="flex justify-between items-center">
-                      <div className="h-6 bg-gray-300 rounded w-20"></div>
-                      <div className="h-10 bg-gray-300 rounded w-24"></div>
+                <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
+                  <div className="aspect-square bg-gray-300 rounded-t-xl md:rounded-t-2xl"></div>
+                  <div className="p-3 md:p-4 lg:p-6">
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-3/4 mb-2 md:mb-3"></div>
+                    <div className="h-3 md:h-4 bg-gray-300 rounded w-full mb-1 md:mb-2"></div>
+                    <div className="h-3 md:h-4 bg-gray-300 rounded w-5/6 mb-3 md:mb-4"></div>
+                    <div className="flex justify-between items-center pt-2 md:pt-3">
+                      <div className="h-5 md:h-6 bg-gray-300 rounded w-16 md:w-20"></div>
+                      <div className="h-8 md:h-10 bg-gray-300 rounded w-20 md:w-24"></div>
                     </div>
                   </div>
                 </div>
@@ -82,18 +80,18 @@ function Menu() {
               <div className="h-4 bg-gray-400 rounded w-96 mx-auto animate-pulse"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="animate-pulse">
-                  <div className="bg-gray-600 rounded-2xl shadow-lg overflow-hidden h-full">
-                    <div className="aspect-square bg-gray-500 rounded-t-2xl"></div>
-                    <div className="p-6">
-                      <div className="h-6 bg-gray-400 rounded w-3/4 mb-3"></div>
-                      <div className="h-4 bg-gray-400 rounded w-full mb-2"></div>
-                      <div className="h-4 bg-gray-400 rounded w-5/6 mb-4"></div>
-                      <div className="flex justify-between items-center">
-                        <div className="h-6 bg-gray-400 rounded w-20"></div>
-                        <div className="h-10 bg-gray-400 rounded w-24"></div>
+                  <div className="bg-gray-600 rounded-xl md:rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div className="aspect-square bg-gray-500 rounded-t-xl md:rounded-t-2xl"></div>
+                    <div className="p-3 md:p-4 lg:p-6">
+                      <div className="h-5 md:h-6 bg-gray-400 rounded w-3/4 mb-2 md:mb-3"></div>
+                      <div className="h-3 md:h-4 bg-gray-400 rounded w-full mb-1 md:mb-2"></div>
+                      <div className="h-3 md:h-4 bg-gray-400 rounded w-5/6 mb-3 md:mb-4"></div>
+                      <div className="flex justify-between items-center pt-2 md:pt-3">
+                        <div className="h-5 md:h-6 bg-gray-400 rounded w-16 md:w-20"></div>
+                        <div className="h-8 md:h-10 bg-gray-400 rounded w-20 md:w-24"></div>
                       </div>
                     </div>
                   </div>
@@ -113,18 +111,18 @@ function Menu() {
             <div className="h-4 bg-gray-300 rounded w-64 mx-auto animate-pulse"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto mb-16">
             {[...Array(2)].map((_, index) => (
               <div key={index} className="animate-pulse">
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
-                  <div className="aspect-square bg-gray-300 rounded-t-2xl"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-300 rounded w-3/4 mb-3"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded w-5/6 mb-4"></div>
-                    <div className="flex justify-between items-center">
-                      <div className="h-6 bg-gray-300 rounded w-20"></div>
-                      <div className="h-10 bg-gray-300 rounded w-24"></div>
+                <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-full">
+                  <div className="aspect-square bg-gray-300 rounded-t-xl md:rounded-t-2xl"></div>
+                  <div className="p-3 md:p-4 lg:p-6">
+                    <div className="h-5 md:h-6 bg-gray-300 rounded w-3/4 mb-2 md:mb-3"></div>
+                    <div className="h-3 md:h-4 bg-gray-300 rounded w-full mb-1 md:mb-2"></div>
+                    <div className="h-3 md:h-4 bg-gray-300 rounded w-5/6 mb-3 md:mb-4"></div>
+                    <div className="flex justify-between items-center pt-2 md:pt-3">
+                      <div className="h-5 md:h-6 bg-gray-300 rounded w-16 md:w-20"></div>
+                      <div className="h-8 md:h-10 bg-gray-300 rounded w-20 md:w-24"></div>
                     </div>
                   </div>
                 </div>
@@ -147,12 +145,10 @@ function Menu() {
     </div>
   );
 
-  // Tampilkan loading skeleton jika masih loading
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
-  // KODE ASLI TANPA PERUBAHAN (hanya return statement yang berubah)
   const openModal = (product) => {
     console.log("Opening modal for:", product.name);
     setSelectedProduct(product);
@@ -166,7 +162,6 @@ function Menu() {
 
   // Data American Taste
   const americanTaste = [
-    // Original Series
     {
       name: "Ayam Crispy Original Dada",
       description: "AYAM DADA NASI + SAUS SAMBAL",
@@ -195,7 +190,6 @@ function Menu() {
       image: "src/assets/menu/original - sayap ayam.png",
       category: "Original"
     },
-    // Cheese Series
     {
       name: "Ayam Crispy Cheese Dada",
       description: "AYAM DADA KEJU NASI + SAUS SAMBAL",
@@ -224,7 +218,6 @@ function Menu() {
       image: "src/assets/menu/cheese - sayap ayam.png",
       category: "Cheese"
     },
-    // Blackpepper Series
     {
       name: "Ayam Crispy Blackpepper Dada",
       description: "AYAM DADA BLACKPEPPER NASI + SAUS SAMBAL",
@@ -253,7 +246,6 @@ function Menu() {
       image: "src/assets/menu/blackpepper - sayap ayam.png",
       category: "Blackpepper"
     },
-    // Additional Items
     {
       name: "Burger Special",
       description: "BURGER DENGAN AYAM CRISPY SPECIAL",
@@ -272,7 +264,6 @@ function Menu() {
 
   // Data Indonesian Taste
   const indonesianTaste = [
-    // Kremes Series
     {
       name: "Ayam Kremes Dada/Paha Atas Cobek",
       description: "AYAM KREMES PAHA ATAS/DADA NASI + SAMBAL COBEK",
@@ -301,7 +292,6 @@ function Menu() {
       image: "src/assets/menu/kremes - sayap ayam.png",
       category: "Kremes"
     },
-    // Geprek Series
     {
       name: "Ayam Geprek Dada",
       description: "AYAM GEPREK DADA NASI + SAMBAL GEPREK",
@@ -330,7 +320,6 @@ function Menu() {
       image: "src/assets/menu/geprek - sayap ayam.png",
       category: "Geprek"
     },
-    // Whole Chicken
     {
       name: "Ayam Kremes Utuh",
       description: "AYAM KREMES UTUH + NASI + SAMBAL COBEK",
@@ -372,19 +361,20 @@ function Menu() {
     return acc;
   }, {});
 
+  // IMPROVED ProductCard dengan ukuran yang lebih baik
   const ProductCard = ({ item, index }) => (
     <div 
       key={index} 
-      className="group relative animate-fade-in-up bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border border-amber-100 overflow-hidden hover:shadow-2xl sm:hover:shadow-3xl transition-all duration-500 h-full flex flex-col"
+      className="group relative animate-fade-in-up bg-white rounded-lg md:rounded-xl shadow-lg md:shadow-xl border border-amber-100 overflow-hidden hover:shadow-xl md:hover:shadow-2xl transition-all duration-500 h-full flex flex-col"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       {/* Enhanced Glow effect */}
-      <div className="absolute -inset-0.5 sm:-inset-1 bg-gradient-to-r from-amber-400 via-red-500 to-amber-400 rounded-xl sm:rounded-2xl blur sm:blur-lg opacity-40 group-hover:opacity-80 transition duration-700 group-hover:scale-105"></div>
+      <div className="absolute -inset-0.5 md:-inset-1 bg-gradient-to-r from-amber-400 via-red-500 to-amber-400 rounded-lg md:rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-700 group-hover:scale-105"></div>
       
-      <div className="relative bg-white rounded-xl sm:rounded-2xl overflow-hidden h-full flex flex-col z-10">
-        {/* IMPROVED Image Container - Kotak dengan gambar full width */}
+      <div className="relative bg-white rounded-lg md:rounded-xl overflow-hidden h-full flex flex-col z-10">
+        {/* Image Container */}
         <div className="relative aspect-square w-full bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center p-1 sm:p-2">
+          <div className="absolute inset-0 flex items-center justify-center p-1 md:p-2">
             <img 
               src={item.image} 
               alt={item.name} 
@@ -394,33 +384,38 @@ function Menu() {
               }}
             />
           </div>
-          {/* Enhanced overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition duration-500"></div>
           
           {/* Category Badge */}
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-amber-500 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold shadow-lg">
+          <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-amber-500 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold shadow-lg">
             {item.category}
           </div>
         </div>
         
-        {/* Enhanced Content */}
-        <div className="p-3 sm:p-4 md:p-6 flex flex-col flex-1">
-          <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 mb-2 sm:mb-3 group-hover:text-amber-600 transition-colors duration-300 line-clamp-2 leading-tight">
-            {item.name}
-          </h3>
-          <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 flex-1 leading-relaxed line-clamp-2">
-            {item.description}
-          </p>
-          <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-amber-100 mt-auto">
-            <span className="font-bold text-red-600 text-lg sm:text-xl">{item.price}</span>
-            <button 
-              onClick={() => openModal(item)}
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-3 rounded-lg sm:rounded-xl font-bold hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-300 text-xs sm:text-sm cursor-pointer shadow-lg hover:from-amber-600 hover:to-amber-700"
-            >
-              Pesan Sekarang
-            </button>
-          </div>
-        </div>
+        {/* Enhanced Content - versi lebih sederhana */}
+<div className="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+  <h3 className="text-sm md:text-base lg:text-lg font-bold text-gray-800 mb-2 group-hover:text-amber-600 transition-colors duration-300 line-clamp-2 leading-tight">
+    {item.name}
+  </h3>
+  
+  <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 flex-1 leading-relaxed line-clamp-2">
+    {item.description}
+  </p>
+  
+  {/* Layout yang lebih clean untuk mobile */}
+  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 md:pt-3 border-t border-amber-100 mt-auto gap-2 sm:gap-3">
+    <span className="font-bold text-red-600 text-base md:text-lg lg:text-xl text-center sm:text-left">
+      {item.price}
+    </span>
+    
+    <button 
+      onClick={() => openModal(item)}
+      className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-3 md:px-4 md:py-2 lg:px-5 lg:py-3 rounded-lg font-bold hover:shadow-lg transform hover:scale-105 active:scale-95 transition-all duration-300 text-sm cursor-pointer shadow-md hover:from-amber-600 hover:to-amber-700 w-full sm:w-auto"
+    >
+      Pesan Sekarang
+    </button>
+  </div>
+</div>
       </div>
     </div>
   );
@@ -488,7 +483,7 @@ function Menu() {
         className="w-full bg-white"
       ></div>
 
-      {/* HERO SECTION YANG DISESUAIKAN DENGAN KONTAK.JSX */}
+      {/* HERO SECTION */}
       <div 
         className="relative flex items-center justify-center overflow-hidden bg-gray-900"
         style={{ 
@@ -505,7 +500,6 @@ function Menu() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
         </div>
         
-        {/* Animated Decorative Elements - Sama seperti Kontak.jsx */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-10 md:left-10 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-t-2 border-l-2 border-amber-400 opacity-60 animate-pulse"></div>
         <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-10 md:right-10 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-b-2 border-r-2 border-amber-400 opacity-60 animate-pulse"></div>
         
@@ -525,30 +519,31 @@ function Menu() {
       </div>
 
       {/* American Taste Section */}
-      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8 sm:py-12 md:py-20 px-4 sm:px-6">
+      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8 md:py-12 lg:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16 animate-fade-in">
-            <div className="inline-flex items-center space-x-2 sm:space-x-3 md:space-x-4 mb-4 sm:mb-6">
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-r from-amber-400 to-red-600 rounded-full"></div>
-              <span className="text-xs sm:text-sm font-bold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full border border-red-200 shadow-lg">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 animate-fade-in">
+            <div className="inline-flex items-center space-x-2 md:space-x-3 lg:space-x-4 mb-4 md:mb-6">
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-r from-amber-400 to-red-600 rounded-full"></div>
+              <span className="text-xs md:text-sm font-bold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5 rounded-full border border-red-200 shadow-lg">
                 American Original Taste
               </span>
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-l from-amber-400 to-red-600 rounded-full"></div>
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-l from-amber-400 to-red-600 rounded-full"></div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 sm:mb-6 md:mb-8 text-gray-800">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 md:mb-6 lg:mb-8 text-gray-800">
               American <span className="text-amber-500">Taste</span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-2">
+            <p className="text-sm md:text-base lg:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-2">
               Rasakan kerenyahan ayam crispy premium kami dengan berbagai pilihan rasa yang menggugah selera
             </p>
           </div>
 
           {/* Original Series */}
-          <div className="mb-8 sm:mb-12 md:mb-16">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-red-600 mb-4 sm:mb-6 md:mb-8 text-center bg-white py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-red-200">
+          <div className="mb-8 md:mb-12 lg:mb-16">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-red-600 mb-4 md:mb-6 lg:mb-8 text-center bg-white py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-red-200">
               Original Series
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            {/* GRID YANG SUDAH DIPERBAIKI: 2 kolom di mobile, responsive ke atas */}
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {americanByCategory.Original?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -556,11 +551,11 @@ function Menu() {
           </div>
 
           {/* Cheese Series */}
-          <div className="mb-8 sm:mb-12 md:mb-16">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-red-600 mb-4 sm:mb-6 md:mb-8 text-center bg-white py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-red-200">
+          <div className="mb-8 md:mb-12 lg:mb-16">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-red-600 mb-4 md:mb-6 lg:mb-8 text-center bg-white py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-red-200">
               Cheese Series
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {americanByCategory.Cheese?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -568,11 +563,11 @@ function Menu() {
           </div>
 
           {/* Blackpepper Series */}
-          <div className="mb-8 sm:mb-12 md:mb-16">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-red-600 mb-4 sm:mb-6 md:mb-8 text-center bg-white py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-red-200">
+          <div className="mb-8 md:mb-12 lg:mb-16">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-red-600 mb-4 md:mb-6 lg:mb-8 text-center bg-white py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-red-200">
               Blackpepper Series
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {americanByCategory.Blackpepper?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -581,10 +576,10 @@ function Menu() {
 
           {/* Additional Items */}
           <div>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-red-600 mb-4 sm:mb-6 md:mb-8 text-center bg-white py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-red-200">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-red-600 mb-4 md:mb-6 lg:mb-8 text-center bg-white py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-red-200">
               Menu Tambahan
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-3xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-3xl mx-auto">
               {americanByCategory.Lainnya?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -594,8 +589,7 @@ function Menu() {
       </div>
 
       {/* Indonesian Taste Section */}
-      <div className="bg-gradient-to-br from-red-600 via-red-700 to-amber-600 py-8 sm:py-12 md:py-20 px-4 sm:px-6 relative overflow-hidden">
-        {/* Background Pattern */}
+      <div className="bg-gradient-to-br from-red-600 via-red-700 to-amber-600 py-8 md:py-12 lg:py-20 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`
@@ -603,28 +597,28 @@ function Menu() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16 animate-fade-in">
-            <div className="inline-flex items-center space-x-2 sm:space-x-3 md:space-x-4 mb-4 sm:mb-6">
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-r from-amber-400 to-white rounded-full"></div>
-              <span className="text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-widest bg-amber-500/30 px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full border border-amber-300/50 shadow-lg">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 animate-fade-in">
+            <div className="inline-flex items-center space-x-2 md:space-x-3 lg:space-x-4 mb-4 md:mb-6">
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-r from-amber-400 to-white rounded-full"></div>
+              <span className="text-xs md:text-sm font-bold text-amber-300 uppercase tracking-widest bg-amber-500/30 px-3 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5 rounded-full border border-amber-300/50 shadow-lg">
                 Indonesian Original Taste
               </span>
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-l from-amber-400 to-white rounded-full"></div>
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-l from-amber-400 to-white rounded-full"></div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 sm:mb-6 md:mb-8 text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 md:mb-6 lg:mb-8 text-white">
               Indonesian <span className="text-amber-300">Taste</span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-amber-100 max-w-4xl mx-auto leading-relaxed font-light px-2">
+            <p className="text-sm md:text-base lg:text-lg text-amber-100 max-w-4xl mx-auto leading-relaxed font-light px-2">
               Nikmati kelezatan ayam khas Indonesia dengan cita rasa tradisional yang autentik dan menggugah selera
             </p>
           </div>
 
           {/* Kremes Series */}
-          <div className="mb-8 sm:mb-12 md:mb-16">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-amber-300 mb-4 sm:mb-6 md:mb-8 text-center bg-amber-500/20 py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
+          <div className="mb-8 md:mb-12 lg:mb-16">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-amber-300 mb-4 md:mb-6 lg:mb-8 text-center bg-amber-500/20 py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
               Kremes Series
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {indonesianByCategory.Kremes?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -632,11 +626,11 @@ function Menu() {
           </div>
 
           {/* Geprek Series */}
-          <div className="mb-8 sm:mb-12 md:mb-16">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-amber-300 mb-4 sm:mb-6 md:mb-8 text-center bg-amber-500/20 py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
+          <div className="mb-8 md:mb-12 lg:mb-16">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-amber-300 mb-4 md:mb-6 lg:mb-8 text-center bg-amber-500/20 py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
               Geprek Series
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {indonesianByCategory.Geprek?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -645,10 +639,10 @@ function Menu() {
 
           {/* Special Items */}
           <div>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-amber-300 mb-4 sm:mb-6 md:mb-8 text-center bg-amber-500/20 py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-8 rounded-xl sm:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-black text-amber-300 mb-4 md:mb-6 lg:mb-8 text-center bg-amber-500/20 py-2 px-4 md:py-3 md:px-6 lg:py-4 lg:px-8 rounded-xl md:rounded-2xl shadow-lg inline-block border border-amber-300/30 backdrop-blur-sm">
               Menu Spesial
             </h3>
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 max-w-md mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-6 lg:gap-8 max-w-md mx-auto">
               {indonesianByCategory.Special?.map((item, index) => (
                 <ProductCard key={index} item={item} index={index} />
               ))}
@@ -658,25 +652,25 @@ function Menu() {
       </div>
 
       {/* Drinks Section */}
-      <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 py-8 sm:py-12 md:py-20 px-4 sm:px-6">
+      <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 py-8 md:py-12 lg:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16 animate-fade-in">
-            <div className="inline-flex items-center space-x-2 sm:space-x-3 md:space-x-4 mb-4 sm:mb-6">
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-r from-blue-400 to-cyan-600 rounded-full"></div>
-              <span className="text-xs sm:text-sm font-bold text-cyan-600 uppercase tracking-widest bg-cyan-50 px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full border border-cyan-200 shadow-lg">
+          <div className="text-center mb-8 md:mb-12 lg:mb-16 animate-fade-in">
+            <div className="inline-flex items-center space-x-2 md:space-x-3 lg:space-x-4 mb-4 md:mb-6">
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-r from-blue-400 to-cyan-600 rounded-full"></div>
+              <span className="text-xs md:text-sm font-bold text-cyan-600 uppercase tracking-widest bg-cyan-50 px-3 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5 rounded-full border border-cyan-200 shadow-lg">
                 Refreshing Drinks
               </span>
-              <div className="w-6 sm:w-8 md:w-12 h-1 bg-gradient-to-l from-blue-400 to-cyan-600 rounded-full"></div>
+              <div className="w-6 md:w-8 lg:w-12 h-1 bg-gradient-to-l from-blue-400 to-cyan-600 rounded-full"></div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 sm:mb-6 md:mb-8 text-gray-800">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 md:mb-6 lg:mb-8 text-gray-800">
               Minuman <span className="text-cyan-500">Segar</span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-2">
+            <p className="text-sm md:text-base lg:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed font-light px-2">
               Sempurnakan makanan Anda dengan minuman segar pilihan yang menyegarkan
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-3xl mx-auto">
             {drinks.map((item, index) => (
               <ProductCard key={index} item={item} index={index} />
             ))}
@@ -685,9 +679,9 @@ function Menu() {
       </div>
 
       {/* Enhanced CTA Section */}
-      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8 sm:py-12 md:py-20 px-4 sm:px-6">
+      <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-8 md:py-12 lg:py-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto text-center animate-fade-in">
-          <div className="relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-amber-200">
+          <div className="relative rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-amber-200">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500 via-red-500 to-red-600"></div>
             <div className="absolute inset-0 opacity-20">
               <div className="absolute inset-0" style={{
@@ -695,11 +689,11 @@ function Menu() {
               }}></div>
             </div>
             
-            <div className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 sm:mb-6 md:mb-8">
+            <div className="relative z-10 py-8 md:py-12 lg:py-16 px-4 md:px-6 lg:px-10">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4 md:mb-6 lg:mb-8">
                 Tertarik dengan <span className="text-amber-300">menu kami?</span>
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-amber-100 mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed font-light">
+              <p className="text-sm md:text-base lg:text-lg text-amber-100 mb-6 md:mb-8 lg:mb-10 max-w-3xl mx-auto leading-relaxed font-light">
                 Pesan sekarang dan nikmati kelezatan ayam crispy terbaik dari DeKremes & Crispy dengan pelayanan tercepat
               </p>
               
@@ -708,7 +702,7 @@ function Menu() {
                   href="https://r.grab.com/g/2-1-6-C7NZGJUDJ36HAX" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="bg-amber-400 text-red-900 font-black px-8 py-3 sm:px-12 sm:py-4 md:px-16 md:py-5 rounded-lg sm:rounded-xl md:rounded-2xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 text-base sm:text-lg md:text-xl hover:bg-amber-300 shadow-lg border-2 border-amber-300"
+                  className="bg-amber-400 text-red-900 font-black px-6 py-3 md:px-8 md:py-4 lg:px-12 lg:py-4 rounded-lg md:rounded-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 text-sm md:text-base lg:text-lg hover:bg-amber-300 shadow-lg border-2 border-amber-300"
                 >
                   🚀 Pesan Sekarang
                 </a>

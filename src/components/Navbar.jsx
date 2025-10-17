@@ -471,13 +471,13 @@ function Navbar({ title }) {
           ${navbarVisible ? "translate-y-0" : "-translate-y-full"}
           ${
             navbarBackground || solidBgRoutes.includes(location.pathname)
-              ? "bg-[#FFFFFF] shadow-lg backdrop-blur-sm bg-opacity-95"
+              ? "bg-[#fff8ed] shadow-lg backdrop-blur-sm bg-opacity-95"
               : "bg-transparent"
           }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-4 sm:px-6 lg:px-8">
-          {/* Logo - DIUBAH: Menggunakan flex-1 dan text-center untuk spacing yang lebih baik */}
-          <div className="flex-1 flex justify-center lg:justify-start">
+          {/* Logo - IMPROVED: Better responsive spacing */}
+          <div className="flex-1 flex justify-center md:justify-start">
             <Link
               to="/"
               className={`font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-wide transition-all duration-500 ease-in-out hover:scale-105 transform relative group ${
@@ -498,14 +498,14 @@ function Navbar({ title }) {
             </Link>
           </div>
 
-          {/* Desktop Menu - DIUBAH: Menggunakan flex-1 dan justify-center untuk center positioning */}
-          <div className="hidden lg:flex flex-1 justify-center items-center space-x-8">
+          {/* Desktop & Tablet Menu - IMPROVED: Better tablet support with md: breakpoint */}
+          <div className="hidden md:flex flex-1 justify-center items-center space-x-4 lg:space-x-8">
             {menuItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
                 onClick={() => handleNavigation(item.path)}
-                className={`relative font-semibold transition-all duration-300 group py-2 px-1 ${
+                className={`relative font-semibold transition-all duration-300 group py-2 px-1 text-sm lg:text-base ${
                   location.pathname === item.path
                     ? navbarBackground || solidBgRoutes.includes(location.pathname)
                       ? "text-[#B80002]"
@@ -525,14 +525,14 @@ function Navbar({ title }) {
             ))}
           </div>
 
-          {/* Auth Section - Desktop - DIUBAH: Menggunakan flex-1 dan justify-end */}
-          <div className="hidden lg:flex flex-1 justify-end items-center space-x-4 relative" ref={menuRef}>
+          {/* Auth Section - Desktop & Tablet - IMPROVED: Better responsive sizing */}
+          <div className="hidden md:flex flex-1 justify-end items-center space-x-3 lg:space-x-4 relative" ref={menuRef}>
             {!isLoggedIn ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 lg:space-x-3">
                 <Link
                   to="/login"
                   onClick={() => handleNavigation("/login")}
-                  className={`px-5 py-2.5 rounded-xl transition-all font-semibold border-2 duration-300 hover:scale-105 ${
+                  className={`px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl transition-all font-semibold border-2 duration-300 hover:scale-105 text-sm lg:text-base ${
                     navbarBackground || solidBgRoutes.includes(location.pathname)
                       ? "bg-[#B80002] text-white hover:bg-[#a00002] border-transparent"
                       : "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30 border-white/30"
@@ -543,13 +543,13 @@ function Navbar({ title }) {
                 <Link
                   to="/register"
                   onClick={() => handleNavigation("/register")}
-                  className="px-5 py-2.5 rounded-xl bg-[#B80002] text-white hover:bg-[#a00002] transition-all font-semibold border-2 border-transparent hover:scale-105 duration-300"
+                  className="px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl bg-[#B80002] text-white hover:bg-[#a00002] transition-all font-semibold border-2 border-transparent hover:scale-105 duration-300 text-sm lg:text-base"
                 >
                   Daftar
                 </Link>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3 lg:space-x-4">
                 {/* Notifications */}
                 <div className="relative" ref={notificationsRef}>
                   <button
@@ -557,22 +557,22 @@ function Navbar({ title }) {
                       setShowNotifications(!showNotifications);
                       setShowProfileMenu(false);
                     }}
-                    className={`relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105 ${
+                    className={`relative p-2 lg:p-2.5 rounded-xl transition-all duration-300 hover:scale-105 ${
                       navbarBackground || solidBgRoutes.includes(location.pathname)
                         ? "text-gray-700 hover:bg-gray-100"
                         : "text-white hover:bg-white/20"
                     } ${showNotifications ? 'bg-white/30' : ''}`}
                   >
-                    <Bell className="w-6 h-6" />
+                    <Bell className="w-5 h-5 lg:w-6 lg:h-6" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      <span className="absolute -top-1 -right-1 bg-[#B80002] text-white text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center text-[10px] lg:text-xs animate-pulse">
                         {unreadCount > 9 ? "9+" : unreadCount}
                       </span>
                     )}
                   </button>
 
                   {showNotifications && (
-                    <div className="absolute right-0 top-14 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden animate-fadeIn">
+                    <div className="absolute right-0 top-12 lg:top-14 w-80 lg:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden animate-fadeIn">
                       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 flex justify-between items-center">
                         <h3 className="font-bold text-gray-800 text-lg">Notifikasi</h3>
                         {unreadCount > 0 && (
@@ -648,7 +648,7 @@ function Navbar({ title }) {
                     <img
                       src={user?.avatar_url || defaultProfile}
                       alt="Profile"
-                      className={`w-10 h-10 rounded-full cursor-pointer border-2 transition-all duration-300 object-cover hover:scale-105 ${
+                      className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full cursor-pointer border-2 transition-all duration-300 object-cover hover:scale-105 ${
                         showProfileMenu
                           ? "border-[#B80002] shadow-lg"
                           : "border-gray-300 hover:border-[#B80002]"
@@ -661,7 +661,7 @@ function Navbar({ title }) {
                   </button>
                   
                   {showProfileMenu && (
-                    <div className="absolute right-0 top-14 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 animate-scaleIn">
+                    <div className="absolute right-0 top-12 lg:top-14 w-72 lg:w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 animate-scaleIn">
                       {/* Header dengan info user */}
                       <div className="p-6 border-b border-gray-100 bg-gradient-to-br from-gray-50 to-white rounded-t-2xl">
                         <div className="flex items-center space-x-4">
@@ -759,8 +759,8 @@ function Navbar({ title }) {
             )}
           </div>
 
-          {/* Mobile Section - Auth + Hamburger - DIUBAH: Menggunakan flex-1 dan justify-end */}
-          <div className="flex lg:hidden flex-1 justify-end items-center space-x-3">
+          {/* Mobile Section - IMPROVED: Better mobile layout */}
+          <div className="flex md:hidden flex-1 justify-end items-center space-x-3">
             {/* Mobile Notifications - hanya jika logged in */}
             {isLoggedIn && (
               <div className="relative" ref={notificationsRef}>
@@ -769,7 +769,7 @@ function Navbar({ title }) {
                     setShowNotifications(!showNotifications);
                     setShowProfileMenu(false);
                   }}
-                  className={`relative p-2.5 rounded-xl transition-all duration-300 ${
+                  className={`relative p-2 rounded-xl transition-all duration-300 ${
                     navbarBackground || solidBgRoutes.includes(location.pathname)
                       ? "text-gray-700 hover:bg-gray-100"
                       : "text-white hover:bg-white/20"
@@ -784,9 +784,9 @@ function Navbar({ title }) {
                 </button>
 
                 {showNotifications && (
-                  <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden" onClick={() => setShowNotifications(false)}>
+                  <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden" onClick={() => setShowNotifications(false)}>
                     <div 
-                      className="absolute right-0 top-20 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-200 mx-4 animate-slideIn"
+                      className="absolute right-0 top-16 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-200 mx-4 animate-slideIn"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 flex justify-between items-center rounded-t-2xl">
@@ -857,7 +857,7 @@ function Navbar({ title }) {
             {isLoggedIn && (
               <button
                 onClick={handleMobileLogout}
-                className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 ${
+                className={`md:hidden p-2 rounded-xl transition-all duration-300 ${
                   navbarBackground || solidBgRoutes.includes(location.pathname)
                     ? "text-gray-700 hover:bg-gray-100"
                     : "text-white hover:bg-white/20"
@@ -870,7 +870,7 @@ function Navbar({ title }) {
 
             {/* Hamburger Menu Button */}
             <button
-              className={`p-2.5 rounded-xl transition-all duration-300 ${
+              className={`p-2 rounded-xl transition-all duration-300 ${
                 navbarBackground || solidBgRoutes.includes(location.pathname)
                   ? "text-gray-800 hover:bg-gray-100"
                   : "text-white hover:bg-white/20"
@@ -902,7 +902,7 @@ function Navbar({ title }) {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${
+        className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${
           mobileMenuOpen 
             ? 'bg-black/50 backdrop-blur-sm visible opacity-100' 
             : 'bg-transparent invisible opacity-0'
@@ -910,10 +910,10 @@ function Navbar({ title }) {
         onClick={() => setMobileMenuOpen(false)}
       />
 
-      {/* Mobile Menu - DIUBAH: Perbaikan tinggi dan spacing untuk mobile */}
+      {/* Mobile Menu - IMPROVED: Better mobile menu sizing */}
       <div
         ref={mobileMenuRef}
-        className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#FFFFFF] shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`md:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[#fff8ed] shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -930,7 +930,7 @@ function Navbar({ title }) {
           </div>
         </div>
 
-        {/* Mobile Menu Content - DIUBAH: Menggunakan flex-1 dan overflow untuk konten yang scrollable */}
+        {/* Mobile Menu Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* User Info - jika logged in */}
           {isLoggedIn && (
@@ -972,7 +972,7 @@ function Navbar({ title }) {
             </div>
           )}
 
-          {/* Navigation Menu - DIUBAH: Menggunakan overflow-auto untuk konten yang bisa di-scroll */}
+          {/* Navigation Menu */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="p-4 space-y-2">
               {menuItems.map((item) => (
@@ -1033,7 +1033,7 @@ function Navbar({ title }) {
                     </button>
                   )}
 
-                  {/* Mobile Logout Button - DIUBAH: Ditambahkan margin top untuk spacing yang lebih baik */}
+                  {/* Mobile Logout Button */}
                   <button
                     onClick={handleMobileLogout}
                     disabled={isLoggingOut}
@@ -1047,7 +1047,7 @@ function Navbar({ title }) {
             </div>
           </div>
 
-          {/* Mobile Menu Footer - untuk yang belum login - DIUBAH: Ditambahkan padding bottom yang lebih besar */}
+          {/* Mobile Menu Footer - untuk yang belum login */}
           {!isLoggedIn && (
             <div className="p-6 border-t border-gray-200 bg-white/50 flex-shrink-0">
               <div className="space-y-4">
