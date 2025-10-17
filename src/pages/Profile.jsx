@@ -39,6 +39,10 @@ function Profile() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImage, setModalImage] = useState("");
 
+  // State untuk loading dan animasi
+  const [isLoading, setIsLoading] = useState(true);
+  const [navbarHeight, setNavbarHeight] = useState(0);
+
   // Fungsi untuk membuka modal zoom foto
   const openImageModal = (imageUrl) => {
     setModalImage(imageUrl);
@@ -152,6 +156,14 @@ function Profile() {
       navigate("/");
       return;
     }
+
+    setNavbarHeight(70);
+    
+    // Simulasi loading data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
     refreshUserStatus();
     checkTestimonialStatus();
 
@@ -160,7 +172,10 @@ function Profile() {
       checkTestimonialStatus();
     }, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [isLoggedIn, navigate, refreshUserStatus]);
 
   useEffect(() => {
@@ -304,6 +319,63 @@ function Profile() {
     }
   };
 
+  // Loading Skeleton Component
+  const LoadingSkeleton = () => (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+      {/* Fixed spacer untuk navbar */}
+      <div style={{ height: `${navbarHeight}px` }} className="w-full bg-white"></div>
+
+      <div className="max-w-4xl mx-auto pb-8 px-4 sm:px-6 lg:px-8">
+        {/* Header Skeleton */}
+        <div className="text-center mb-8 animate-pulse">
+          <div className="h-10 bg-gray-300 rounded-lg w-64 mx-auto mb-4"></div>
+          <div className="h-4 bg-gray-300 rounded w-96 mx-auto"></div>
+        </div>
+
+        {/* Profile Card Skeleton */}
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/50 mb-8 p-8">
+          <div className="text-center">
+            {/* Profile Photo Skeleton */}
+            <div className="relative inline-block mb-6">
+              <div className="w-40 h-40 bg-gray-300 rounded-3xl mx-auto"></div>
+            </div>
+
+            <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-300 rounded w-64 mx-auto mb-2"></div>
+            <div className="h-6 bg-gray-300 rounded w-48 mx-auto mb-8"></div>
+
+            {/* Action Buttons Skeleton */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+              {[...Array(3)].map((_, index) => (
+                <div key={index} className="h-14 bg-gray-300 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonial Status Skeleton */}
+        <div className="bg-white rounded-3xl shadow-2xl p-8 border border-white/50 animate-pulse">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+            <div className="h-8 bg-gray-300 rounded w-48 mb-4 md:mb-0"></div>
+            <div className="h-8 bg-gray-300 rounded w-32"></div>
+          </div>
+
+          <div className="bg-gray-200 rounded-2xl p-6 mb-6 h-32"></div>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="h-12 bg-gray-300 rounded-2xl flex-1"></div>
+            <div className="h-12 bg-gray-300 rounded-2xl w-32"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Tampilkan loading skeleton jika masih loading
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 px-4 sm:px-6 lg:px-8">
       {/* Spasi atas untuk menghindari ketutupan navbar */}
@@ -335,18 +407,18 @@ function Profile() {
       )}
 
       <div className="max-w-4xl mx-auto pb-8">
-        {/* Header yang lebih baik */}
-        <div className="text-center mb-8 relative">
+        {/* Header dengan animasi */}
+        <div className="text-center mb-8 relative animate-fade-in-down">
           <div className="bg-gradient-to-r from-[#B80002] to-[#D90003] bg-clip-text text-transparent">
             <h1 className="text-4xl font-bold mb-3">Profil Saya</h1>
           </div>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed animate-fade-in-up">
             Kelola informasi profil Anda dan pantau status testimoni dengan mudah
           </p>
         </div>
 
-        {/* Profile Card yang lebih modern */}
-        <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl overflow-hidden border border-white/50 mb-8">
+        {/* Profile Card dengan animasi */}
+        <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl overflow-hidden border border-white/50 mb-8 animate-scale-in">
           {message.text && (
             <div className={`m-6 p-4 rounded-2xl ${
               message.type === "success" 
@@ -366,7 +438,7 @@ function Profile() {
 
           {!isEditing && !isChangingPassword ? (
             /* View Mode - Desain Lebih Modern */
-            <div className="p-8">
+            <div className="p-8 animate-fade-in">
               <div className="text-center">
                 {/* Profile Photo dengan efek lebih menarik */}
                 <div className="relative inline-block group">
@@ -405,11 +477,11 @@ function Profile() {
                   />
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent animate-text-reveal">
                   {user?.name || "User"}
                 </h2>
                 <p className="text-gray-600 mb-2 text-lg">{user?.email}</p>
-                <p className="text-sm text-gray-500 bg-gray-100 inline-block px-4 py-2 rounded-full">
+                <p className="text-sm text-gray-500 bg-gray-100 inline-block px-4 py-2 rounded-full animate-fade-in-up delay-200">
                   Bergabung sejak {new Date(user?.created_at).toLocaleDateString('id-ID', { 
                     year: 'numeric', 
                     month: 'long', 
@@ -421,21 +493,24 @@ function Profile() {
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
                   <button
                     onClick={() => navigate("/")}
-                    className="group py-4 px-6 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center"
+                    className="group py-4 px-6 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center animate-card-float"
+                    style={{ animationDelay: '0.1s' }}
                   >
                     <FaHome className="w-5 h-5 mr-3 text-[#B80002] group-hover:scale-110 transition-transform" />
                     Kembali ke Beranda
                   </button>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="group py-4 px-6 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white rounded-2xl shadow-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center"
+                    className="group py-4 px-6 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white rounded-2xl shadow-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center animate-card-float"
+                    style={{ animationDelay: '0.2s' }}
                   >
                     <FaEdit className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
                     Edit Profil
                   </button>
                   <button
                     onClick={() => setIsChangingPassword(true)}
-                    className="group py-4 px-6 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center"
+                    className="group py-4 px-6 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1 font-semibold flex items-center justify-center animate-card-float"
+                    style={{ animationDelay: '0.3s' }}
                   >
                     <FaKey className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
                     Ganti Password
@@ -445,13 +520,13 @@ function Profile() {
             </div>
           ) : isEditing ? (
             /* Edit Mode - Desain Lebih Modern */
-            <form onSubmit={handleProfileUpdate} className="p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+            <form onSubmit={handleProfileUpdate} className="p-8 animate-fade-in">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent animate-scale-in">
                 Edit Profil
               </h2>
 
               {/* Profile Photo Section */}
-              <div className="flex flex-col items-center mb-8">
+              <div className="flex flex-col items-center mb-8 animate-fade-in-up">
                 <div className="relative group">
                   <img
                     src={avatarPreview}
@@ -483,7 +558,7 @@ function Profile() {
               </div>
 
               <div className="space-y-6">
-                <div>
+                <div className="animate-fade-in-left">
                   <label className="block text-gray-800 font-semibold mb-3 text-lg" htmlFor="name">
                     Nama Lengkap
                   </label>
@@ -498,7 +573,7 @@ function Profile() {
                   />
                 </div>
 
-                <div>
+                <div className="animate-fade-in-left delay-100">
                   <label className="block text-gray-800 font-semibold mb-3 text-lg" htmlFor="email">
                     Alamat Email
                   </label>
@@ -516,7 +591,7 @@ function Profile() {
                 </div>
               </div>
 
-              <div className="flex space-x-4 mt-8">
+              <div className="flex space-x-4 mt-8 animate-fade-in-up delay-200">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
@@ -540,13 +615,13 @@ function Profile() {
             </form>
           ) : (
             /* Password Change Mode - Desain Lebih Modern */
-            <form onSubmit={handlePasswordChange} className="p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+            <form onSubmit={handlePasswordChange} className="p-8 animate-fade-in">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent animate-scale-in">
                 Ganti Password
               </h2>
 
               <div className="space-y-6">
-                <div>
+                <div className="animate-fade-in-left">
                   <label className="block text-gray-800 font-semibold mb-3 text-lg" htmlFor="oldPassword">
                     Password Lama
                   </label>
@@ -570,7 +645,7 @@ function Profile() {
                   </div>
                 </div>
 
-                <div>
+                <div className="animate-fade-in-left delay-100">
                   <label className="block text-gray-800 font-semibold mb-3 text-lg" htmlFor="newPassword">
                     Password Baru
                   </label>
@@ -595,7 +670,7 @@ function Profile() {
                   </div>
                 </div>
 
-                <div>
+                <div className="animate-fade-in-left delay-200">
                   <label className="block text-gray-800 font-semibold mb-3 text-lg" htmlFor="confirmPassword">
                     Konfirmasi Password Baru
                   </label>
@@ -621,7 +696,7 @@ function Profile() {
                 </div>
               </div>
 
-              <div className="flex space-x-4 mt-8">
+              <div className="flex space-x-4 mt-8 animate-fade-in-up delay-300">
                 <button
                   type="button"
                   onClick={() => setIsChangingPassword(false)}
@@ -646,28 +721,28 @@ function Profile() {
           )}
         </div>
 
-        {/* Status Testimoni Section yang lebih menarik - DIPINDAHKAN ke bawah card profile */}
+        {/* Status Testimoni Section yang lebih menarik */}
         {testimonialStatus && (
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 border border-white/50 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 border border-white/50 relative overflow-hidden animate-fade-in-up">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#B80002]/5 to-transparent rounded-bl-3xl"></div>
             
             <div className="relative z-10">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 animate-fade-in-down">
                 <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-4 md:mb-0">
                   <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
                     <FaStar className="text-white text-xl" />
                   </div>
                   Status Testimoni Anda
                 </h2>
-                <span className={`px-4 py-2 rounded-2xl text-sm font-semibold ${getStatusColor(testimonialStatus)} border-2 flex items-center shadow-lg`}>
+                <span className={`px-4 py-2 rounded-2xl text-sm font-semibold ${getStatusColor(testimonialStatus)} border-2 flex items-center shadow-lg animate-pulse-slow`}>
                   {getStatusIcon(testimonialStatus)}
                   <span className="ml-2">{testimonialStatus}</span>
                 </span>
               </div>
 
               {testimonialData && (
-                <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-6 border border-gray-100 shadow-sm">
+                <div className="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 mb-6 border border-gray-100 shadow-sm animate-fade-in-left">
                   <div className="flex flex-col md:flex-row md:items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center mb-3">
@@ -718,7 +793,7 @@ function Profile() {
                   testimonialStatus === 'Disetujui' ? 'bg-green-50 border-green-400' :
                   testimonialStatus === 'Ditolak' ? 'bg-red-50 border-red-400' :
                   'bg-yellow-50 border-yellow-400'
-                }`}>
+                } animate-fade-in-right`}>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 mt-1">
                       {getStatusIcon(testimonialStatus)}
@@ -736,7 +811,7 @@ function Profile() {
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up">
                 <button
                   onClick={() => navigate("/testimoni")}
                   className="flex-1 bg-gradient-to-r from-[#B80002] to-[#D90003] text-white py-4 px-6 rounded-2xl hover:from-[#A00002] hover:to-[#C00002] transition-all duration-300 font-semibold text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
@@ -760,7 +835,7 @@ function Profile() {
       </div>
 
       {/* Custom CSS untuk animasi */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -777,6 +852,162 @@ function Profile() {
         
         .animate-scaleIn {
           animation: scaleIn 0.3s ease-out;
+        }
+
+        /* Animasi dari Tentang.jsx */
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes fadeInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes cardFloat {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
+        @keyframes textReveal {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+
+        /* Kelas Animasi */
+        .animate-fade-in-down {
+          animation: fadeInDown 1s ease-out;
+        }
+
+        .animate-fade-in-up {
+          animation: fadeInUp 1s ease-out;
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 1.5s ease-out;
+        }
+
+        .animate-fade-in-left {
+          animation: fadeInLeft 1s ease-out;
+        }
+
+        .animate-fade-in-right {
+          animation: fadeInRight 1s ease-out;
+        }
+
+        .animate-scale-in {
+          animation: scaleIn 1s ease-out;
+        }
+
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-card-float {
+          animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        .animate-text-reveal {
+          animation: textReveal 1.5s ease-out;
+        }
+
+        .animate-pulse-slow {
+          animation: pulse 3s ease-in-out infinite;
+        }
+
+        .delay-100 {
+          animation-delay: 100ms;
+        }
+
+        .delay-200 {
+          animation-delay: 200ms;
+        }
+
+        .delay-300 {
+          animation-delay: 300ms;
         }
       `}</style>
     </div>

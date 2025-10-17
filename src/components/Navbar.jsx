@@ -20,6 +20,7 @@ function Navbar({ title }) {
   const [testimonialMessage, setTestimonialMessage] = useState(null);
   const [hasNewTestimonialNotification, setHasNewTestimonialNotification] = useState(false);
   const [showMarkAllReadConfirm, setShowMarkAllReadConfirm] = useState(false);
+  const [isMarkingAllRead, setIsMarkingAllRead] = useState(false);
 
   const menuRef = useRef();
   const notificationsRef = useRef();
@@ -146,6 +147,7 @@ function Navbar({ title }) {
   // Mark all as read dengan konfirmasi
   const markAllAsRead = async () => {
     try {
+      setIsMarkingAllRead(true);
       await api.post("/notifications/read-all");
       setNotifications(prev => prev.map(n => ({ ...n, dibaca: true })));
       setUnreadCount(0);
@@ -168,6 +170,8 @@ function Navbar({ title }) {
       
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
+    } finally {
+      setIsMarkingAllRead(false);
     }
   };
 
@@ -186,7 +190,7 @@ function Navbar({ title }) {
             '<p class="text-gray-600">Semua notifikasi akan ditandai sebagai sudah dibaca</p>' +
             '</div>',
       showCancelButton: true,
-      confirmButtonText: "Ya, Tandai Dibaca",
+      confirmButtonText: isMarkingAllRead ? "Memproses..." : "Ya, Tandai Dibaca",
       cancelButtonText: "Batal",
       confirmButtonColor: "#3b82f6",
       cancelButtonColor: "#6b7280",
@@ -197,9 +201,10 @@ function Navbar({ title }) {
         confirmButton: 'py-3 px-6 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200',
         cancelButton: 'py-3 px-6 rounded-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-200'
       },
-      showCloseButton: true
+      showCloseButton: true,
+      allowOutsideClick: () => !isMarkingAllRead
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && !isMarkingAllRead) {
         markAllAsRead();
       }
     });
@@ -419,19 +424,31 @@ function Navbar({ title }) {
     }
   };
 
-  // Klik luar → close dropdown
+  // Klik luar → close dropdown - DIPERBAIKI: Tidak menutup saat klik di dalam dropdown
   useEffect(() => {
     function handleClickOutside(event) {
+      // Cek jika klik di luar menu profile
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowProfileMenu(false);
+        // Cek jika yang diklik bukan bagian dari notifications dropdown
+        if (!notificationsRef.current?.contains(event.target)) {
+          setShowProfileMenu(false);
+        }
       }
+      
+      // Cek jika klik di luar notifications
       if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
-        setShowNotifications(false);
+        // Cek jika yang diklik bukan bagian dari profile menu
+        if (!menuRef.current?.contains(event.target)) {
+          setShowNotifications(false);
+        }
       }
+      
+      // Cek jika klik di luar mobile menu
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
         setMobileMenuOpen(false);
       }
     }
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -550,7 +567,7 @@ function Navbar({ title }) {
               </div>
             ) : (
               <div className="flex items-center space-x-3 lg:space-x-4">
-                {/* Notifications */}
+                {/* Notifications - DIPERBAIKI: Dropdown tidak menutup saat klik di dalamnya */}
                 <div className="relative" ref={notificationsRef}>
                   <button
                     onClick={() => {
@@ -572,16 +589,32 @@ function Navbar({ title }) {
                   </button>
 
                   {showNotifications && (
-                    <div className="absolute right-0 top-12 lg:top-14 w-80 lg:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden animate-fadeIn">
+                    <div 
+                      className="absolute right-0 top-12 lg:top-14 w-80 lg:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden animate-fadeIn"
+                      onClick={(e) => e.stopPropagation()} // Mencegah penutupan saat klik di dalam dropdown
+                    >
                       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 flex justify-between items-center">
                         <h3 className="font-bold text-gray-800 text-lg">Notifikasi</h3>
                         {unreadCount > 0 && (
                           <button
-                            onClick={confirmMarkAllAsRead}
-                            className="text-sm text-[#B80002] hover:text-[#a00002] font-semibold px-3 py-1 rounded-lg hover:bg-red-50 transition-colors flex items-center space-x-1"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Mencegah penutupan dropdown
+                              confirmMarkAllAsRead();
+                            }}
+                            disabled={isMarkingAllRead}
+                            className="text-sm text-[#B80002] hover:text-[#a00002] font-semibold px-3 py-1 rounded-lg hover:bg-red-50 transition-colors flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <Check className="w-4 h-4" />
-                            <span>Tandai semua dibaca</span>
+                            {isMarkingAllRead ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-[#B80002] border-t-transparent rounded-full animate-spin"></div>
+                                <span>Memproses...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Check className="w-4 h-4" />
+                                <span>Tandai semua dibaca</span>
+                              </>
+                            )}
                           </button>
                         )}
                       </div>
@@ -591,12 +624,13 @@ function Navbar({ title }) {
                             <div
                               key={notification.id}
                               className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 hover:shadow-md ${getNotificationBgColor(notification)}`}
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation(); // Mencegah penutupan dropdown
                                 markAsRead(notification.id);
                                 if (notification.testimonial_id) {
                                   handleNavigation('/testimoni');
+                                  setShowNotifications(false);
                                 }
-                                setShowNotifications(false);
                               }}
                             >
                               <div className="flex items-start space-x-3">
@@ -661,7 +695,10 @@ function Navbar({ title }) {
                   </button>
                   
                   {showProfileMenu && (
-                    <div className="absolute right-0 top-12 lg:top-14 w-72 lg:w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 animate-scaleIn">
+                    <div 
+                      className="absolute right-0 top-12 lg:top-14 w-72 lg:w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 animate-scaleIn"
+                      onClick={(e) => e.stopPropagation()} // Mencegah penutupan saat klik di dalam dropdown
+                    >
                       {/* Header dengan info user */}
                       <div className="p-6 border-b border-gray-100 bg-gradient-to-br from-gray-50 to-white rounded-t-2xl">
                         <div className="flex items-center space-x-4">
@@ -713,33 +750,6 @@ function Navbar({ title }) {
                           <User className="w-5 h-5 text-gray-500" />
                           <span>Lihat Profil</span>
                         </button>
-                        
-                        <button
-                          onClick={() => {
-                            setShowProfileMenu(false);
-                            handleNavigation("/testimoni");
-                          }}
-                          className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 mb-2 hover:translate-x-1"
-                        >
-                          <Star className="w-5 h-5 text-yellow-500" />
-                          <span>Testimoni Saya</span>
-                          {hasNewTestimonialNotification && (
-                            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                          )}
-                        </button>
-
-                        {(hasNewTestimonialNotification || unreadCount > 0) && (
-                          <button
-                            onClick={() => {
-                              setShowProfileMenu(false);
-                              confirmMarkAllAsRead();
-                            }}
-                            className="w-full flex items-center space-x-3 px-4 py-3 text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 mb-2 hover:translate-x-1"
-                          >
-                            <CheckCircle className="w-5 h-5" />
-                            <span>Tandai Sudah Dibaca</span>
-                          </button>
-                        )}
 
                         <div className="border-t border-gray-200 my-3"></div>
 
@@ -787,17 +797,30 @@ function Navbar({ title }) {
                   <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden" onClick={() => setShowNotifications(false)}>
                     <div 
                       className="absolute right-0 top-16 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-200 mx-4 animate-slideIn"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()} // Mencegah penutupan saat klik di dalam dropdown
                     >
                       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 flex justify-between items-center rounded-t-2xl">
                         <h3 className="font-bold text-gray-800">Notifikasi</h3>
                         {unreadCount > 0 && (
                           <button
-                            onClick={confirmMarkAllAsRead}
-                            className="text-sm text-[#B80002] hover:text-[#a00002] font-semibold flex items-center space-x-1"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Mencegah penutupan dropdown
+                              confirmMarkAllAsRead();
+                            }}
+                            disabled={isMarkingAllRead}
+                            className="text-sm text-[#B80002] hover:text-[#a00002] font-semibold flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <Check className="w-4 h-4" />
-                            <span>Tandai semua dibaca</span>
+                            {isMarkingAllRead ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-[#B80002] border-t-transparent rounded-full animate-spin"></div>
+                                <span>Memproses...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Check className="w-4 h-4" />
+                                <span>Tandai semua dibaca</span>
+                              </>
+                            )}
                           </button>
                         )}
                       </div>
@@ -807,12 +830,13 @@ function Navbar({ title }) {
                             <div
                               key={notification.id}
                               className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${getNotificationBgColor(notification)}`}
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation(); // Mencegah penutupan dropdown
                                 markAsRead(notification.id);
                                 if (notification.testimonial_id) {
                                   handleNavigation('/testimoni');
+                                  setShowNotifications(false);
                                 }
-                                setShowNotifications(false);
                               }}
                             >
                               <div className="flex items-start space-x-3">
@@ -1005,33 +1029,6 @@ function Navbar({ title }) {
                     <User className="w-5 h-5 text-gray-500" />
                     <span>Lihat Profil</span>
                   </button>
-                  
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      handleNavigation("/testimoni");
-                    }}
-                    className="w-full flex items-center space-x-3 px-4 py-4 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200"
-                  >
-                    <Star className="w-5 h-5 text-yellow-500" />
-                    <span>Testimoni Saya</span>
-                    {hasNewTestimonialNotification && (
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    )}
-                  </button>
-
-                  {(hasNewTestimonialNotification || unreadCount > 0) && (
-                    <button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        confirmMarkAllAsRead();
-                      }}
-                      className="w-full flex items-center space-x-3 px-4 py-4 text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200"
-                    >
-                      <CheckCircle className="w-5 h-5" />
-                      <span>Tandai Sudah Dibaca</span>
-                    </button>
-                  )}
 
                   {/* Mobile Logout Button */}
                   <button
